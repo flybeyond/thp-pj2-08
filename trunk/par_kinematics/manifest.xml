@@ -1,0 +1,17 @@
+<package>
+  <description brief="par_kinematics">
+
+     par_kinematics
+
+  </description>
+  <author>Wouter van Teijlingen</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/par_kinematics</url>
+  <depend package="std_msgs"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+
+</package>
+
+
