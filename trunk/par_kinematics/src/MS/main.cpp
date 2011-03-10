@@ -9,7 +9,7 @@
 
 // robot geometry
 // (look at pics above for explanation)
- const double e = 46;
+ const double e = 46; // effector
  const double f = 50; // base
  
  const double re = 150.0;    // effector arm length
