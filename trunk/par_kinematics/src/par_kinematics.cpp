@@ -2,11 +2,25 @@
 #include <ros/ros.h>
 #include <par_kinematics/coord.h>
 #include <par_kinematics/kinematics.h>
-
+#include <par_trajectory_planning/angles.h>
 
 static const int QUEUE_SIZE = 1000;
 static Kinematics kinematic_solver;
+static ros::Publisher chatter_pub;
 
+/**
+ * @brief This function converts degrees to radians.
+ * @param deg theta in degrees
+ */
+double rad(double deg) 
+{
+    return double(deg/180 * pi);
+}
+
+/**
+ * @brief This is the callback function responsible for publishing angles in radians.
+ * @param coord object representing XYZ coordinates. 
+ */
 void IK_solver(const par_kinematics::coord& coord)
 {
     std::cout << "[seq: " << coord.header.seq << "]" << std::endl;
@@ -23,6 +37,12 @@ void IK_solver(const par_kinematics::coord& coord)
     {
         std::cout << "[kinematics] non-existing point." << std::endl;
     }
+    
+    par_trajectory_planning::angles angles;
+    angles.XYZ[0] = rad(coord.XYZ[0]);
+    angles.XYZ[1] = rad(coord.XYZ[1]);
+    angles.XYZ[2] = rad(coord.XYZ[2]);
+    chatter_pub.publish(angles);
 }
 
 int main(int argc, char **argv)
@@ -32,6 +52,7 @@ int main(int argc, char **argv)
     ros::NodeHandle n;
 
     ros::Subscriber sub = n.subscribe("coord", QUEUE_SIZE, IK_solver);
+    chatter_pub = n.advertise<par_trajectory_planning::angles>("angles", QUEUE_SIZE);
     
     ros::spin();
     
