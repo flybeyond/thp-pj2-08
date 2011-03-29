@@ -23,8 +23,10 @@ rosbuild_genmsg()
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
+rosbuild_add_library(par_planning src/steppermotor.cpp)
+target_link_libraries(par_planning modbus)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 rosbuild_add_executable(par_planning src/par_planning.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
+
+#target_link_libraries(modbus modbus)
