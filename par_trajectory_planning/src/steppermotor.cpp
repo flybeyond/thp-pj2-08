@@ -18,6 +18,17 @@ void StepperMotor::init()
 
 bool StepperMotor::startPTPMotion(double x, double y, double z)
 {
-    // send some modbus commands :)
+    modbus_set_slave(ctx, 1);
+    // addr 0316h, communication axis number, default value 15
+    uint8_t* dest = new uint8_t[8];
+    modbus_read_input_bits(ctx, 0x316, 8, dest);
+    int i;
+    for(i=0;i<8;i++)
+    {
+        std::cout << "dest[" << i << "]" << " := " << dest[i] << std::endl;
+    }
+    
+    delete(dest);
+    
     return false;
 }
