@@ -37,7 +37,9 @@ void IK_solver(const par_kinematics::coord& coord)
     {
         std::cout << "[kinematics] non-existing point." << std::endl;
     }
-    
+    /* 
+     * For debugging purposes every message gets published; valid or invalid points.
+     */
     par_trajectory_planning::angles angles;
     angles.XYZ[0] = rad(coord.XYZ[0]);
     angles.XYZ[1] = rad(coord.XYZ[1]);
