@@ -13,6 +13,10 @@ static StepperMotor* stepperMotor;
 void MO_angles(const par_trajectory_planning::angles& angles)
 {
     // communicate angles to motion interface.
+    std::cout << "[trajectory planning] theta1: " << angles.XYZ[0] << std::endl;
+    std::cout << "[trajectory planning] theta2: " << angles.XYZ[1] << std::endl;
+    std::cout << "[trajectory planning] theta3: " << angles.XYZ[2] << std::endl;
+    stepperMotor->startPTPMotion(angles.XYZ[0], angles.XYZ[1], angles.XYZ[2]);
 }
 
 int main(int argc, char **argv)
@@ -21,10 +25,11 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "par_trajectory_planning");
     ros::NodeHandle n;
     stepperMotor = new StepperMotor();
+    stepperMotor->init();
 
     ros::Subscriber sub = n.subscribe("angles", QUEUE_SIZE, MO_angles);
-    
+
     ros::spin();
-    
+
     return 0;
 }
