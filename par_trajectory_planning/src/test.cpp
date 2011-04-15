@@ -42,11 +42,11 @@ int main()
 
 
 	// Set M[0]..M[5] to 0 else wrong position is selected 
-	int n = modbus_write_register(ctx, 0x001E, 0x0000);
-	printf("errno: %s\n", modbus_strerror(errno));
+	// int n = modbus_write_register(ctx, 0x001E, 0x0000);
+	// printf("errno: %s\n", modbus_strerror(errno));
 
-        //  turn ON the motor excitation
-        n = modbus_write_register(ctx, 0x001E, 0x2000);
+    //  turn ON the motor excitation
+    int n = modbus_write_register(ctx, 0x001E, 0x2000);
 	printf("errno: %s\n", modbus_strerror(errno));
 
 
@@ -62,8 +62,8 @@ int main()
 	src[0] = 0x00;
 	n = modbus_write_registers(ctx, 0x0502, 2, src);
 
-	// POSITION NO1 set operating mode to link
-	n = modbus_write_register(ctx, 0x0701, 0x01);
+	// POSITION NO1 set operating mode to single motion
+	n = modbus_write_register(ctx, 0x0701, 0x00);
 
 	// POSITION NO1 set to absolute positioning
 	n = modbus_write_register(ctx, 0x0601, 0x01);
@@ -81,7 +81,7 @@ int main()
 	src[0] = 0x00;
 	n = modbus_write_registers(ctx, 0x0504, 2, src);
 
-	// POSITION NO2 set operating mode to single
+	// POSITION NO2 set operating mode to single motion
 	n = modbus_write_register(ctx, 0x0702, 0x00);
 
 	// POSITION NO2 set to absolute positioning
@@ -91,9 +91,8 @@ int main()
 	n = modbus_write_register(ctx, 0x0802, 0x01);
 
 
-
 	// turn start input on
-	n = modbus_write_register(ctx, 0x001E, 0x2101);
+	n = modbus_write_register(ctx, 0x001E, 0x2100);
 
 	// turn start input off
 	//n = modbus_write_register(ctx, 0x001E, 0x2000);
