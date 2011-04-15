@@ -41,62 +41,36 @@ int main()
 	printf("errno: %s\n", modbus_strerror(errno));
 
 
-	// Set M[0]..M[5] to 0 else wrong position is selected 
-	// int n = modbus_write_register(ctx, 0x001E, 0x0000);
-	// printf("errno: %s\n", modbus_strerror(errno));
 
-    //  turn ON the motor excitation
-    int n = modbus_write_register(ctx, 0x001E, 0x2000);
+	uint16_t* dest = new uint16_t[1];
+	modbus_read_registers(ctx, 0x117, 1, dest); 
+	std::cout << "0: present selected operation data number: " << dest[0] << std::endl;
+    	//  turn ON the motor excitation
+    	int n = modbus_write_register(ctx, 0x001E, 0x2000);
 	printf("errno: %s\n", modbus_strerror(errno));
-
-
-	uint16_t* src = new uint16_t[2];
-	// POSITION NO1 is address 0x0402 and 0x0403 and specify position 1000
-	src[1] = 0x03E8;
-	src[0] = 0x00;
-	n = modbus_write_registers(ctx, 0x0402, 2, src);
-	printf("errno: %s\n", modbus_strerror(errno));
-
-	// POSITION NO1 set operating speed
-	src[1] = 0x1388;
-	src[0] = 0x00;
-	n = modbus_write_registers(ctx, 0x0502, 2, src);
-
-	// POSITION NO1 set operating mode to single motion
-	n = modbus_write_register(ctx, 0x0701, 0x00);
-
-	// POSITION NO1 set to absolute positioning
-	n = modbus_write_register(ctx, 0x0601, 0x01);
-
-	// POSITION NO1 set to sequential mode
-	n = modbus_write_register(ctx, 0x0801, 0x01);
-
-	// POSITION NO2 is address 0x0404 and 0x045 and specify position
-	src[1] = 0x1710;
-	src[0] = 0x00;
-	n = modbus_write_registers(ctx, 0x0404, 2, src);
-
-	// POSITION NO2 set operating speed
-	src[1] = 0x0800;
-	src[0] = 0x00;
-	n = modbus_write_registers(ctx, 0x0504, 2, src);
-
-	// POSITION NO2 set operating mode to single motion
-	n = modbus_write_register(ctx, 0x0702, 0x00);
-
-	// POSITION NO2 set to absolute positioning
-	n = modbus_write_register(ctx, 0x0602, 0x01);
-
-	// POSITION NO2 set to sequential mode
-	n = modbus_write_register(ctx, 0x0802, 0x01);
-
-
 	// turn start input on
-	n = modbus_write_register(ctx, 0x001E, 0x2100);
-
+	n = modbus_write_register(ctx, 0x001E, 0x2101);
+	printf("errno: %s\n", modbus_strerror(errno));
 	// turn start input off
-	//n = modbus_write_register(ctx, 0x001E, 0x2000);
+	n = modbus_write_register(ctx, 0x001E, 0x2001);
+	printf("errno: %s\n", modbus_strerror(errno));
 
+	uint16_t* status = new uint16_t[1];
+	//status[0] = 0x00;
+	//status[1] = 0x00;
+	modbus_read_registers(ctx, 0x0020, 2, status); 
+	printf("motor status READY [0, 1]: %x\n", (status[0] & 0x2000));
+
+	// do nothing	
+	while( (status[0] & 0x2000) == 0 )
+	{
+		modbus_read_registers(ctx, 0x0020, 2, status); 
+	}
+	
+
+	n = modbus_write_register(ctx, 0x001E, 0x2101);
+
+	delete(dest);
 	modbus_close(ctx);
 	modbus_free(ctx);
 
