@@ -31,14 +31,14 @@ int main()
 	//modbus_write_register(ctx, 0x0030, 1);
 
 
-	uint16_t* src = new uint16_t[2];
+	uint16_t src[2]; //= new uint16_t[2];
 	//
 	 // AXIS 1
 	 //
 	// 
 	// POSITION NO1 is address 0x0402 and 0x0403 and specify position 1000
 	modbus_set_slave(ctx, 1);
-	src[1] = 0x1388;
+	src[1] = 0x03E8;
 	src[0] = 0x00;
 	int n = modbus_write_registers(ctx, 0x0402, 2, src);
 	printf("errno: %s\n", modbus_strerror(errno));
@@ -69,7 +69,7 @@ int main()
 	// 
 	modbus_set_slave(ctx, 2);
 	// POSITION NO1 is address 0x0402 and 0x0403 and specify position 1000
-	src[1] = 0x1388;
+	src[1] = 0x03E8;
 	src[0] = 0x00;
 	n = modbus_write_registers(ctx, 0x0402, 2, src);
 	printf("errno: %s\n", modbus_strerror(errno));
@@ -101,7 +101,7 @@ int main()
 	// 
 	modbus_set_slave(ctx, 3);
 	// POSITION NO1 is address 0x0402 and 0x0403 and specify position 1000
-	src[1] = 0x1388;
+	src[1] = 0x03E8;
 	src[0] = 0x00;
 	n = modbus_write_registers(ctx, 0x0402, 2, src);
 	printf("errno: %s\n", modbus_strerror(errno));
@@ -178,7 +178,7 @@ int main()
 	printf("errno: %s\n", modbus_strerror(errno));
 */
 
-	delete(src);
+	//delete(src);
 	modbus_close(ctx);
 	modbus_free(ctx);
 

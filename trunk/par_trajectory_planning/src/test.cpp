@@ -4,6 +4,42 @@
 #include <cmath>
 #include <cerrno>
 
+const uint16_t MOTOR_SPEED_UP = 0x1388;
+const uint16_t MOTOR_SPEED_LO = 0x0000;
+
+void set_position(modbus_t* ctx, int slave, uint16_t pos_up, uint16_t pos_lo)
+{
+	uint16_t src[2]; //= new uint16_t[2];
+	//
+	 // AXIS 1
+	 //
+	// 
+	// POSITION NO1 is address 0x0402 and 0x0403 and specify position pos_up / pos_lo
+	modbus_set_slave(ctx, slave);
+	src[1] = pos_up;
+	src[0] = pos_lo;
+	int n = modbus_write_registers(ctx, 0x0402, 2, src);
+	printf("errno: %s\n", modbus_strerror(errno));
+
+	// 1POSITION NO1 set operating speed
+	src[1] = MOTOR_SPEED_UP;
+	src[0] = MOTOR_SPEED_LO;
+	n = modbus_write_registers(ctx, 0x0502, 2, src);
+	printf("errno: %s\n", modbus_strerror(errno));
+
+	// 1POSITION NO1 set operating mode to single motion
+	//n = modbus_write_register(ctx, 0x0701, 0x00);
+	printf("errno: %s\n", modbus_strerror(errno));
+
+	// 1POSITION NO1 set to absolute positioning
+	//n = modbus_write_register(ctx, 0x0601, 0x01);	
+	printf("errno: %s\n", modbus_strerror(errno));
+
+	// 1POSITION NO1 set to sequential mode
+	//n = modbus_write_register(ctx, 0x0801, 0x00);
+	printf("errno: %s\n", modbus_strerror(errno));
+} 
+
 int main()
 {
         modbus_t* ctx;
@@ -24,6 +60,12 @@ int main()
         {
                 std::cout << "StepperMotor::init(): connection failed." << std::endl;
         }
+
+
+
+	//
+        // execute the position crap
+         //
 
 
         modbus_set_slave(ctx, 0);
