@@ -51,9 +51,9 @@ void execute_motion(modbus_t* ctx, int off)
 	//int n = modbus_write_register(ctx, 0x001E, 0x2002);
 	//modbus_read_registers(ctx, 0x117, 1, dest); 
 	//std::cout << "0: present selected operation data number: " << dest[0] << std::endl;
-    	//  turn ON the motor excitation
+    //  turn ON the motor excitation
 
-    	int n = modbus_write_register(ctx, 0x001E, 0x2000);
+    int n = modbus_write_register(ctx, 0x001E, 0x2000);
 	printf("errno: %s\n", modbus_strerror(errno));
 	// turn start input on
 	n = modbus_write_register(ctx, 0x001E, 0x2100 + (off) );
