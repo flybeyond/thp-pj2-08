@@ -1,3 +1,6 @@
+// compile instruction 
+// g++ control.cpp -o control -lboost_signals -lboost_system -lmodbus
+
 #include <iostream>
 #include <cstdio>
 #include <cmath>
