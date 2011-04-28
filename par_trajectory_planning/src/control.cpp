@@ -5,10 +5,10 @@
 #include <cstdio>
 #include <cmath>
 #include <cerrno>
+#include <modbus/modbus.h>
 #include <boost/asio.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/bind.hpp>
-#include <modbus/modbus.h>
 
 const int MENU_INIT_COMM    = 1;
 const int MENU_INIT_MOTOR   = 2;
@@ -19,6 +19,8 @@ const int MENU_EXIT         = 0;
 
 const int MODBUS_MAX_PROC_TIME  = 4000; // in usec
 const int MODBUS_MAX_BCAST_TIME = 7500; // in usec
+const int MODBUS_TIMEOUT_BEGIN  = 50000; // in usec
+const int MODBUS_TIMEOUT_END    = 50000;
 const int MODBUS_SLAVE_ADDR_01  = 0x01;
 const int MODBUS_SLAVE_ADDR_02  = 0x02;
 const int MODBUS_SLAVE_ADDR_03  = 0x03;
@@ -50,36 +52,59 @@ void init_motor()
 
 void init_communication(modbus_t* ctx)
 {
+  
     ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1);
     if (ctx == NULL)
     {
-            std::cout << "StepperMotor::init(): unable to create the libmodbus context." << std::endl;
-    }
-	modbus_set_debug(ctx, 1);
+            std::cout << "unable to create the libmodbus context." << std::endl;
+    } 
+    modbus_set_debug(ctx, 1);
 	
     if ( modbus_connect(ctx) == -1)
     {
-        std::cout << "StepperMotor::init(): connection failed." << std::endl;
+        std::cout << "connection failed." << std::endl;
     }	
 }
 
 void start_motion(modbus_t* ctx, int motions)
 {
-    modbus_set_slave(ctx, 0);
+    uint16_t stat_ax01[2], stat_ax02[2], stat_ax03[3];
     int i;
     for(i=1; i<motions; i++)
     {
+	modbus_set_slave(ctx, 0);
         int n = modbus_write_register(ctx, 0x001E, 0x2000);
-	    printf("errno: %s\n", modbus_strerror(errno));
-	    usleep(MODBUS_MAX_BCAST_TIME);
-	    // turn start input on
-	    n = modbus_write_register(ctx, 0x001E, 0x2100 + i );
-	    printf("errno: %s\n", modbus_strerror(errno));
-	    usleep(MODBUS_MAX_BCAST_TIME);
-	    // turn start input off
-	    n = modbus_write_register(ctx, 0x001E, 0x2000 + i );
-	    printf("errno: %s\n", modbus_strerror(errno));    
-	    usleep(MODBUS_MAX_BCAST_TIME);
+	printf("errno: %s\n", modbus_strerror(errno));
+	usleep(MODBUS_MAX_BCAST_TIME);
+	// turn start input on
+	n = modbus_write_register(ctx, 0x001E, 0x2100 + i );
+	printf("errno: %s\n", modbus_strerror(errno));
+	usleep(MODBUS_MAX_BCAST_TIME);
+	// turn start input off
+	n = modbus_write_register(ctx, 0x001E, 0x2000 + i );
+	printf("errno: %s\n", modbus_strerror(errno));    
+	usleep(MODBUS_MAX_BCAST_TIME);
+
+	stat_ax01[0] = stat_ax02[0] = stat_ax03[0] = 0x0000;
+	stat_ax01[1] = stat_ax02[1] = stat_ax03[1] = 0x0000;
+	while( (stat_ax01[0] & 0x2000) == 0 ||
+	       (stat_ax02[0] && 0x2000) == 0 ||
+	       (stat_ax03[0] && 0x2000) == 0 )
+	{
+		modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_01);
+		modbus_read_registers(ctx, 0x0020, 2, stat_ax01); 
+		usleep(MODBUS_MAX_PROC_TIME);
+
+		modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_02);
+		modbus_read_registers(ctx, 0x0020, 2, stat_ax02); 
+		usleep(MODBUS_MAX_PROC_TIME);
+
+		modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_03);
+		modbus_read_registers(ctx, 0x0020, 2, stat_ax03); 
+		usleep(MODBUS_MAX_PROC_TIME);
+		// this is zero if the motor is moving
+	}
+	std::cout << "motor can receive new command\n" << std::endl;
     }  
 }
 
@@ -113,18 +138,29 @@ int configure_PTP_motion(modbus_t* ctx)
     int motions = 0;
     std::cin >> motions;
     
-	uint16_t pos_up = 0x0000;
-	uint16_t pos_lo = 0x0000;    
+    uint16_t pos_up[3];
+    uint16_t pos_lo[3];    
     int i = 1;
     while(i <= motions)
     {
-		std::cout << "pos up: ";
-		std::cin >> pos_up;
-		std::cout << "pos lo: ";
-		std::cin >> pos_lo;
-		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_01, pos_up, pos_lo, i);
-		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_02, pos_up, pos_lo, i);
-		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_03, pos_up, pos_lo, i);
+		std::cout << "pos up for axis 1: ";
+		std::cin >> pos_up[0];
+		std::cout << "pos lo for axis 1: ";
+		std::cin >> pos_lo[0];
+		
+		std::cout << "pos up for axis 2: ";
+		std::cin >> pos_up[1];
+		std::cout << "pos lo for axis 2: ";
+		std::cin >> pos_lo[1];
+
+		std::cout << "pos up for axis 3: ";
+		std::cin >> pos_up[2];
+		std::cout << "pos lo for axis 3: ";
+		std::cin >> pos_lo[2];
+
+		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_01, pos_up[0], pos_lo[0], i);
+		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_02, pos_up[1], pos_lo[1], i);
+		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_03, pos_up[2], pos_lo[2], i);
         i++;
     }
     
@@ -133,8 +169,38 @@ int configure_PTP_motion(modbus_t* ctx)
 
 int main()
 {
-    modbus_t* ctx = NULL;	
-	int m = 0;
+	
+	modbus_t* ctx;
+
+	ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1);
+	if (ctx == NULL)
+	{
+		std::cout << "StepperMotor::init(): unable to create the libmodbus context." << std::endl;
+	}
+	modbus_set_debug(ctx, 1);
+	struct timeval timeout_end;
+	struct timeval timeout_begin;
+	//timeout.tv_sec = 0;
+	//timeout.tv_usec =  500000;
+	//modbus_set_timeout_begin(ctx, &timeout);
+	modbus_get_timeout_end(ctx, &timeout_end);
+	printf("timeout.tv_sec: %ld\n", timeout_end.tv_sec);
+	printf("timeout.tv_usec: %ld\n", timeout_end.tv_usec);
+	timeout_end.tv_usec = MODBUS_TIMEOUT_END;
+	modbus_set_timeout_end(ctx, &timeout_end);
+
+	modbus_get_timeout_begin(ctx, &timeout_begin);
+	printf("timeout.tv_sec: %ld\n", timeout_begin.tv_sec);
+	printf("timeout.tv_usec: %ld\n", timeout_begin.tv_usec);
+	timeout_begin.tv_usec = MODBUS_TIMEOUT_BEGIN;
+	modbus_set_timeout_begin(ctx, &timeout_begin);
+
+	if ( modbus_connect(ctx) == -1)
+	{
+		std::cout << "StepperMotor::init(): connection failed." << std::endl;
+	}
+
+    int m = 0;
     int x = 1;
     
     while(x)
@@ -144,6 +210,7 @@ int main()
         {
             case MENU_INIT_COMM:
                 init_communication(ctx);
+	    break;
             case MENU_INIT_MOTOR: 
                 init_motor();
             break;
@@ -163,7 +230,7 @@ int main()
     {
 	    modbus_close(ctx);
 	    modbus_free(ctx);    
-	}
+    }
     
     return 0;
 }
