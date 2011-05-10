@@ -17,6 +17,14 @@ class Motor
          * @brief Virtual function for initializing the motor.
          */        
         virtual void init() = 0;
+        /**
+         * @brief Virtual function for starting the motor
+         */
+        virtual void start() = 0;
+        /**
+         * @brief Virtual function for stopping the motor
+         */
+        virtual void stop() = 0;
 };
 
 #endif
