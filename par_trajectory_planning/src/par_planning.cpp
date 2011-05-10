@@ -23,7 +23,7 @@ void commands(const par_trajectory_planning::commands& cmd)
             stepperMotor->init();
         break;
         case MENU_CONF_SIN_MOT:
-            stepperMotor->confSingleMotion();
+            stepperMotor->confSingleMotion(cmd);
         break;
         case MENU_CONF_PTP_MOT:
             stepperMotor->confPTPMotion(cmd);

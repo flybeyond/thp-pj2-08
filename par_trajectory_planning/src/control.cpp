@@ -32,6 +32,7 @@ const uint16_t REG_MOTOR_POS   = 0x0400; // 2 bytes per offset
 const uint16_t REG_MOTOR_SPEED = 0x0500; // 2 bytes per offset
 const uint16_t REG_MOTOR_ABS   = 0x0600; // 1 byte per offset
 
+
 int menu()
 {
     std::cout << "[" << MENU_INIT_COMM << "] init communication" << std::endl;
@@ -52,18 +53,34 @@ void init_motor()
 
 void init_communication(modbus_t* ctx)
 {
-  
-    ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1);
-    if (ctx == NULL)
-    {
-            std::cout << "unable to create the libmodbus context." << std::endl;
-    } 
-    modbus_set_debug(ctx, 1);
-	
-    if ( modbus_connect(ctx) == -1)
-    {
-        std::cout << "connection failed." << std::endl;
-    }	
+
+	//ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1);
+	if (ctx == NULL)
+	{
+		std::cout << "StepperMotor::init(): unable to create the libmodbus context." << std::endl;
+	}
+	modbus_set_debug(ctx, 1);
+	struct timeval timeout_end;
+	struct timeval timeout_begin;
+	//timeout.tv_sec = 0;
+	//timeout.tv_usec =  500000;
+	//modbus_set_timeout_begin(ctx, &timeout);
+	modbus_get_timeout_end(ctx, &timeout_end);
+	printf("timeout.tv_sec: %ld\n", timeout_end.tv_sec);
+	printf("timeout.tv_usec: %ld\n", timeout_end.tv_usec);
+	timeout_end.tv_usec = MODBUS_TIMEOUT_END;
+	modbus_set_timeout_end(ctx, &timeout_end);
+
+	modbus_get_timeout_begin(ctx, &timeout_begin);
+	printf("timeout.tv_sec: %ld\n", timeout_begin.tv_sec);
+	printf("timeout.tv_usec: %ld\n", timeout_begin.tv_usec);
+	timeout_begin.tv_usec = MODBUS_TIMEOUT_BEGIN;
+	modbus_set_timeout_begin(ctx, &timeout_begin);
+
+	if ( modbus_connect(ctx) == -1)
+	{
+		std::cout << "StepperMotor::init(): connection failed." << std::endl;
+	}	
 }
 
 void start_motion(modbus_t* ctx, int motions)
@@ -110,9 +127,11 @@ void start_motion(modbus_t* ctx, int motions)
 
 void configure_single_motion(modbus_t* ctx, int slave, uint16_t pos_up, uint16_t pos_lo, int off)
 {
+	
 	uint16_t src[2];
 	// position is address 0x0402 and 0x0403 and specify position pos_up / pos_lo
 	modbus_set_slave(ctx, slave);
+
 	src[1] = pos_up;
 	src[0] = pos_lo;
 	int n = modbus_write_registers(ctx, REG_MOTOR_POS + (off * 2), 2, src);
@@ -157,8 +176,9 @@ int configure_PTP_motion(modbus_t* ctx)
 		std::cin >> pos_up[2];
 		std::cout << "pos lo for axis 3: ";
 		std::cin >> pos_lo[2];
-
+		printf("lsdkj");
 		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_01, pos_up[0], pos_lo[0], i);
+		printf("xxx");
 		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_02, pos_up[1], pos_lo[1], i);
 		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_03, pos_up[2], pos_lo[2], i);
         i++;
@@ -169,8 +189,8 @@ int configure_PTP_motion(modbus_t* ctx)
 
 int main()
 {
-	
-	modbus_t* ctx;
+	modbus_t* ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1);
+	/*
 
 	ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1);
 	if (ctx == NULL)
@@ -198,7 +218,7 @@ int main()
 	if ( modbus_connect(ctx) == -1)
 	{
 		std::cout << "StepperMotor::init(): connection failed." << std::endl;
-	}
+	}*/
 
     int m = 0;
     int x = 1;
