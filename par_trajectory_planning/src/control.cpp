@@ -25,7 +25,7 @@ const int MODBUS_SLAVE_ADDR_01  = 0x01;
 const int MODBUS_SLAVE_ADDR_02  = 0x02;
 const int MODBUS_SLAVE_ADDR_03  = 0x03;
 
-const uint16_t MOTOR_SPEED_UP  = 0x1388;
+const uint16_t MOTOR_SPEED_UP  = 0x4000;
 const uint16_t MOTOR_SPEED_LO  = 0x0000;
 
 const uint16_t REG_MOTOR_POS   = 0x0400; // 2 bytes per offset 
@@ -125,7 +125,46 @@ void start_motion(modbus_t* ctx, int motions)
     }  
 }
 
-void configure_single_motion(modbus_t* ctx, int slave, uint16_t pos_up, uint16_t pos_lo, int off)
+void configure_single_motion_fixed(modbus_t* ctx, int slave, uint16_t pos_up, uint16_t pos_lo, int off)
+{
+	uint16_t src[2];
+	modbus_set_slave(ctx, slave);
+	int n;
+
+	/*if (slave == 1)
+	{
+		src[0] = 0;
+		src[1] = 0;
+		n = modbus_read_registers(ctx, REG_MOTOR_POS + (off * 2), 2, src);
+		usleep(MODBUS_MAX_PROC_TIME);
+		printf("pos_up: %x\n", src[1]);
+		printf("pos_lo: %x\n", src[0]);
+	}*/
+	
+	pos_up = 0xFFFF;
+	pos_lo = 0xFF9C;
+
+	n = modbus_write_register(ctx, REG_MOTOR_POS + (off * 2), pos_up);
+	printf("errno: %s\n", modbus_strerror(errno));
+	usleep(MODBUS_MAX_PROC_TIME);
+	n = modbus_write_register(ctx, REG_MOTOR_POS + (off * 2) + 1, pos_lo);
+	printf("errno: %s\n", modbus_strerror(errno));
+	usleep(MODBUS_MAX_PROC_TIME);
+
+	// set operating speed
+	src[1] = MOTOR_SPEED_UP;
+	src[0] = MOTOR_SPEED_LO;
+	n = modbus_write_registers(ctx, REG_MOTOR_SPEED + (off * 2), 2, src);
+	printf("errno: %s\n", modbus_strerror(errno));
+	usleep(MODBUS_MAX_PROC_TIME);
+
+	// set to absolute positioning
+	n = modbus_write_register(ctx, REG_MOTOR_ABS + (off * 1), 0x01);	
+	printf("errno: %s\n", modbus_strerror(errno));
+	usleep(MODBUS_MAX_PROC_TIME);	
+}
+
+void configure_single_motion(modbus_t* ctx, int slave, uint16_t pos_lo, uint16_t pos_up, int off)
 {
 	
 	uint16_t src[2];
@@ -156,32 +195,38 @@ int configure_PTP_motion(modbus_t* ctx)
     std::cout << "Please enter the amount of motions you want to configure: " << std::endl;
     int motions = 0;
     std::cin >> motions;
-    
+
     uint16_t pos_up[3];
-    uint16_t pos_lo[3];    
+    uint16_t pos_lo[3];   
     int i = 1;
     while(i <= motions)
     {
-		std::cout << "pos up for axis 1: ";
-		std::cin >> pos_up[0];
+		//std::cout << "pos up for axis 1: ";
+		//std::cin >> pos_up[0]; 
+		pos_up[0] = 0;
 		std::cout << "pos lo for axis 1: ";
 		std::cin >> pos_lo[0];
-		
-		std::cout << "pos up for axis 2: ";
-		std::cin >> pos_up[1];
+		if (pos_lo[0] & 0x8000) pos_up[0] = 0xFFFF;
+
+		//std::cout << "pos up for axis 2: ";
+		//std::cin >> pos_up[1]; 
+		pos_up[1] = 0;
 		std::cout << "pos lo for axis 2: ";
 		std::cin >> pos_lo[1];
+		if (pos_lo[1] & 0x8000) pos_up[1] = 0xFFFF;
 
-		std::cout << "pos up for axis 3: ";
-		std::cin >> pos_up[2];
+		//std::cout << "pos up for axis 3: ";
+		//std::cin >> pos_up[2]; 
+		pos_up[2] = 0;
 		std::cout << "pos lo for axis 3: ";
 		std::cin >> pos_lo[2];
-		printf("lsdkj");
+		if (pos_lo[2] & 0x8000) pos_up[2] = 0xFFFF;
+		
 		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_01, pos_up[0], pos_lo[0], i);
-		printf("xxx");
 		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_02, pos_up[1], pos_lo[1], i);
 		configure_single_motion(ctx, MODBUS_SLAVE_ADDR_03, pos_up[2], pos_lo[2], i);
-        i++;
+		
+        	i++;
     }
     
     return i;
