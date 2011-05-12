@@ -13,10 +13,10 @@
 class StepperMotor : public Motor
 {
     public:
-	/**
+	    /**
          * @brief Constructor.
-	 */
-	StepperMotor() { std::cout << "godver?" << std::endl; ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1); }
+	    */
+	    StepperMotor() { ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1); }
         /**
          * @brief Destructor.
          */        
@@ -46,14 +46,20 @@ class StepperMotor : public Motor
          */
         void confPTPMotion(const par_trajectory_planning::commands& cmd);
         /**
-         *@brief Function for exiting.
+         * @brief Function for exiting.
          */
         void exit();
+        /**
+         * @brief Function for converting angles in degrees to motor positions.
+         * @param x Angle in degrees.
+         * @return uint16_t n amount of motor steps.
+         */
+        uint16_t angleToStep(double x);
     private:
-	/**
-	 * Helper function for initialization of single motion.
-	 */
-	void initSingleMotion(int slave, uint16_t pos_up, uint16_t pos_lo, int off);
+	    /**
+	    * Helper function for initialization of single motion.
+	    */
+	    void initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up, int off);
 
         modbus_t* ctx;
         int motions;

@@ -1,3 +1,4 @@
 Header header
 int32 option
-float64[] arguments
+uint16[] abs_pos
+float64[] xyz_pos
