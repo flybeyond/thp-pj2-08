@@ -127,6 +127,7 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
         pos_lo = angleToStep( cmd.xyz_pos[0] );
         pos_up = ( pos_lo & 0x8000 ) ? 0xFFFF : 0x00;
         initSingleMotion(MODBUS_SLAVE_ADDR_01, pos_up, pos_lo, i + 1); // X
+        std::cout << pos_lo << std::endl;
         
         pos_lo = angleToStep( cmd.xyz_pos[1] );
         pos_up = ( pos_lo & 0x8000 ) ? 0xFFFF : 0x00;

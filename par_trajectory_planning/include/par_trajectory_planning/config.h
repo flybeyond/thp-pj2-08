@@ -1,6 +1,12 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+
+const double DELTA_ROBOT_HIP_LEN = 62.0; // hip length
+const double DELTA_ROBOT_ANK_LEN = 150.0; // ankle length
+const double DELTA_ROBOT_BS_SZ   = 101.4; // base size
+const double DELTA_ROBOT_EF_SZ   = 46.19; // effector size
+
 const int MENU_INIT_COMM    = 1;
 const int MENU_INIT_MOTOR   = 2;
 const int MENU_CONF_SIN_MOT = 3;

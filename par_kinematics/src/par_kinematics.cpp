@@ -43,7 +43,8 @@ int main(int argc, char **argv)
     std::cout << "par_kinematics_subscriber." << std::endl;
     ros::init(argc, argv, "par_kinematics_subscriber");
     ros::NodeHandle n;
-    deltaRobot = new DeltaRobot(62, 150, 101.4, 46.19);
+    deltaRobot = new DeltaRobot(DELTA_ROBOT_HIP_LEN, DELTA_ROBOT_ANK_LEN, 
+                        DELTA_ROBOT_BS_SZ, DELTA_ROBOT_EF_SZ);
     
     ros::ServiceServer service = n.advertiseService("coord", IK_solver);
     
