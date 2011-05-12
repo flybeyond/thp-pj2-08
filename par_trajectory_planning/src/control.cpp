@@ -125,12 +125,8 @@ void start_motion(modbus_t* ctx, int motions)
     }  
 }
 
-void configure_single_motion_fixed(modbus_t* ctx, int slave, uint16_t pos_up, uint16_t pos_lo, int off)
+void configure_single_motion(modbus_t* ctx, int slave, uint16_t pos_lo, uint16_t pos_up, int off)
 {
-	uint16_t src[2];
-	modbus_set_slave(ctx, slave);
-	int n;
-
 	/*if (slave == 1)
 	{
 		src[0] = 0;
@@ -140,32 +136,6 @@ void configure_single_motion_fixed(modbus_t* ctx, int slave, uint16_t pos_up, ui
 		printf("pos_up: %x\n", src[1]);
 		printf("pos_lo: %x\n", src[0]);
 	}*/
-	
-	pos_up = 0xFFFF;
-	pos_lo = 0xFF9C;
-
-	n = modbus_write_register(ctx, REG_MOTOR_POS + (off * 2), pos_up);
-	printf("errno: %s\n", modbus_strerror(errno));
-	usleep(MODBUS_MAX_PROC_TIME);
-	n = modbus_write_register(ctx, REG_MOTOR_POS + (off * 2) + 1, pos_lo);
-	printf("errno: %s\n", modbus_strerror(errno));
-	usleep(MODBUS_MAX_PROC_TIME);
-
-	// set operating speed
-	src[1] = MOTOR_SPEED_UP;
-	src[0] = MOTOR_SPEED_LO;
-	n = modbus_write_registers(ctx, REG_MOTOR_SPEED + (off * 2), 2, src);
-	printf("errno: %s\n", modbus_strerror(errno));
-	usleep(MODBUS_MAX_PROC_TIME);
-
-	// set to absolute positioning
-	n = modbus_write_register(ctx, REG_MOTOR_ABS + (off * 1), 0x01);	
-	printf("errno: %s\n", modbus_strerror(errno));
-	usleep(MODBUS_MAX_PROC_TIME);	
-}
-
-void configure_single_motion(modbus_t* ctx, int slave, uint16_t pos_lo, uint16_t pos_up, int off)
-{
 	
 	uint16_t src[2];
 	// position is address 0x0402 and 0x0403 and specify position pos_up / pos_lo

@@ -1,21 +1,13 @@
 #include <iostream>
 #include <ros/ros.h>
 #include <par_kinematics/coord.h>
-#include <par_kinematics/kinematics.h>
+#include <par_kinematics/deltarobot.h>
 #include <par_trajectory_planning/angles.h>
-#include "/home/hpros/ros_packages/thp-pj2-08/par_trajectory_planning/include/par_trajectory_planning/config.h"
+#include "/home/wouter/ros_packages/thp-pj2-08/par_trajectory_planning/include/par_trajectory_planning/config.h"
 
 static const int QUEUE_SIZE = 1000;
-static Kinematics kinematic_solver;
+static DeltaRobot* deltaRobot;
 
-/**
- * @brief This function converts degrees to radians.
- * @param deg theta in degrees
- */
-double rad(double deg) 
-{
-    return double(deg/180 * pi);
-}
 
 /**
  * @brief This is the callback function responsible for publishing angles in radians.
@@ -26,24 +18,23 @@ bool IK_solver(par_kinematics::coord::Request& req,
 {
     std::cout << "Inverse kinematics request received." << std::endl;
     
-    if ( kinematic_solver.getPositionIK(req.x, req.y, req.z) )
-    {
-        std::cout << "[kinematics] existing point found." << std::endl;
-        std::cout << "[kinematics] theta1: " << kinematic_solver.getTheta1() << std::endl;
-        std::cout << "[kinematics] theta2: " << kinematic_solver.getTheta2() << std::endl;
-        std::cout << "[kinematics] theta3: " << kinematic_solver.getTheta3() << std::endl;
-        
-        res.angles[X] = rad(kinematic_solver.getTheta1());
-        res.angles[Y] = rad(kinematic_solver.getTheta2());
-        res.angles[Z] = rad(kinematic_solver.getTheta3());
-    }
-    else
-    {
-        std::cout << "[kinematics] non-existing point." << std::endl;
-        res.angles[X] = 0;
-        res.angles[Y] = 0;
-        res.angles[Z] = 0;
-    }
+	double x = req.x;
+	double y = req.y;
+	double z = req.z;
+    Point goal(x, y, z);
+	deltaRobot->moveto(goal);    
+	
+    std::cout << "deltaRobot->servo[X]: " << deltaRobot->servo[X] << std::endl;
+	std::cout << "deltaRobot->servo[Y]: " << deltaRobot->servo[Y] << std::endl;
+	std::cout << "deltaRobot->servo[Z]: " << deltaRobot->servo[Z] << std::endl;
+	
+	std::cout << "deltaRobot->servo[X] deg: " << Util::deg(deltaRobot->servo[X]) << std::endl;
+	std::cout << "deltaRobot->servo[Y] deg: " << Util::deg(deltaRobot->servo[Y]) << std::endl;
+	std::cout << "deltaRobot->servo[Z] deg: " << Util::deg(deltaRobot->servo[Z]) << std::endl;
+	res.angles[X] = Util::deg(deltaRobot->servo[X]);
+	res.angles[Y] = Util::deg(deltaRobot->servo[Y]);
+	res.angles[Z] = Util::deg(deltaRobot->servo[Z]); 
+    
 
     return true;    
 }
@@ -53,6 +44,7 @@ int main(int argc, char **argv)
     std::cout << "par_kinematics_subscriber." << std::endl;
     ros::init(argc, argv, "par_kinematics_subscriber");
     ros::NodeHandle n;
+    deltaRobot = new DeltaRobot(62, 150, 101.4, 46.19);
     
     ros::ServiceServer service = n.advertiseService("coord", IK_solver);
     
