@@ -2,7 +2,7 @@
 #include <ros/ros.h>
 #include <par_kinematics/coord.h>
 #include <par_trajectory_planning/commands.h>
-#include "/home/wouter/ros_packages/thp-pj2-08/par_trajectory_planning/include/par_trajectory_planning/config.h"
+#include <par_trajectory_planning/config.h>
 
 static const int QUEUE_SIZE = 1000;
 
