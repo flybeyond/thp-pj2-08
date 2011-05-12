@@ -12,6 +12,7 @@
   <depend package="roscpp"/>
   <depend package="par_kinematics"/>
   <depend package="par_trajectory_planning"/>
+  
 </package>
 
 
