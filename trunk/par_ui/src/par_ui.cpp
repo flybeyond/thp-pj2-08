@@ -41,7 +41,7 @@ void configure_single_motion(par_trajectory_planning::commands& cmd)
 	    cmd.abs_pos.push_back(pos_lo[Y]);
 
 	    cmd.abs_pos.push_back(pos_up[Z]);
-	    cmd.abs_pos.push_back(pos_up[Z]);	    
+	    cmd.abs_pos.push_back(pos_lo[Z]);	    
 	    
 	    i++;
 	}

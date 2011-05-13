@@ -13,14 +13,14 @@
 class StepperMotor : public Motor
 {
     public:
-	    /**
-         * @brief Constructor.
-	    */
-	    StepperMotor() { ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1); }
+	/**
+        * @brief Constructor.
+	*/
+	StepperMotor(modbus_t* cm) { ctx = cm; }
         /**
          * @brief Destructor.
          */        
-        virtual ~StepperMotor() { free(ctx); }
+        virtual ~StepperMotor() { /*free(ctx);*/ }
         /**
          * @brief Function for initializing the motor.
          */      
