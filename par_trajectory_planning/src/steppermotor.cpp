@@ -129,6 +129,7 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
 {
     std::cout << "StepperMotor::confPTPMotion" << std::endl;
     motions = cmd.xyz_pos.size() / 3;
+    std::cout << "motinos: " << motions << std::endl;
     
     int i;
     uint16_t pos_lo = 0;
