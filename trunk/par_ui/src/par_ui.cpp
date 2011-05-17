@@ -39,7 +39,7 @@ void read_configuration_file(ros::ServiceClient& coord_client, par_kinematics::c
     //cmd.abs_pos.clear();
     //cmd.xyz_pos.clear();
 
-	std::string file = "/home/wouter/ros_packages/thp-pj2-08/par_ui/config.xml";
+	std::string file = "/home/hpros/ros_packages/thp-pj2-08/par_ui/config.xml";
 	TiXmlDocument doc(file.c_str());
 	
 	if (doc.LoadFile())
@@ -200,7 +200,8 @@ int main(int argc, char **argv)
                 configure_PTP_motion(coord_client, coords, cmd);
             break;
 	        case MENU_RD_CONF_FILE:
-		        read_configuration_file(coord_client, coords, cmd);
+                cmd.option = MENU_RD_CONF_FILE;
+		read_configuration_file(coord_client, coords, cmd);
 	        break;
             case MENU_START_MOT:
                 cmd.option = MENU_START_MOT;
