@@ -181,6 +181,7 @@ void commands(const par_trajectory_planning::commands& cmd)
         case MENU_CONF_SIN_MOT:
             stepperMotor->confSingleMotion(cmd);
         break;
+	case MENU_RD_CONF_FILE:
         case MENU_CONF_PTP_MOT:
             stepperMotor->confPTPMotion(cmd);
         break;
