@@ -45,7 +45,7 @@ void read_configuration_file(ros::ServiceClient& coord_client, par_kinematics::c
 	if (doc.LoadFile())
 	{
 	    TiXmlElement *root = doc.RootElement();
-	    
+	    std::cout << "hallo";
         for(TiXmlElement* config = root->FirstChildElement(); config;
                 config = config->NextSiblingElement()) 
         {
@@ -193,7 +193,7 @@ int main(int argc, char **argv)
             break;
             case MENU_CONF_SIN_MOT:
                 cmd.option = MENU_CONF_SIN_MOT;
-		        configure_single_motion(cmd);
+		configure_single_motion(cmd);
             break;
             case MENU_CONF_PTP_MOT:
                 cmd.option = MENU_CONF_PTP_MOT;
@@ -202,7 +202,7 @@ int main(int argc, char **argv)
 	        case MENU_RD_CONF_FILE:
                 cmd.option = MENU_RD_CONF_FILE;
 		read_configuration_file(coord_client, coords, cmd);
-	        break;
+	    break;
             case MENU_START_MOT:
                 cmd.option = MENU_START_MOT;
             break;

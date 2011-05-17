@@ -50,6 +50,26 @@
    <X>0</X>
    <Y>201.5</Y>
    <Z>0</Z>
+  </row>
+  <row number="11">
+   <X>-10</X>
+   <Y>151.5</Y>
+   <Z>0</Z>
+  </row>
+  <row number="12">
+   <X>0</X>
+   <Y>151.5</Y>
+   <Z>0</Z>
+  </row>
+  <row number="13">
+   <X>0</X>
+   <Y>151.5</Y>
+   <Z>10</Z>
+  </row>
+  <row number="14">
+   <X>0</X>
+   <Y>201.5</Y>
+   <Z>0</Z>
   </row>             
  </option>
 </config>
