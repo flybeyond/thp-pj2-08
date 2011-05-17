@@ -196,8 +196,8 @@ void commands(const par_trajectory_planning::commands& cmd)
 int main(int argc, char **argv)
 {
     std::cout << "par_trajectory_planning." << std::endl;
-    //ros::init(argc, argv, "par_trajectory_planning", ros::init_options::NoSigintHandler);
-    //ros::NodeHandle n;
+    ros::init(argc, argv, "par_trajectory_planning");
+    ros::NodeHandle n;
     modbus_t* ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1); 
     //init_communication(ctx);
     //configure_PTP_motion(ctx);
@@ -213,9 +213,14 @@ int main(int argc, char **argv)
     //init_communication(ctx);
     //configure_PTP_motion(ctx);
     
-    //ros::Subscriber sub = n.subscribe("commands", QUEUE_SIZE, commands);
-
-    //ros::spin();
+    ros::Subscriber sub = n.subscribe("commands", QUEUE_SIZE, commands);
+    ros::Rate loop_rate(1);
+    
+    while (ros::ok())
+    {
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
 
     return 0;
 }
