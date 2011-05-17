@@ -92,14 +92,17 @@ void start_motion(modbus_t* ctx, int motions)
 	modbus_set_slave(ctx, 0);
         int n = modbus_write_register(ctx, 0x001E, 0x2000);
 	printf("errno: %s\n", modbus_strerror(errno));
+	std::cout << "--> [1] write result: " << n << std::endl;
 	usleep(MODBUS_MAX_BCAST_TIME);
 	// turn start input on
 	n = modbus_write_register(ctx, 0x001E, 0x2100 + i );
 	printf("errno: %s\n", modbus_strerror(errno));
+	std::cout << "--> [2] write result: " << n << std::endl;
 	usleep(MODBUS_MAX_BCAST_TIME);
 	// turn start input off
 	n = modbus_write_register(ctx, 0x001E, 0x2000 + i );
 	printf("errno: %s\n", modbus_strerror(errno));    
+	std::cout << "--> [3] write result: " << n << std::endl;
 	usleep(MODBUS_MAX_BCAST_TIME);
 
 	stat_ax01[0] = stat_ax02[0] = stat_ax03[0] = 0x0000;
@@ -109,15 +112,18 @@ void start_motion(modbus_t* ctx, int motions)
 	       (stat_ax03[0] && 0x2000) == 0 )
 	{
 		modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_01);
-		modbus_read_registers(ctx, 0x0020, 2, stat_ax01); 
+		n = modbus_read_registers(ctx, 0x0020, 2, stat_ax01); 
+		std::cout << "--> [1] read result: " << n << std::endl;
 		usleep(MODBUS_MAX_PROC_TIME);
 
 		modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_02);
-		modbus_read_registers(ctx, 0x0020, 2, stat_ax02); 
+		n = modbus_read_registers(ctx, 0x0020, 2, stat_ax02); 
+		std::cout << "--> [2] read result: " << n << std::endl;
 		usleep(MODBUS_MAX_PROC_TIME);
 
 		modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_03);
-		modbus_read_registers(ctx, 0x0020, 2, stat_ax03); 
+		n = modbus_read_registers(ctx, 0x0020, 2, stat_ax03); 
+		std::cout << "--> [3] read result: " << n << std::endl;
 		usleep(MODBUS_MAX_PROC_TIME);
 		// this is zero if the motor is moving
 	}
