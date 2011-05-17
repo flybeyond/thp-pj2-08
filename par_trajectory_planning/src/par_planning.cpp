@@ -196,31 +196,33 @@ void commands(const par_trajectory_planning::commands& cmd)
 int main(int argc, char **argv)
 {
     std::cout << "par_trajectory_planning." << std::endl;
-    ros::init(argc, argv, "par_trajectory_planning");
+    ros::init(argc, argv, "par_trajectory_planning", ros::init_options::NoSigintHandler | ros::init_options::NoRosout);
     ros::NodeHandle n;
     modbus_t* ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1); 
     //init_communication(ctx);
     //configure_PTP_motion(ctx);
-    par_trajectory_planning::commands cmd;
-    cmd.xyz_pos.clear();
+    //par_trajectory_planning::commands cmd;
+    //cmd.xyz_pos.clear();
     stepperMotor = new StepperMotor(ctx);
-    stepperMotor->initCom();
-    cmd.xyz_pos.push_back(-41.5733);
-    cmd.xyz_pos.push_back(-41.5733);
-    cmd.xyz_pos.push_back(-41.5733);
-    stepperMotor->confPTPMotion(cmd);
+    //stepperMotor->initCom();
+    //cmd.xyz_pos.push_back(-41.5733);
+    //cmd.xyz_pos.push_back(-41.5733);
+    //cmd.xyz_pos.push_back(-41.5733);
+    //stepperMotor->confPTPMotion(cmd);
     //stepperMotor->start();
     //init_communication(ctx);
     //configure_PTP_motion(ctx);
+	ros::Subscriber sub = n.subscribe("commands", QUEUE_SIZE, commands);
+    ros::spin();
     
-    ros::Subscriber sub = n.subscribe("commands", QUEUE_SIZE, commands);
-    ros::Rate loop_rate(1);
+
+    //ros::Rate loop_rate(1);
     
-    while (ros::ok())
-    {
-        ros::spinOnce();
-        loop_rate.sleep();
-    }
+    //while (ros::ok())
+    //{
+    //    ros::spinOnce();
+    //    loop_rate.sleep();
+   // }
 
     return 0;
 }

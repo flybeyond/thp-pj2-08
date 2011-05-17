@@ -3,8 +3,16 @@
 #include <par_kinematics/coord.h>
 #include <par_trajectory_planning/commands.h>
 #include <par_trajectory_planning/config.h>
+#include <tinyxml/tinyxml.h>
+
 
 static const int QUEUE_SIZE = 1000;
+
+void read_configuration_file()
+{
+	std::string path;
+	std::cout << "Enter path to file: " << std::endl;
+}
 
 void configure_single_motion(par_trajectory_planning::commands& cmd)
 {
@@ -92,6 +100,7 @@ int menu()
     std::cout << "[" << MENU_INIT_MOTOR     << "] init motors"              << std::endl;
     std::cout << "[" << MENU_CONF_SIN_MOT   << "] configure single motion"  << std::endl;
     std::cout << "[" << MENU_CONF_PTP_MOT   << "] configure PTP motion"     << std::endl;
+    std::cout << "[" << MENU_RD_CONF_FILE   << "] read configuration file"  << std::endl;
     std::cout << "[" << MENU_START_MOT      << "] start motion"             << std::endl;
     std::cout << "[" << MENU_EXIT           << "] exit"                     << std::endl;
     
@@ -131,12 +140,14 @@ int main(int argc, char **argv)
                 cmd.option = MENU_CONF_PTP_MOT;
                 configure_PTP_motion(coord_client, coords, cmd);
             break;
+	    case MENU_RD_CONF_FILE:
+		read_configuration_file();
+	    break;
             case MENU_START_MOT:
                 cmd.option = MENU_START_MOT;
             break;
             case MENU_EXIT:
                 cmd.option = MENU_EXIT;
-                std::cout << "Bye." << std::endl;
             break;
         }
         chatter_pub_cmd.publish(cmd);

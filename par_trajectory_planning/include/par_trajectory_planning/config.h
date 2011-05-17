@@ -11,7 +11,8 @@ const int MENU_INIT_COMM    = 1;
 const int MENU_INIT_MOTOR   = 2;
 const int MENU_CONF_SIN_MOT = 3;
 const int MENU_CONF_PTP_MOT = 4;
-const int MENU_START_MOT    = 5;
+const int MENU_RD_CONF_FILE = 5;
+const int MENU_START_MOT    = 6;
 const int MENU_EXIT         = 0;
 
 const int MODBUS_MAX_PROC_TIME  = 4000; // in usec
