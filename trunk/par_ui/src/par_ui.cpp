@@ -1,4 +1,7 @@
 #include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 #include <ros/ros.h>
 #include <par_kinematics/coord.h>
 #include <par_trajectory_planning/commands.h>
@@ -8,10 +11,68 @@
 
 static const int QUEUE_SIZE = 1000;
 
-void read_configuration_file()
+void push_angles(ros::ServiceClient& coord_client, par_kinematics::coord& coords,
+			  par_trajectory_planning::commands& cmd)
 {
-	std::string path;
-	std::cout << "Enter path to file: " << std::endl;
+        if (coord_client.call(coords))
+        {
+            std::cout << "success." << std::endl;
+        }
+        else
+        {
+            std::cout << "failure." << std::endl;
+        }
+        
+        cmd.xyz_pos.push_back(coords.response.angles[X]);
+        cmd.xyz_pos.push_back(coords.response.angles[Y]);
+        cmd.xyz_pos.push_back(coords.response.angles[Z]);
+        
+        std::cout << "coords.request.x: " << coords.request.x << std::endl;
+        std::cout << "coords.request.y: " << coords.request.y << std::endl;
+        std::cout << "coords.request.z: " << coords.request.z << std::endl;        
+}
+
+void read_configuration_file(ros::ServiceClient& coord_client, par_kinematics::coord& coords,
+			  par_trajectory_planning::commands& cmd)
+{
+    // important; if not emptied before use strange things can happen.
+    //cmd.abs_pos.clear();
+    //cmd.xyz_pos.clear();
+
+	std::string file = "/home/wouter/ros_packages/thp-pj2-08/par_ui/config.xml";
+	TiXmlDocument doc(file.c_str());
+	
+	if (doc.LoadFile())
+	{
+	    TiXmlElement *root = doc.RootElement();
+	    
+        for(TiXmlElement* config = root->FirstChildElement(); config;
+                config = config->NextSiblingElement()) 
+        {
+            std::cout << "option #: ";
+            std::cout << config->Attribute("number") << std::endl;
+            
+            // should check the number with a switch or something similar. 
+            // then do appropriate processing.
+            
+            for (TiXmlElement* row = config->FirstChildElement(); row;
+                row = row->NextSiblingElement())
+            {
+                std::cout << "row #: "; 
+                std::cout << row->Attribute("number") << std::endl;
+                
+                std::cout << "[X] = " << row->FirstChild("X")->FirstChild()->ValueStr() << std::endl;
+                std::cout << "[Y] = " << row->FirstChild("Y")->FirstChild()->ValueStr() << std::endl;
+                std::cout << "[Z] = " << row->FirstChild("Z")->FirstChild()->ValueStr() << std::endl;
+
+                coords.request.x = atof( row->FirstChild("X")->FirstChild()->ValueStr().c_str() );
+                coords.request.y = atof( row->FirstChild("Y")->FirstChild()->ValueStr().c_str() );
+                coords.request.z = atof( row->FirstChild("Z")->FirstChild()->ValueStr().c_str() );
+                
+                push_angles(coord_client, coords, cmd);
+            }
+        }	    
+	}
 }
 
 void configure_single_motion(par_trajectory_planning::commands& cmd)
@@ -73,22 +134,20 @@ void configure_PTP_motion(ros::ServiceClient& coord_client, par_kinematics::coor
         std::cout << "Z: ";
         std::cin >> coords.request.z;
         
-        if (coord_client.call(coords))
+        /*if (coord_client.call(coords))
         {
             std::cout << "success." << std::endl;
         }
         else
         {
             std::cout << "failure." << std::endl;
-        }
+        }*/
         
-        cmd.xyz_pos.push_back(coords.response.angles[X]);
+/*        cmd.xyz_pos.push_back(coords.response.angles[X]);
         cmd.xyz_pos.push_back(coords.response.angles[Y]);
         cmd.xyz_pos.push_back(coords.response.angles[Z]);
-
-        std::cout << "coords.request.x: " << coords.request.x << std::endl;
-        std::cout << "coords.request.y: " << coords.request.y << std::endl;
-        std::cout << "coords.request.z: " << coords.request.z << std::endl;
+*/
+        push_angles(coord_client, coords, cmd);
         
         i++;
     }
@@ -96,13 +155,13 @@ void configure_PTP_motion(ros::ServiceClient& coord_client, par_kinematics::coor
 
 int menu()
 {
-    std::cout << "[" << MENU_INIT_COMM      << "] init communication"       << std::endl;
-    std::cout << "[" << MENU_INIT_MOTOR     << "] init motors"              << std::endl;
-    std::cout << "[" << MENU_CONF_SIN_MOT   << "] configure single motion"  << std::endl;
-    std::cout << "[" << MENU_CONF_PTP_MOT   << "] configure PTP motion"     << std::endl;
-    std::cout << "[" << MENU_RD_CONF_FILE   << "] read configuration file"  << std::endl;
-    std::cout << "[" << MENU_START_MOT      << "] start motion"             << std::endl;
-    std::cout << "[" << MENU_EXIT           << "] exit"                     << std::endl;
+    std::cout << "[" << MENU_INIT_COMM      << "] init communication"           << std::endl;
+    std::cout << "[" << MENU_INIT_MOTOR     << "] init motors"                  << std::endl;
+    std::cout << "[" << MENU_CONF_SIN_MOT   << "] configure single abs motion"  << std::endl;
+    std::cout << "[" << MENU_CONF_PTP_MOT   << "] configure PTP motion"         << std::endl;
+    std::cout << "[" << MENU_RD_CONF_FILE   << "] read configuration file"      << std::endl;
+    std::cout << "[" << MENU_START_MOT      << "] start motion"                 << std::endl;
+    std::cout << "[" << MENU_EXIT           << "] exit"                         << std::endl;
     
     int x = 0;
     std::cin >> x;
@@ -140,9 +199,9 @@ int main(int argc, char **argv)
                 cmd.option = MENU_CONF_PTP_MOT;
                 configure_PTP_motion(coord_client, coords, cmd);
             break;
-	    case MENU_RD_CONF_FILE:
-		read_configuration_file();
-	    break;
+	        case MENU_RD_CONF_FILE:
+		        read_configuration_file(coord_client, coords, cmd);
+	        break;
             case MENU_START_MOT:
                 cmd.option = MENU_START_MOT;
             break;
