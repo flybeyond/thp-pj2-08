@@ -16,7 +16,7 @@
 
 static const int QUEUE_SIZE = 1000;
 
-std::string file = "/home/wouter/ros_packages/thp-pj2-08/par_ui/config.xml";
+std::string file = "/etc/ROS/config.xml";
 
 int main(int argc, char **argv)
 {

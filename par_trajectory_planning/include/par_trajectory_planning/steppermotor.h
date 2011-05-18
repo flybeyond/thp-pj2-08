@@ -65,5 +65,6 @@ class StepperMotor : public Motor
 
         modbus_t* ctx;
         int motions;
+        int repeat_motions;
 };
 #endif
