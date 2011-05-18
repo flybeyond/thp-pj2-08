@@ -9,14 +9,13 @@
 #ifndef _STEPPERMOTOR_H_
 #define _STEPPERMOTOR_H_
 
-
 class StepperMotor : public Motor
 {
     public:
-	/**
+	    /**
         * @brief Constructor.
-	*/
-	StepperMotor(modbus_t* cm) { ctx = cm; }
+	    */
+	    StepperMotor(modbus_t* cm) { ctx = cm; }
         /**
          * @brief Destructor.
          */        
@@ -27,6 +26,7 @@ class StepperMotor : public Motor
         virtual void init();
         /**
          * @brief Function for starting the motor.
+         * @param cmd Object with instructions.
          */
         virtual void start();
         /**
@@ -39,10 +39,12 @@ class StepperMotor : public Motor
         void initCom();        
         /** 
          * @brief Function for configuring single motions.
+         * @param cmd Object with instructions.
          */
         void confSingleMotion(const par_trajectory_planning::commands& cmd);
         /**
          * @brief Function for configuring PTP motions.
+         * @param cmd Object with instructions.
          */
         void confPTPMotion(const par_trajectory_planning::commands& cmd);
         /**
