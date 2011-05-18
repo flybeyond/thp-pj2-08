@@ -23,9 +23,11 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
-#rosbuild_add_library(kinematics src/kinematics.cpp)
+rosbuild_add_library(deltarobot src/deltarobot.cpp)
+rosbuild_add_library(deltarobot src/point.cpp)
+rosbuild_add_library(deltarobot src/armmodel.cpp)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 rosbuild_add_executable(par_kinematics src/par_kinematics.cpp)
-#target_link_libraries(par_kinematics kinematics)
+target_link_libraries(par_kinematics deltarobot)
 #target_link_libraries(example ${PROJECT_NAME})
