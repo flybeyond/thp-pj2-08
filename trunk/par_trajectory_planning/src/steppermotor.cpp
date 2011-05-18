@@ -14,52 +14,58 @@ void StepperMotor::start()
 {
     std::cout << "StepperMotor::start()" << std::endl;
     uint16_t stat_ax01[2], stat_ax02[2], stat_ax03[3];
-    int i, n;
+    int i, n, j;
+    
+    j = 0;
+    std::cout << "REPEAT MOTIONS: " << repeat_motions << std::endl;
     std::cout << "MOTIONS: " << motions << std::endl;
-    for(i=1; i<=motions; i++)
+    return;
+    while(j < repeat_motions)
     {
-	    modbus_set_slave(ctx, 0);
-        n = modbus_write_register(ctx, 0x001E, 0x2000);
-	    printf("errno: %s\n", modbus_strerror(errno));
-		std::cout << "--> [1] write result: " << n << std::endl;
-	    usleep(MODBUS_MAX_BCAST_TIME);
-	    // turn start input on
-	    n = modbus_write_register(ctx, 0x001E, 0x2100 + i );
-	    printf("errno: %s\n", modbus_strerror(errno));
-		std::cout << "--> [2] write result: " << n << std::endl;
-	    usleep(MODBUS_MAX_BCAST_TIME);
-	    // turn start input off
-	    n = modbus_write_register(ctx, 0x001E, 0x2000 + i );
-		std::cout << "--> [3] write result: " << n << std::endl;
-	    printf("errno: %s\n", modbus_strerror(errno));    
-	    usleep(MODBUS_MAX_BCAST_TIME);
+        for(i=1; i<=motions; i++)
+        {
+	        modbus_set_slave(ctx, 0);
+            n = modbus_write_register(ctx, 0x001E, 0x2000);
+	        printf("errno: %s\n", modbus_strerror(errno));
+		    std::cout << "--> [1] write result: " << n << std::endl;
+	        usleep(MODBUS_MAX_BCAST_TIME);
+	        // turn start input on
+	        n = modbus_write_register(ctx, 0x001E, 0x2100 + i );
+	        printf("errno: %s\n", modbus_strerror(errno));
+		    std::cout << "--> [2] write result: " << n << std::endl;
+	        usleep(MODBUS_MAX_BCAST_TIME);
+	        // turn start input off
+	        n = modbus_write_register(ctx, 0x001E, 0x2000 + i );
+		    std::cout << "--> [3] write result: " << n << std::endl;
+	        printf("errno: %s\n", modbus_strerror(errno));    
+	        usleep(MODBUS_MAX_BCAST_TIME);
 
-	    stat_ax01[0] = stat_ax02[0] = stat_ax03[0] = 0x0000;
-	    stat_ax01[1] = stat_ax02[1] = stat_ax03[1] = 0x0000;
-	    while( (stat_ax01[0] & 0x2000) == 0 ||
-	           (stat_ax02[0] && 0x2000) == 0 ||
-	           (stat_ax03[0] && 0x2000) == 0 )
-	    {
-		    modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_01);
-		    n = modbus_read_registers(ctx, 0x0020, 2, stat_ax01); 
-			std::cout << "--> [1] read result: " << n << std::endl;
-		    usleep(MODBUS_MAX_PROC_TIME);
+	        stat_ax01[0] = stat_ax02[0] = stat_ax03[0] = 0x0000;
+	        stat_ax01[1] = stat_ax02[1] = stat_ax03[1] = 0x0000;
+	        while( (stat_ax01[0] & 0x2000) == 0 ||
+	               (stat_ax02[0] && 0x2000) == 0 ||
+	               (stat_ax03[0] && 0x2000) == 0 )
+	        {
+		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_01);
+		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax01); 
+			    std::cout << "--> [1] read result: " << n << std::endl;
+		        usleep(MODBUS_MAX_PROC_TIME);
 
-		    modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_02);
-		    n = modbus_read_registers(ctx, 0x0020, 2, stat_ax02); 
-			std::cout << "--> [2] read result: " << n << std::endl;
-		    usleep(MODBUS_MAX_PROC_TIME);
+		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_02);
+		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax02); 
+			    std::cout << "--> [2] read result: " << n << std::endl;
+		        usleep(MODBUS_MAX_PROC_TIME);
 
-		    modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_03);
-		    n = modbus_read_registers(ctx, 0x0020, 2, stat_ax03); 
-			std::cout << "--> [3] read result: " << n << std::endl;
-		    usleep(MODBUS_MAX_PROC_TIME);
-		    // this is zero if the motor is moving
-	    }
-	    std::cout << "motor can receive new command\n" << std::endl;
-    }  
-    //modbus_flush(ctx);
-    printf("errno: %s\n", modbus_strerror(errno));
+		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_03);
+		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax03); 
+			    std::cout << "--> [3] read result: " << n << std::endl;
+		        usleep(MODBUS_MAX_PROC_TIME);
+		        // this is zero if the motor is moving
+	        }
+	        std::cout << "motor can receive new command\n" << std::endl;
+        }  
+        j++;
+    }
 }
 
 void StepperMotor::stop()
@@ -69,8 +75,7 @@ void StepperMotor::stop()
 
 void StepperMotor::initCom()
 {
-	//ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1);
-    	std::cout << "StepperMotor::initCom()" << std::endl;
+    std::cout << "StepperMotor::initCom()" << std::endl;
 	if (ctx == NULL)
 	{
 		std::cout << "StepperMotor::init(): unable to create the libmodbus context." << std::endl;
@@ -131,11 +136,16 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
     motions = cmd.xyz_pos.size() / 3;
     std::cout << "motions: " << motions << std::endl;
     
+    repeat_motions = cmd.repeat_motions;
+    
     int i;
     uint16_t pos_lo = 0;
     uint16_t pos_up = 0;
     for(i=0; i<motions; i++)  
     {
+        std::cout << " x : " << cmd.xyz_pos[ 0 + (i * 3) ] << std::endl;
+        std::cout << " y : " << cmd.xyz_pos[ 1 + (i * 3) ] << std::endl;
+        std::cout << " z : " << cmd.xyz_pos[ 2 + (i * 3) ] << std::endl;
         pos_lo = angleToStep( cmd.xyz_pos[ 0 + (i * 3) ] );
         pos_up = ( pos_lo & 0x8000 ) ? 0xFFFF : 0x00;
         initSingleMotion(MODBUS_SLAVE_ADDR_01, pos_up, pos_lo, i + 1); // X
@@ -143,12 +153,12 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
         
         pos_lo = angleToStep( cmd.xyz_pos[ 1 + (i * 3) ] );
         pos_up = ( pos_lo & 0x8000 ) ? 0xFFFF : 0x00;
-        initSingleMotion(MODBUS_SLAVE_ADDR_02, pos_up, pos_lo, i + 1); // Y
+        initSingleMotion(MODBUS_SLAVE_ADDR_02, pos_up, pos_lo, i + 1); // Y is eigenlijk Z
 	    std::cout << "Y: " << pos_lo << std::endl;
         
         pos_lo = angleToStep( cmd.xyz_pos[ 2 + (i * 3) ] );
         pos_up = ( pos_lo & 0x8000 ) ? 0xFFFF : 0x00;
-        initSingleMotion(MODBUS_SLAVE_ADDR_03, pos_up, pos_lo, i + 1); // Z
+        initSingleMotion(MODBUS_SLAVE_ADDR_03, pos_up, pos_lo, i + 1); // Z is eigenlijk Y
 	    std::cout << "Z: " << pos_lo << std::endl;
     }
 }

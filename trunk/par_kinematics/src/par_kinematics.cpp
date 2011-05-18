@@ -20,7 +20,9 @@ bool IK_solver(par_kinematics::coord::Request& req,
 	double x = req.x;
 	double y = req.y;
 	double z = req.z;
-    Point goal(x, y, z);
+	// y and z are reversed, yes, this is nasty.
+	// for now, it's a quick fix that works as expected. 
+    Point goal(x, z, y);
 	deltaRobot->moveto(goal);    
 	
     std::cout << "deltaRobot->servo[X]: " << deltaRobot->servo[X] << std::endl;

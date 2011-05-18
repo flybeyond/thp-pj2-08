@@ -50,6 +50,10 @@ void Config::parse_xml_ptp()
                 {
                     cmd.repeat_motions = atoi( node->FirstChild()->ValueStr().c_str() );
                 }
+                else
+                {
+                    cmd.repeat_motions = 1;
+                }
             }
             
             for (TiXmlElement* row = config->FirstChildElement(); row;
