@@ -1,6 +1,16 @@
 <?xml version="1.0" ?>
 <config>
+
+ <option number="1">
+ </option>
+ 
+ <option number="2">
+  <speed_up>1234</speed_up>
+  <speed_lo>5678</speed_lo>
+ </option>
+ 
  <option number="4">
+  <repeat_motions>12</repeat_motions>
   <row number="1">
    <X>0</X>
    <Y>151.5</Y>

@@ -25,9 +25,13 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
+rosbuild_add_library(par_utils src/par_utils.cpp)
+rosbuild_add_library(par_config src/par_config.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 rosbuild_add_executable(par_ui src/par_ui.cpp)
+target_link_libraries(par_ui par_utils)
+target_link_libraries(par_ui par_config)

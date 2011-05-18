@@ -19,7 +19,7 @@ void StepperMotor::start()
     for(i=1; i<=motions; i++)
     {
 	    modbus_set_slave(ctx, 0);
-            n = modbus_write_register(ctx, 0x001E, 0x2000);
+        n = modbus_write_register(ctx, 0x001E, 0x2000);
 	    printf("errno: %s\n", modbus_strerror(errno));
 		std::cout << "--> [1] write result: " << n << std::endl;
 	    usleep(MODBUS_MAX_BCAST_TIME);
@@ -109,17 +109,17 @@ void StepperMotor::confSingleMotion(const par_trajectory_planning::commands& cmd
     {
         // pos up X
         // pos lo X
-	std::cout << "FIRST COMMAND: " << cmd.abs_pos[ 0 + (i * 6) ] << ", " << cmd.abs_pos[ 1 + (i * 6) ] << std::endl;
+	    std::cout << "FIRST COMMAND: " << cmd.abs_pos[ 0 + (i * 6) ] << ", " << cmd.abs_pos[ 1 + (i * 6) ] << std::endl;
         initSingleMotion(MODBUS_SLAVE_ADDR_01, cmd.abs_pos[ 0 + (i * 6) ], cmd.abs_pos[ 1 + (i * 6) ], i + 1);    
 
         // pos up Y
         // pos lo Y
-	std::cout << "SECOND COMMAND: " << cmd.abs_pos[ 2 + (i * 6) ] << ", " << cmd.abs_pos[ 3 + (i * 6) ] << std::endl;
+	    std::cout << "SECOND COMMAND: " << cmd.abs_pos[ 2 + (i * 6) ] << ", " << cmd.abs_pos[ 3 + (i * 6) ] << std::endl;
         initSingleMotion(MODBUS_SLAVE_ADDR_02, cmd.abs_pos[ 2 + (i * 6) ], cmd.abs_pos[ 3 + (i * 6) ], i + 1); 
 
         // pos up Z
         // pos lo Z
-	std::cout << "THIRD COMMAND: " << cmd.abs_pos[ 4 + (i * 6) ] << ", " << cmd.abs_pos[ 5 + (i * 6) ] << std::endl;
+	    std::cout << "THIRD COMMAND: " << cmd.abs_pos[ 4 + (i * 6) ] << ", " << cmd.abs_pos[ 5 + (i * 6) ] << std::endl;
         initSingleMotion(MODBUS_SLAVE_ADDR_03, cmd.abs_pos[ 4 + (i * 6) ], cmd.abs_pos[ 5 + (i * 6) ], i + 1); 
     }
 
@@ -129,7 +129,7 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
 {
     std::cout << "StepperMotor::confPTPMotion" << std::endl;
     motions = cmd.xyz_pos.size() / 3;
-    std::cout << "motinos: " << motions << std::endl;
+    std::cout << "motions: " << motions << std::endl;
     
     int i;
     uint16_t pos_lo = 0;
@@ -144,12 +144,12 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
         pos_lo = angleToStep( cmd.xyz_pos[ 1 + (i * 3) ] );
         pos_up = ( pos_lo & 0x8000 ) ? 0xFFFF : 0x00;
         initSingleMotion(MODBUS_SLAVE_ADDR_02, pos_up, pos_lo, i + 1); // Y
-	std::cout << "Y: " << pos_lo << std::endl;
+	    std::cout << "Y: " << pos_lo << std::endl;
         
         pos_lo = angleToStep( cmd.xyz_pos[ 2 + (i * 3) ] );
         pos_up = ( pos_lo & 0x8000 ) ? 0xFFFF : 0x00;
         initSingleMotion(MODBUS_SLAVE_ADDR_03, pos_up, pos_lo, i + 1); // Z
-	std::cout << "Z: " << pos_lo << std::endl;
+	    std::cout << "Z: " << pos_lo << std::endl;
     }
 }
 
