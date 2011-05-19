@@ -171,7 +171,7 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
 	{
 		initSingleMotion(MODBUS_SLAVE_ADDR_01, pos_up[X], pos_lo[X], i + 1); // X
 		initSingleMotion(MODBUS_SLAVE_ADDR_02, pos_up[Y], pos_lo[Y], i + 1); // Y
-        	initSingleMotion(MODBUS_SLAVE_ADDR_03, pos_up[Z], pos_lo[Z], i + 1); // Z	
+        initSingleMotion(MODBUS_SLAVE_ADDR_03, pos_up[Z], pos_lo[Z], i + 1); // Z	
 	}
     }
 }
@@ -215,6 +215,20 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	n = modbus_write_registers(ctx, REG_MOTOR_SPEED + (off * 2), 2, src);
 	printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);
+	
+	// set acceleration
+	src[1] = 0x9C40;
+	src[0] = 0x0000;
+	n = modbus_write_registers(ctx, REG_MOTOR_ACC + (off * 2), 2, src);
+	printf("errno: %s\n", modbus_strerror(errno));
+	usleep(MODBUS_MAX_PROC_TIME);	
+	
+	// set deceleration
+	src[1] = 0x9C40;
+	src[0] = 0x0000;
+	n = modbus_write_registers(ctx, REG_MOTOR_DEC + (off * 2), 2, src);
+	printf("errno: %s\n", modbus_strerror(errno));
+	usleep(MODBUS_MAX_PROC_TIME);		
 
 	// set to absolute positioning
 	n = modbus_write_register(ctx, REG_MOTOR_ABS + (off * 1), 0x01);	

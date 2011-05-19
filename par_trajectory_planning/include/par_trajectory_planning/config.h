@@ -29,6 +29,8 @@ const double   MOTOR_STEP_ANGLE = 0.072;
 
 const uint16_t REG_MOTOR_POS   = 0x0400; // 2 bytes per offset 
 const uint16_t REG_MOTOR_SPEED = 0x0500; // 2 bytes per offset
+const uint16_t REG_MOTOR_ACC   = 0x0900; // 2 bytes per offset
+const uint16_t REG_MOTOR_DEC   = 0x0A00; // 2 bytes per offset
 const uint16_t REG_MOTOR_ABS   = 0x0600; // 1 byte per offset
 
 const int XYZ_DIV_FACTOR = 16;
