@@ -37,6 +37,10 @@ void commands(const par_trajectory_planning::commands& cmd)
         case MENU_START_MOT:
             stepperMotor->start();
         break;
+	case MENU_START_HM:
+	     stepperMotor->confSingleMotion(cmd);
+	     stepperMotor->start();
+	break;
         case MENU_EXIT:
             stepperMotor->exit();
         break;  
