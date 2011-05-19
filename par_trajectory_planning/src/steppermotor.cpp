@@ -48,17 +48,17 @@ void StepperMotor::start()
 	        {
 		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_01);
 		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax01); 
-			    std::cout << "--> [1] read result: " << n << std::endl;
+			std::cout << "--> [1] read result: " << n << std::endl;
 		        usleep(MODBUS_MAX_PROC_TIME);
 
 		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_02);
 		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax02); 
-			    std::cout << "--> [2] read result: " << n << std::endl;
+			std::cout << "--> [2] read result: " << n << std::endl;
 		        usleep(MODBUS_MAX_PROC_TIME);
 
 		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_03);
 		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax03); 
-			    std::cout << "--> [3] read result: " << n << std::endl;
+			std::cout << "--> [3] read result: " << n << std::endl;
 		        usleep(MODBUS_MAX_PROC_TIME);
 		        // this is zero if the motor is moving
 	        }
@@ -115,17 +115,17 @@ void StepperMotor::confSingleMotion(const par_trajectory_planning::commands& cmd
     {
         // pos up X
         // pos lo X
-	    std::cout << "FIRST COMMAND: " << cmd.abs_pos[ 0 + (i * 6) ] << ", " << cmd.abs_pos[ 1 + (i * 6) ] << std::endl;
+	std::cout << "FIRST COMMAND: " << cmd.abs_pos[ 0 + (i * 6) ] << ", " << cmd.abs_pos[ 1 + (i * 6) ] << std::endl;
         initSingleMotion(MODBUS_SLAVE_ADDR_01, cmd.abs_pos[ 0 + (i * 6) ], cmd.abs_pos[ 1 + (i * 6) ], i + 1);    
 
         // pos up Y
         // pos lo Y
-	    std::cout << "SECOND COMMAND: " << cmd.abs_pos[ 2 + (i * 6) ] << ", " << cmd.abs_pos[ 3 + (i * 6) ] << std::endl;
+	std::cout << "SECOND COMMAND: " << cmd.abs_pos[ 2 + (i * 6) ] << ", " << cmd.abs_pos[ 3 + (i * 6) ] << std::endl;
         initSingleMotion(MODBUS_SLAVE_ADDR_02, cmd.abs_pos[ 2 + (i * 6) ], cmd.abs_pos[ 3 + (i * 6) ], i + 1); 
 
         // pos up Z
         // pos lo Z
-	    std::cout << "THIRD COMMAND: " << cmd.abs_pos[ 4 + (i * 6) ] << ", " << cmd.abs_pos[ 5 + (i * 6) ] << std::endl;
+	std::cout << "THIRD COMMAND: " << cmd.abs_pos[ 4 + (i * 6) ] << ", " << cmd.abs_pos[ 5 + (i * 6) ] << std::endl;
         initSingleMotion(MODBUS_SLAVE_ADDR_03, cmd.abs_pos[ 4 + (i * 6) ], cmd.abs_pos[ 5 + (i * 6) ], i + 1); 
     }
 
@@ -217,15 +217,15 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	usleep(MODBUS_MAX_PROC_TIME);
 	
 	// set acceleration
-	src[1] = 0x9C40;
-	src[0] = 0x0000;
+	src[1] = 0x4240;
+	src[0] = 0x000F;
 	n = modbus_write_registers(ctx, REG_MOTOR_ACC + (off * 2), 2, src);
 	printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);	
 	
 	// set deceleration
-	src[1] = 0x9C40;
-	src[0] = 0x0000;
+	src[1] = 0x4240;
+	src[0] = 0x000F;
 	n = modbus_write_registers(ctx, REG_MOTOR_DEC + (off * 2), 2, src);
 	printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);		

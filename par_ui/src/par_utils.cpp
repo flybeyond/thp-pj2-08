@@ -98,6 +98,7 @@ int menu()
     std::cout << "[" << MENU_CONF_PTP_MOT   << "] configure PTP motion"         << std::endl;
     std::cout << "[" << MENU_RD_CONF_FILE   << "] read configuration file"      << std::endl;
     std::cout << "[" << MENU_START_MOT      << "] start motion"                 << std::endl;
+    std::cout << "[" << MENU_START_HM	    << "] start homing"			<< std::endl;
     std::cout << "[" << MENU_EXIT           << "] exit"                         << std::endl;
     
     int x = 0;
