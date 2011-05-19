@@ -56,7 +56,7 @@ class StepperMotor : public Motor
          * @param x Angle in degrees.
          * @return uint16_t n amount of motor steps.
          */
-        uint16_t angleToStep(double x);
+        uint16_t angleToStep(double x, bool& invalid_motion);
     private:
 	    /**
 	    * Helper function for initialization of single motion.
