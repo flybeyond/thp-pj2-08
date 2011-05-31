@@ -20,8 +20,6 @@ void StepperMotor::start()
     std::cout << "REPEAT MOTIONS: " << repeat_motions << std::endl;
     std::cout << "MOTIONS: " << motions << std::endl;
 
-    if (is_test) motions = 1;
-
     while(j < repeat_motions)
     {
         for(i=1; i<=motions; i++)
@@ -157,11 +155,11 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
         
         pos_lo[Y] = angleToStep( cmd.xyz_pos[ 1 + (i * 3) ], invalid_motion[Y] );
         pos_up[Y] = ( pos_lo[Y] & 0x8000 ) ? 0xFFFF : 0x00;
-	std::cout << "Y: " << pos_lo[Y] << std::endl;
+	    std::cout << "Y: " << pos_lo[Y] << std::endl;
         
         pos_lo[Z] = angleToStep( cmd.xyz_pos[ 2 + (i * 3) ], invalid_motion[Z] );
         pos_up[Z] = ( pos_lo[Z] & 0x8000 ) ? 0xFFFF : 0x00;
-	std::cout << "Z: " << pos_lo[Z] << std::endl;
+	    std::cout << "Z: " << pos_lo[Z] << std::endl;
 
 	if (invalid_motion[X] ||
             invalid_motion[Y] ||
