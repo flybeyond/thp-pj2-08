@@ -71,6 +71,10 @@ int main(int argc, char **argv)
 	            cmd.abs_pos.push_back(0);
 	            chatter_pub_cmd.publish(cmd);
 	        break;
+	    case MENU_START_TEST:
+		cmd.option = MENU_START_TEST;
+		chatter_pub_cmd.publish(cmd);
+		break;
             case MENU_EXIT:
                 cmd.option = MENU_EXIT;
                 chatter_pub_cmd.publish(cmd);

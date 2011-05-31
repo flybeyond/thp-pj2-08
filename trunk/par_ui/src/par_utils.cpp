@@ -103,7 +103,7 @@ void pick_configuration_file(const boost::filesystem::path& directory, std::stri
         {
             if (! boost::filesystem::is_directory( *iter ) )
             {
-                std::cout << "[" << i << "]" << " " << iter->path().file_string() << std::endl;
+                std::cout << "[" << i++ << "]" << " " << iter->path().file_string() << std::endl;
                 files.push_back( iter->path().file_string() );
             }
         }
