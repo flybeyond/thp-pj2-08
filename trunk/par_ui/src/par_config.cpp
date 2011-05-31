@@ -11,10 +11,9 @@
 #include <par_trajectory_planning/config.h>
 #include <tinyxml/tinyxml.h>
 
-Config::Config(std::string& file, ros::ServiceClient& coord_client, par_kinematics::coord& coords,
+Config::Config(ros::ServiceClient& coord_client, par_kinematics::coord& coords,
 			  par_trajectory_planning::commands& cmd, ros::Publisher& chatter_pub_cmd)
 {
-    this->file = file;
     this->coord_client = coord_client;
     this->coords = coords;
     this->cmd = cmd;
@@ -76,12 +75,13 @@ void Config::parse_xml_start()
 {
 }
 
-void Config::read()
+void Config::read(const std::string& file)
 {
     cmd.abs_pos.clear();
     cmd.xyz_pos.clear();
 
 	TiXmlDocument doc(file.c_str());
+	std::cout << "file: " << file.c_str() << std::endl;
 	
 	if (doc.LoadFile())
 	{

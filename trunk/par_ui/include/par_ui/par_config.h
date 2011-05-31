@@ -22,12 +22,12 @@ class Config
         * @param cmd Object used for configuring trajectory parameters.
         * @param chatter_pub_cmd Object used for communication 
 	    */    
-        Config(std::string& file, ros::ServiceClient& coord_client, par_kinematics::coord& coords,
+        Config(ros::ServiceClient& coord_client, par_kinematics::coord& coords,
 			  par_trajectory_planning::commands& cmd, ros::Publisher& chatter_pub_cmd);
         /**
          * @brief Function for reading XML configuration file.
          */			  
-        void read();
+        void read(const std::string& file);
     private:
         /**
          * @brief Function for parsing communication parameters.
@@ -50,7 +50,6 @@ class Config
          */	          
         void parse_xml_start();
         
-        std::string file;
         TiXmlElement* config;
         ros::ServiceClient coord_client;
         par_kinematics::coord coords;
