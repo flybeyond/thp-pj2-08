@@ -15,7 +15,7 @@ class StepperMotor : public Motor
 	    /**
         * @brief Constructor.
 	    */
-	    StepperMotor(modbus_t* cm) { ctx = cm; }
+	    StepperMotor(modbus_t* cm) { ctx = cm; is_test = false; }
         /**
          * @brief Destructor.
          */        
@@ -57,6 +57,10 @@ class StepperMotor : public Motor
          * @return uint16_t n amount of motor steps.
          */
         uint16_t angleToStep(double x, bool& invalid_motion);
+        /**
+         * @brief Function for developing purposes. 
+         */
+        void test();
     private:
 	    /**
 	    * Helper function for initialization of single motion.
@@ -66,5 +70,6 @@ class StepperMotor : public Motor
         modbus_t* ctx;
         int motions;
         int repeat_motions;
+        bool is_test;
 };
 #endif

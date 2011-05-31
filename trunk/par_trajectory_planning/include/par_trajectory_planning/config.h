@@ -14,6 +14,7 @@ const int MENU_CONF_PTP_MOT = 4;
 const int MENU_RD_CONF_FILE = 5;
 const int MENU_START_MOT    = 6;
 const int MENU_START_HM	    = 7;
+const int MENU_START_TEST   = 8;
 const int MENU_EXIT         = 0;
 
 const int MODBUS_MAX_PROC_TIME  = 4000; // in usec
@@ -30,9 +31,13 @@ const double   MOTOR_STEP_ANGLE = 0.072;
 
 const uint16_t REG_MOTOR_POS   = 0x0400; // 2 bytes per offset 
 const uint16_t REG_MOTOR_SPEED = 0x0500; // 2 bytes per offset
+const uint16_t REG_MOTOR_ABS   = 0x0600; // 1 byte per offset
+const uint16_t REG_MOTOR_OPM   = 0x0700; // 1 byte per offset
+const uint16_t REG_MOTOR_SQPS  = 0x0800; // 1 byte per offset 
 const uint16_t REG_MOTOR_ACC   = 0x0900; // 2 bytes per offset
 const uint16_t REG_MOTOR_DEC   = 0x0A00; // 2 bytes per offset
-const uint16_t REG_MOTOR_ABS   = 0x0600; // 1 byte per offset
+const uint16_t REG_MOTOR_DT    = 0x0C01; // 1 byte per offset
+
 
 const int XYZ_DIV_FACTOR = 16;
 
