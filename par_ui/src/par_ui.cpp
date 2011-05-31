@@ -16,8 +16,6 @@
 
 static const int QUEUE_SIZE = 1000;
 
-std::string file = "/etc/ROS/config.xml";
-
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "par_ui");
@@ -28,8 +26,8 @@ int main(int argc, char **argv)
     	    
     par_trajectory_planning::commands cmd;
     par_kinematics::coord coords;    	    
-    Config config(file, coord_client, coords, cmd, chatter_pub_cmd);
-               
+    Config config(coord_client, coords, cmd, chatter_pub_cmd);
+    std::string file;
     int x = 1;
     while(ros::ok() && x)
     {
@@ -46,8 +44,8 @@ int main(int argc, char **argv)
             break;
             case MENU_CONF_SIN_MOT:
                 cmd.option = MENU_CONF_SIN_MOT;
-		configure_single_motion(cmd);
-		chatter_pub_cmd.publish(cmd);
+		        configure_single_motion(cmd);
+		        chatter_pub_cmd.publish(cmd);
             break;
             case MENU_CONF_PTP_MOT:
                 cmd.option = MENU_CONF_PTP_MOT;
@@ -56,21 +54,23 @@ int main(int argc, char **argv)
             break;
 	        case MENU_RD_CONF_FILE:
                 cmd.option = MENU_RD_CONF_FILE;
-		config.read();
-	    break;
+                pick_configuration_file("/etc/ROS", file);
+		        config.read(file);
+	            break;
             case MENU_START_MOT:
                 cmd.option = MENU_START_MOT;
                 chatter_pub_cmd.publish(cmd);
             break;
-	    case MENU_START_HM:
-	    cmd.option = MENU_START_HM;
-	    cmd.abs_pos.push_back(0);
-	    cmd.abs_pos.push_back(0);
-	    cmd.abs_pos.push_back(0);
-	    cmd.abs_pos.push_back(0);
-	    cmd.abs_pos.push_back(0);
-	    cmd.abs_pos.push_back(0);
-	    chatter_pub_cmd.publish(cmd);
+	        case MENU_START_HM:
+	            cmd.option = MENU_START_HM;
+	            cmd.abs_pos.push_back(0);
+	            cmd.abs_pos.push_back(0);
+	            cmd.abs_pos.push_back(0);
+	            cmd.abs_pos.push_back(0);
+	            cmd.abs_pos.push_back(0);
+	            cmd.abs_pos.push_back(0);
+	            chatter_pub_cmd.publish(cmd);
+	        break;
             case MENU_EXIT:
                 cmd.option = MENU_EXIT;
                 chatter_pub_cmd.publish(cmd);

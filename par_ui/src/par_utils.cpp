@@ -90,6 +90,28 @@ void configure_PTP_motion(ros::ServiceClient& coord_client, par_kinematics::coor
     }
 }
 
+void pick_configuration_file(const boost::filesystem::path& directory, std::string& file)
+{
+    std::vector<std::string> files;
+    int i = 1;
+    
+    std::cout << "Please pick your preferred configuration file: " << std::endl;
+    if ( boost::filesystem::exists( directory ) )
+    {
+        boost::filesystem::directory_iterator end;
+        for( boost::filesystem::directory_iterator iter(directory);  iter != end; ++iter )
+        {
+            if (! boost::filesystem::is_directory( *iter ) )
+            {
+                std::cout << "[" << i << "]" << " " << iter->path().file_string() << std::endl;
+                files.push_back( iter->path().file_string() );
+            }
+        }
+    }
+    std::cin >> i;
+    file = files[i-1];
+}
+
 int menu()
 {
     std::cout << "[" << MENU_INIT_COMM      << "] init communication"           << std::endl;
