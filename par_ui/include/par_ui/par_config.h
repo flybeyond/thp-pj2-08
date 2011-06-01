@@ -49,6 +49,12 @@ class Config
          * @brief Function for parsing start motion parameters.
          */	          
         void parse_xml_start();
+        /**
+         * @brief Function for retrieving value of a specified node.
+         * @param key Key to retrieve value for.
+         * @param value Variable to store associated value.
+         */
+        void get_value(TiXmlNode* node, const std::string& key, std::string& value);
         
         TiXmlElement* config;
         ros::ServiceClient coord_client;

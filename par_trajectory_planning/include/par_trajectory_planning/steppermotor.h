@@ -65,7 +65,9 @@ class StepperMotor : public Motor
 	    /**
 	    * Helper function for initialization of single motion.
 	    */
-	    void initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up, int off);
+	    void initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up, 
+	            uint16_t acc_up, uint16_t acc_lo, uint16_t dec_up, uint16_t dec_lo, 
+	            uint16_t speed_up, uint16_t speed_lo, int off);
 
         modbus_t* ctx;
         int motions;

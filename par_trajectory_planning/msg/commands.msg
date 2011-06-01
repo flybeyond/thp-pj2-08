@@ -3,3 +3,9 @@ int32 option
 uint16[] abs_pos
 float64[] xyz_pos
 int32 repeat_motions
+uint16 acc_up
+uint16 acc_lo
+uint16 dec_up
+uint16 dec_lo
+uint16 speed_up
+uint16 speed_lo
