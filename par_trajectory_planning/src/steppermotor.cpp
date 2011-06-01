@@ -217,15 +217,15 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	usleep(MODBUS_MAX_PROC_TIME);
 	
 	// set acceleration
-	src[1] = 0x4240;
-	src[0] = 0x000F;
+	src[1] = 0xA120;
+	src[0] = 0x0007;
 	n = modbus_write_registers(ctx, REG_MOTOR_ACC + (off * 2), 2, src);
 	printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);	
 	
 	// set deceleration
-	src[1] = 0x4240;
-	src[0] = 0x000F;
+	src[1] = 0xA120;
+	src[0] = 0x0007;
 	n = modbus_write_registers(ctx, REG_MOTOR_DEC + (off * 2), 2, src);
 	printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);		

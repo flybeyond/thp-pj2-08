@@ -25,8 +25,8 @@ const int MODBUS_SLAVE_ADDR_01  = 0x01;
 const int MODBUS_SLAVE_ADDR_02  = 0x02;
 const int MODBUS_SLAVE_ADDR_03  = 0x03;
 
-const uint16_t MOTOR_SPEED_UP   = 0xA120; // working default 0x2800
-const uint16_t MOTOR_SPEED_LO   = 0x0007;
+const uint16_t MOTOR_SPEED_UP   = 0x0D40; // working default 0x2800
+const uint16_t MOTOR_SPEED_LO   = 0x0003;
 const double   MOTOR_STEP_ANGLE = 0.072;
 
 const uint16_t REG_MOTOR_POS   = 0x0400; // 2 bytes per offset 
