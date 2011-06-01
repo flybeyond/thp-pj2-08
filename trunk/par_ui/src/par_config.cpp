@@ -39,21 +39,93 @@ void Config::parse_xml_mot()
 {
 }
 
+void Config::get_value(TiXmlNode* node, const std::string& key, std::string& value)
+{
+    if (node != NULL)
+    {
+        std::string el;
+        el = node->ValueStr();
+        if (el == key)
+        {
+            value = node->FirstChild()->ValueStr();
+        }
+        else
+        {
+            value = "invalid";
+        }
+    }
+}
+
 void Config::parse_xml_ptp()
 {
             TiXmlNode* node = config->FirstChild();
+            std::string key;
+            std::string value;
+            
             if (node != NULL)
             {
-                std::string firstNode = node->ValueStr();
-                if (firstNode == "repeat_motions")
+                get_value(node, "repeat_motions", value);
+                if (value != "invalid")
                 {
-                    cmd.repeat_motions = atoi( node->FirstChild()->ValueStr().c_str() );
+                    cmd.repeat_motions = atoi( value.c_str() );
                 }
                 else
-                {
+                {   
                     cmd.repeat_motions = 1;
                 }
             }
+            
+            if (node != NULL)
+            {
+                node = node->NextSibling();
+                get_value(node, "acceleration", value);
+                if (value != "invalid")
+                {
+                    uint32_t acc = atoi( value.c_str() );
+                    cmd.acc_up = 0xFFFF & acc;
+                    cmd.acc_lo = 0xFFFF & (acc >> 16);
+                }
+                else
+                {
+                    cmd.acc_up = MOTOR_ACC_UP;
+                    cmd.acc_lo = MOTOR_ACC_LO;
+                }
+            }
+            
+            if (node != NULL)
+            {
+                node = node->NextSibling();
+                get_value(node, "deceleration", value);
+                if (value != "invalid")
+                {
+                    uint32_t dec = atoi( value.c_str() );
+                    cmd.dec_up = 0xFFFF & dec;
+                    cmd.dec_lo = 0xFFFF & (dec >> 16);
+                }
+                else
+                {
+                    cmd.dec_up = MOTOR_DEC_UP;
+                    cmd.dec_lo = MOTOR_DEC_LO;
+                }
+            }
+            
+            if (node != NULL)
+            {
+                node = node->NextSibling();
+                get_value(node, "speed", value);
+                if (value != "invalid")
+                {
+                    uint32_t speed = atoi( value.c_str() );
+                    cmd.speed_up = 0xFFFF & speed;
+                    cmd.speed_lo = 0xFFFF & (speed >> 16);
+                }
+                else
+                {
+                    cmd.speed_up = MOTOR_SPEED_UP;
+                    cmd.speed_lo = MOTOR_SPEED_LO;
+                }
+            }            
+            
             
             for (TiXmlElement* row = config->FirstChildElement(); row;
                 row = row->NextSiblingElement())

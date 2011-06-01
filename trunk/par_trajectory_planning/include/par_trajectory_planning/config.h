@@ -2,7 +2,7 @@
 #define _CONFIG_H_
 
 
-const double DELTA_ROBOT_HIP_LEN = 62.0; // hip length
+const double DELTA_ROBOT_HIP_LEN = 62.0;  // hip length
 const double DELTA_ROBOT_ANK_LEN = 150.0; // ankle length
 const double DELTA_ROBOT_BS_SZ   = 101.4; // base size
 const double DELTA_ROBOT_EF_SZ   = 46.19; // effector size
@@ -27,6 +27,10 @@ const int MODBUS_SLAVE_ADDR_03  = 0x03;
 
 const uint16_t MOTOR_SPEED_UP   = 0x0D40; // working default 0x2800
 const uint16_t MOTOR_SPEED_LO   = 0x0003;
+const uint16_t MOTOR_ACC_UP     = 0x7530;
+const uint16_t MOTOR_ACC_LO     = 0x0000;
+const uint16_t MOTOR_DEC_UP     = 0x7530;
+const uint16_t MOTOR_DEC_LO     = 0x0000;
 const double   MOTOR_STEP_ANGLE = 0.072;
 
 const uint16_t REG_MOTOR_POS   = 0x0400; // 2 bytes per offset 
