@@ -25,8 +25,8 @@ const int MODBUS_SLAVE_ADDR_01  = 0x01;
 const int MODBUS_SLAVE_ADDR_02  = 0x02;
 const int MODBUS_SLAVE_ADDR_03  = 0x03;
 
-const uint16_t MOTOR_SPEED_UP   = 0x0D40; // working default 0x2800
-const uint16_t MOTOR_SPEED_LO   = 0x0003;
+const uint16_t MOTOR_SPEED_UP   = 0x03E8; // working default 0x2800
+const uint16_t MOTOR_SPEED_LO   = 0x0000;
 const uint16_t MOTOR_ACC_UP     = 0x7530;
 const uint16_t MOTOR_ACC_LO     = 0x0000;
 const uint16_t MOTOR_DEC_UP     = 0x7530;

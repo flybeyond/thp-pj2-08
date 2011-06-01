@@ -220,6 +220,8 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	// set operating speed
 	src[1] = speed_up;
 	src[0] = speed_lo;
+	std::cout << "speed_up: " << speed_up << std::endl;
+std::cout << "speed_lo: " << speed_lo << std::endl;
 	n = modbus_write_registers(ctx, REG_MOTOR_SPEED + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);
@@ -227,13 +229,17 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	// set acceleration
 	src[1] = acc_up;
 	src[0] = acc_lo;
+	std::cout << "acc_up: " << acc_up << std::endl;
+std::cout << "acc_lo: " << acc_lo << std::endl;
 	n = modbus_write_registers(ctx, REG_MOTOR_ACC + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);	
 	
 	// set deceleration
 	src[1] = dec_up;
-	src[0] = dec_lo;	
+	src[0] = dec_lo;
+	std::cout << "dec_up: " << dec_up << std::endl;
+std::cout << "dec_lo: " << dec_lo << std::endl;	
 	n = modbus_write_registers(ctx, REG_MOTOR_DEC + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);		
