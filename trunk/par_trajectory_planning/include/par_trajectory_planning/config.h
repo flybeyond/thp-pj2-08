@@ -13,8 +13,9 @@ const int MENU_CONF_SIN_MOT = 3;
 const int MENU_CONF_PTP_MOT = 4;
 const int MENU_RD_CONF_FILE = 5;
 const int MENU_START_MOT    = 6;
-const int MENU_START_HM	    = 7;
-const int MENU_START_TEST   = 8;
+const int MENU_STOP_MOT	    = 7;
+const int MENU_START_HM	    = 8;
+const int MENU_START_TEST   = 9;
 const int MENU_EXIT         = 0;
 
 const int MODBUS_MAX_PROC_TIME  = 4000; // in usec
@@ -25,11 +26,11 @@ const int MODBUS_SLAVE_ADDR_01  = 0x01;
 const int MODBUS_SLAVE_ADDR_02  = 0x02;
 const int MODBUS_SLAVE_ADDR_03  = 0x03;
 
-const uint16_t MOTOR_SPEED_UP   = 0x03E8; // working default 0x2800
-const uint16_t MOTOR_SPEED_LO   = 0x0000;
-const uint16_t MOTOR_ACC_UP     = 0x7530;
+const uint16_t MOTOR_SPEED_UP   = 0xA120; // working default 0x2800
+const uint16_t MOTOR_SPEED_LO   = 0x0007;
+const uint16_t MOTOR_ACC_UP     = 0x1388;
 const uint16_t MOTOR_ACC_LO     = 0x0000;
-const uint16_t MOTOR_DEC_UP     = 0x7530;
+const uint16_t MOTOR_DEC_UP     = 0x1388;
 const uint16_t MOTOR_DEC_LO     = 0x0000;
 const double   MOTOR_STEP_ANGLE = 0.072;
 
