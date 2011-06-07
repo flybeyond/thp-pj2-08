@@ -193,8 +193,8 @@ void StepperMotor::exit()
 }
 
 void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up, 
-    uint16_t acc_up, uint16_t acc_lo, uint16_t dec_up, uint16_t dec_lo, 
-    uint16_t speed_up, uint16_t speed_lo, int off)
+    uint16_t acc_lo, uint16_t acc_up, uint16_t dec_lo, uint16_t dec_up, 
+    uint16_t speed_lo, uint16_t speed_up, int off)
 {
 	uint16_t src[2];
 	int n;
@@ -221,7 +221,7 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	src[1] = speed_up;
 	src[0] = speed_lo;
 	std::cout << "speed_up: " << speed_up << std::endl;
-std::cout << "speed_lo: " << speed_lo << std::endl;
+    std::cout << "speed_lo: " << speed_lo << std::endl;
 	n = modbus_write_registers(ctx, REG_MOTOR_SPEED + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);
@@ -230,7 +230,7 @@ std::cout << "speed_lo: " << speed_lo << std::endl;
 	src[1] = acc_up;
 	src[0] = acc_lo;
 	std::cout << "acc_up: " << acc_up << std::endl;
-std::cout << "acc_lo: " << acc_lo << std::endl;
+    std::cout << "acc_lo: " << acc_lo << std::endl;
 	n = modbus_write_registers(ctx, REG_MOTOR_ACC + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);	
@@ -239,7 +239,7 @@ std::cout << "acc_lo: " << acc_lo << std::endl;
 	src[1] = dec_up;
 	src[0] = dec_lo;
 	std::cout << "dec_up: " << dec_up << std::endl;
-std::cout << "dec_lo: " << dec_lo << std::endl;	
+    std::cout << "dec_lo: " << dec_lo << std::endl;	
 	n = modbus_write_registers(ctx, REG_MOTOR_DEC + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);		
