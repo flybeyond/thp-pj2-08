@@ -15,7 +15,7 @@ class StepperMotor : public Motor
 	    /**
         * @brief Constructor.
 	    */
-	    StepperMotor(modbus_t* cm) { ctx = cm; is_test = false; }
+	    StepperMotor(modbus_t* cm) { ctx = cm; is_test = false; stop_motion = false; }
         /**
          * @brief Destructor.
          */        
@@ -73,5 +73,6 @@ class StepperMotor : public Motor
         int motions;
         int repeat_motions;
         bool is_test;
+	bool stop_motion;
 };
 #endif
