@@ -1,5 +1,8 @@
-#include <ros/ros.h>
+/**
+ * Author: W. van Teijlingen <wouter.vanteijlingen@student.hu.nl>
+ */
 
+#include <ros/ros.h>
 #include <iostream>
 #include <cmath>
 

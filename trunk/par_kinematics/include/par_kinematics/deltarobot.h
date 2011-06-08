@@ -17,23 +17,14 @@
 #ifndef _DELTAROBOT_H_
 #define _DELTAROBOT_H_
 
-/** Three DeltaArms, the base and the effector. */
 class DeltaRobot {
 public:
 	ArmModel* m[3];
 	DeltaArm* arm[3];
-  
-	//  private DeltaArm arm0, arm120, arm240;
-	//  public double angle1, angle2, angle3;      // servo angles
-	//  public double pangle1, pangle2, pangle3;   // parallelogram joint angles
-  
 	double servo[3];
 	double pangle[3];
-  
 	double servoMin, servoMax;
-  
 	double hip, ankle, base, effector;
-  
 	Point* effLoc;
   
 	DeltaRobot(double hipLength, double ankleLength, double baseSize, double effectorSize);

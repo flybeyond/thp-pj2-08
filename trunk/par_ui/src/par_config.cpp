@@ -20,10 +20,6 @@ Config::Config(ros::ServiceClient& coord_client, par_kinematics::coord& coords,
     this->chatter_pub_cmd = chatter_pub_cmd;
 }
 
-void Config::parse_xml_comm()
-{
-}
-
 void Config::parse_xml_init()
 {
             TiXmlElement* motor = config->FirstChildElement();
@@ -35,9 +31,6 @@ void Config::parse_xml_init()
             speed_lo = atoi( motor->FirstChild()->ValueStr().c_str() );
 }
 
-void Config::parse_xml_mot()
-{
-}
 
 void Config::get_value(TiXmlNode* node, const std::string& key, std::string& value)
 {
@@ -112,27 +105,45 @@ void Config::parse_xml_ptp()
             if (node != NULL)
             {
                 node = node->NextSibling();
-                get_value(node, "speed", value);
+                get_value(node, "operating_speed", value);
                 if (value != "invalid")
                 {
                     uint32_t speed = atoi( value.c_str() );
-                    cmd.speed_up = 0xFFFF & speed;
-                    cmd.speed_lo = 0xFFFF & (speed >> 16);
+                    cmd.op_speed_up = 0xFFFF & speed;
+                    cmd.op_speed_lo = 0xFFFF & (speed >> 16);
                 }
                 else
                 {
-                    cmd.speed_up = MOTOR_SPEED_UP;
-                    cmd.speed_lo = MOTOR_SPEED_LO;
+                    cmd.op_speed_up = MOTOR_OP_SPEED_UP;
+                    cmd.op_speed_lo = MOTOR_OP_SPEED_LO;
                 }
             }            
+            
+            if (node != NULL)
+            {
+                node = node->NextSibling();
+                get_value(node, "startup_speed", value);
+                if (value != "invalid")
+                {
+                    uint32_t speed = atoi( value.c_str() );
+                    cmd.st_speed_up = 0xFFFF & speed;
+                    cmd.st_speed_lo = 0xFFFF & (speed >> 16);                    
+                }
+                else
+                {
+                    cmd.st_speed_up = MOTOR_ST_SPEED_UP;
+                    cmd.st_speed_lo = MOTOR_ST_SPEED_LO;
+                }
+            }
             
             
             for (TiXmlElement* row = config->FirstChildElement(); row;
                 row = row->NextSiblingElement())
             {
-                TiXmlNode* X = row->FirstChild("X");
-                TiXmlNode* Y = row->FirstChild("Y");
-                TiXmlNode* Z = row->FirstChild("Z");
+                TiXmlNode* X  = row->FirstChild("X");
+                TiXmlNode* Y  = row->FirstChild("Y");
+                TiXmlNode* Z  = row->FirstChild("Z");
+                TiXmlNode* OM = row->FirstChild("mode"); 
                 if (X != NULL && Y != NULL && Z != NULL)
                 {
                     coords.request.x = atof( X->FirstChild()->ValueStr().c_str() );
@@ -140,11 +151,32 @@ void Config::parse_xml_ptp()
                     coords.request.z = atof( Z->FirstChild()->ValueStr().c_str() );
                     push_angles(coord_client, coords, cmd);
                 }
+                
+                if (OM != NULL)
+                {
+                    std::string om = OM->FirstChild()->ValueStr();
+                    if ( om == "single" )
+                    {
+                        cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
+                    }
+                    else if ( om == "link" )
+                    {
+                        cmd.operating_mode.push_back( MOTOR_OPM_LINK1 );
+                    }
+                    else if ( om == "cp" )
+                    {
+                        cmd.operating_mode.push_back( MOTOR_OPM_LINK2 );
+                    }
+                    else
+                    {
+                        cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
+                    }
+                }
+                else
+                {
+                    cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
+                }
             }
-}
-
-void Config::parse_xml_start()
-{
 }
 
 void Config::read(const std::string& file)
@@ -166,19 +198,9 @@ void Config::read(const std::string& file)
             std::cout << "Number #: " << x << std::endl;
             switch(x)
             {
-                case MENU_INIT_COMM:
-                    cmd.option = MENU_INIT_COMM;
-                    parse_xml_comm();
-                    chatter_pub_cmd.publish(cmd);
-                break;
                 case MENU_INIT_MOTOR: 
                     cmd.option = MENU_INIT_MOTOR;
                     parse_xml_init();
-                    chatter_pub_cmd.publish(cmd);
-                break;
-                case MENU_CONF_SIN_MOT:
-                    cmd.option = MENU_CONF_SIN_MOT;
-                    parse_xml_mot();
                     chatter_pub_cmd.publish(cmd);
                 break;
                 case MENU_CONF_PTP_MOT:
@@ -188,7 +210,6 @@ void Config::read(const std::string& file)
                 break;
                 case MENU_START_MOT:
                     cmd.option = MENU_START_MOT;
-                    parse_xml_start();
                     chatter_pub_cmd.publish(cmd);
                 break;
             }

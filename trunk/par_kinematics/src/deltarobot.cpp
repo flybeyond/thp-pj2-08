@@ -1,3 +1,9 @@
+/**
+ * Author: W. van Teijlingen <wouter.vanteijlingen@student.hu.nl>
+ *
+ * This code is based on http://sensi.org/~svo/dbot/applet/ by Viacheslav Slavinsky. 
+ */
+
 #include <par_kinematics/deltarobot.h>
 
 DeltaRobot::DeltaRobot(double hipLength, double ankleLength, double baseSize, double effectorSize) 

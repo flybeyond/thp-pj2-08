@@ -30,25 +30,13 @@ class Config
         void read(const std::string& file);
     private:
         /**
-         * @brief Function for parsing communication parameters.
-         */		
-        void parse_xml_comm();
-        /**
          * @brief Function for parsing motor parameters.
          */	        
         void parse_xml_init();
         /**
-         * @brief Function for parsing single motion parameters.
-         */	          
-        void parse_xml_mot();
-        /**
          * @brief Function for parsing PTP parameters.
          */	          
         void parse_xml_ptp();
-        /**
-         * @brief Function for parsing start motion parameters.
-         */	          
-        void parse_xml_start();
         /**
          * @brief Function for retrieving value of a specified node.
          * @param key Key to retrieve value for.

@@ -1,3 +1,9 @@
+/**
+ * Author: W. van Teijlingen <wouter.vanteijlingen@student.hu.nl>
+ *
+ * This code is based on http://sensi.org/~svo/dbot/applet/ by Viacheslav Slavinsky. 
+ */
+
 #include <par_kinematics/armmodel.h>
 
 ArmModel::ArmModel(double angle, double hip, double ankle, double base, double effector) 

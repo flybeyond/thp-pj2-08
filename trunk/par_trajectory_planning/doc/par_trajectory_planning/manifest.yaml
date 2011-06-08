@@ -1,0 +1,15 @@
+api_documentation: http://ros.org/doc/api/par_trajectory_planning/html/
+authors: Wouter van Teijlingen
+brief: par_trajectory_planning
+dependency_tree: http://ros.org/doc/api/par_trajectory_planning/html/par_trajectory_planning_deps.pdf
+depends: [std_msgs, roscpp]
+depends_on: [par_ui, par_kinematics]
+description: par_trajectory_planning
+license: BSD
+msgs: [commands]
+repository: https://thp-pj2-08.googlecode.com/svn
+review_notes: ''
+review_status: unreviewed
+srvs: []
+url: http://ros.org/wiki/par_trajectory_planning
+vcs: svn

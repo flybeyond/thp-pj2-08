@@ -1,0 +1,15 @@
+api_documentation: http://ros.org/doc/api/par_kinematics/html/
+authors: Wouter van Teijlingen
+brief: par_kinematics
+dependency_tree: http://ros.org/doc/api/par_kinematics/html/par_kinematics_deps.pdf
+depends: [std_msgs, roscpp, par_trajectory_planning]
+depends_on: [par_ui]
+description: par_kinematics
+license: BSD
+msgs: [coord]
+repository: https://thp-pj2-08.googlecode.com/svn
+review_notes: ''
+review_status: unreviewed
+srvs: [coord]
+url: http://code.google.com/p/thp-pj2-08/
+vcs: svn
