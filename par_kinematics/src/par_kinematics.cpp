@@ -1,12 +1,16 @@
+/**
+ * Author: W. van Teijlingen <wouter.vanteijlingen@student.hu.nl>
+ */
+
 #include <iostream>
 #include <ros/ros.h>
 #include <par_kinematics/coord.h>
 #include <par_kinematics/deltarobot.h>
+#include <par_kinematics/par_kinematics.h>
 #include <par_trajectory_planning/config.h>
 
 static const int QUEUE_SIZE = 1000;
 static DeltaRobot* deltaRobot;
-
 
 /**
  * @brief This is the callback function responsible for publishing angles in radians.

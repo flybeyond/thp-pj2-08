@@ -1,0 +1,15 @@
+api_documentation: http://ros.org/doc/api/par_ui/html/
+authors: Wouter van Teijlingen
+brief: par_ui
+dependency_tree: http://ros.org/doc/api/par_ui/html/par_ui_deps.pdf
+depends: [std_msgs, roscpp, par_kinematics, par_trajectory_planning, tinyxml]
+depends_on: []
+description: par_ui
+license: BSD
+msgs: []
+repository: https://thp-pj2-08.googlecode.com/svn
+review_notes: ''
+review_status: unreviewed
+srvs: []
+url: http://ros.org/wiki/par_ui
+vcs: svn

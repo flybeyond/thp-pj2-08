@@ -1,3 +1,7 @@
+/**
+ * Author: W. van Teijlingen <wouter.vanteijlingen@student.hu.nl>
+ */
+
 #include <par_trajectory_planning/steppermotor.h>
 #include <par_trajectory_planning/config.h>
 #include <cstdio>
@@ -25,18 +29,18 @@ void StepperMotor::start()
         for(i=1; i<=motions && !stop_motion; i++)
         {
 	        modbus_set_slave(ctx, 0);
-            	n = modbus_write_register(ctx, 0x001E, 0x2000);
+            n = modbus_write_register(ctx, 0x001E, 0x2000);
 	        //printf("errno: %s\n", modbus_strerror(errno));
-		//std::cout << "--> [1] write result: " << n << std::endl;
+		    //std::cout << "--> [1] write result: " << n << std::endl;
 	        usleep(MODBUS_MAX_BCAST_TIME);
 	        // turn start input on
-	        n = modbus_write_register(ctx, 0x001E, 0x2100 + i );
+	        n = modbus_write_register(ctx, 0x001E, 0x2100 /*+ i*/ );
 	        //printf("errno: %s\n", modbus_strerror(errno));
-		//std::cout << "--> [2] write result: " << n << std::endl;
+		    //std::cout << "--> [2] write result: " << n << std::endl;
 	        usleep(MODBUS_MAX_BCAST_TIME);
 	        // turn start input off
-	        n = modbus_write_register(ctx, 0x001E, 0x2000 + i );
-		//std::cout << "--> [3] write result: " << n << std::endl;
+	        n = modbus_write_register(ctx, 0x001E, 0x2000 /*+ i*/ );
+		    //std::cout << "--> [3] write result: " << n << std::endl;
 	        //printf("errno: %s\n", modbus_strerror(errno));    
 	        usleep(MODBUS_MAX_BCAST_TIME);
 	
@@ -49,19 +53,15 @@ void StepperMotor::start()
 	        {
 		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_01);
 		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax01); 
-			//std::cout << "--> [1] read result: " << n << std::endl;
 		        usleep(MODBUS_MAX_PROC_TIME);
 
 		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_02);
 		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax02); 
-			//std::cout << "--> [2] read result: " << n << std::endl;
 		        usleep(MODBUS_MAX_PROC_TIME);
 
 		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_03);
 		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax03); 
-			//std::cout << "--> [3] read result: " << n << std::endl;
 		        usleep(MODBUS_MAX_PROC_TIME);
-		        // this is zero if the motor is moving
 	        }
 	        //std::cout << "motor can receive new command\n" << std::endl;
         }  
@@ -72,13 +72,11 @@ void StepperMotor::start()
 
 void StepperMotor::stop()
 {
-    std::cout << "StepperMotor::stop()" << std::endl;
     stop_motion = true;
 }
 
 void StepperMotor::initCom()
 {
-    	std::cout << "StepperMotor::initCom()" << std::endl;
 	if (ctx == NULL)
 	{
 		std::cout << "StepperMotor::init(): unable to create the libmodbus context." << std::endl;
@@ -113,23 +111,17 @@ void StepperMotor::confSingleMotion(const par_trajectory_planning::commands& cmd
     int i;
     for(i=0; i<motions; i++)
     {
-        // pos up X
-        // pos lo X
         initSingleMotion(MODBUS_SLAVE_ADDR_01, cmd.abs_pos[ 0 + (i * 6) ], cmd.abs_pos[ 1 + (i * 6) ], 
             MOTOR_ACC_UP, MOTOR_ACC_LO, MOTOR_DEC_UP, MOTOR_DEC_LO, 
-            MOTOR_SPEED_UP, MOTOR_SPEED_LO, i + 1);    
+            MOTOR_OP_SPEED_UP, MOTOR_OP_SPEED_LO, MOTOR_OPM_SINGLE, 0x00, i + 1); // X
 
-        // pos up Y
-        // pos lo Y
         initSingleMotion(MODBUS_SLAVE_ADDR_02, cmd.abs_pos[ 2 + (i * 6) ], cmd.abs_pos[ 3 + (i * 6) ],
             MOTOR_ACC_UP, MOTOR_ACC_LO, MOTOR_DEC_UP, MOTOR_DEC_LO, 
-            MOTOR_SPEED_UP, MOTOR_SPEED_LO, i + 1); 
+            MOTOR_OP_SPEED_UP, MOTOR_OP_SPEED_LO, MOTOR_OPM_SINGLE, 0x00, i + 1); // Y
 
-        // pos up Z
-        // pos lo Z
         initSingleMotion(MODBUS_SLAVE_ADDR_03, cmd.abs_pos[ 4 + (i * 6) ], cmd.abs_pos[ 5 + (i * 6) ], 
             MOTOR_ACC_UP, MOTOR_ACC_LO, MOTOR_DEC_UP, MOTOR_DEC_LO,
-            MOTOR_SPEED_UP, MOTOR_SPEED_LO, i + 1); 
+            MOTOR_OP_SPEED_UP, MOTOR_OP_SPEED_LO, MOTOR_OPM_SINGLE, 0x00, i + 1); // Z
     }
 
 }
@@ -140,7 +132,16 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
     repeat_motions = cmd.repeat_motions;
     if (repeat_motions == 0) repeat_motions = 1;    
 
+    uint16_t src[2];
+    modbus_set_slave(ctx, 0);
+	src[1] = cmd.st_speed_lo;
+	src[0] = cmd.st_speed_up;
+	int n = modbus_write_registers(ctx, REG_MOTOR_ST_SPEED, 2, src);
+	printf("errno: %s\n", modbus_strerror(errno));
+	usleep(MODBUS_MAX_PROC_TIME);    
+
     int i;
+    uint16_t seq_pos = 0x01;
     uint16_t pos_lo[3];
     uint16_t pos_up[3];
     bool invalid_motion[3] = {false, false, false};
@@ -161,6 +162,10 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
         pos_up[Z] = ( pos_lo[Z] & 0x8000 ) ? 0xFFFF : 0x00;
 	    //std::cout << "Z: " << pos_lo[Z] << std::endl;
 
+        uint16_t operating_mode = cmd.operating_mode[i];
+        // disable sequential positioning for last entry.
+        seq_pos = (i == (motions - 1)) ? 0x00 : 0x01;
+
 	    if (invalid_motion[X] ||
                 invalid_motion[Y] ||
                 invalid_motion[Z] )
@@ -170,14 +175,14 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
 	    else
 	    {
 		    initSingleMotion(MODBUS_SLAVE_ADDR_01, pos_up[X], pos_lo[X], 
-		    cmd.acc_lo, cmd.acc_up, cmd.dec_lo, cmd.dec_up, 
-		    cmd.speed_lo, cmd.speed_up, i + 1); // X
+		        cmd.acc_lo, cmd.acc_up, cmd.dec_lo, cmd.dec_up, 
+		        cmd.op_speed_lo, cmd.op_speed_up, operating_mode, seq_pos, i + 1); // X
 		    initSingleMotion(MODBUS_SLAVE_ADDR_02, pos_up[Y], pos_lo[Y], 
-		    cmd.acc_lo, cmd.acc_up, cmd.dec_lo, cmd.dec_up,
-		    cmd.speed_lo, cmd.speed_up, i + 1); // Y
-            	    initSingleMotion(MODBUS_SLAVE_ADDR_03, pos_up[Z], pos_lo[Z], 
-                    cmd.acc_lo, cmd.acc_up, cmd.dec_lo, cmd.dec_up, 
-                    cmd.speed_lo, cmd.speed_up, i + 1); // Z	
+		        cmd.acc_lo, cmd.acc_up, cmd.dec_lo, cmd.dec_up,
+		        cmd.op_speed_lo, cmd.op_speed_up, operating_mode, seq_pos, i + 1); // Y
+            initSingleMotion(MODBUS_SLAVE_ADDR_03, pos_up[Z], pos_lo[Z], 
+                cmd.acc_lo, cmd.acc_up, cmd.dec_lo, cmd.dec_up, 
+                cmd.op_speed_lo, cmd.op_speed_up, operating_mode, seq_pos, i + 1); // Z	
 	    }
     }
 }
@@ -194,7 +199,8 @@ void StepperMotor::exit()
 
 void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up, 
     uint16_t acc_lo, uint16_t acc_up, uint16_t dec_lo, uint16_t dec_up, 
-    uint16_t speed_lo, uint16_t speed_up, int off)
+    uint16_t speed_lo, uint16_t speed_up, uint16_t operating_mode, uint16_t seq_pos,
+    int off)
 {
 	uint16_t src[2];
 	int n;
@@ -211,8 +217,8 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	src[1] = speed_up;
 	src[0] = speed_lo;
 	std::cout << "speed_up: " << speed_up << std::endl;
-    	std::cout << "speed_lo: " << speed_lo << std::endl;
-	n = modbus_write_registers(ctx, REG_MOTOR_SPEED + (off * 2), 2, src);
+    std::cout << "speed_lo: " << speed_lo << std::endl;
+	n = modbus_write_registers(ctx, REG_MOTOR_OP_SPEED + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);
 	
@@ -220,7 +226,7 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	src[1] = acc_up;
 	src[0] = acc_lo;
 	std::cout << "acc_up: " << acc_up << std::endl;
-    	std::cout << "acc_lo: " << acc_lo << std::endl;
+    std::cout << "acc_lo: " << acc_lo << std::endl;
 	n = modbus_write_registers(ctx, REG_MOTOR_ACC + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);	
@@ -229,17 +235,25 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	src[1] = dec_up;
 	src[0] = dec_lo;
 	std::cout << "dec_up: " << dec_up << std::endl;
-    	std::cout << "dec_lo: " << dec_lo << std::endl;	
+    std::cout << "dec_lo: " << dec_lo << std::endl;	
 	n = modbus_write_registers(ctx, REG_MOTOR_DEC + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);		
 
 	// set to absolute positioning
-	n = modbus_write_register(ctx, REG_MOTOR_ABS + (off * 1), 0x01);	
+	n = modbus_write_register(ctx, REG_MOTOR_MPOS + (off * 1), 0x01);	
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);
+	
+	// set operating mode
+	n = modbus_write_register(ctx, REG_MOTOR_OPM + (off * 1), operating_mode);
+	usleep(MODBUS_MAX_PROC_TIME);
+	
+	// set to sequential positioning
+	n = modbus_write_register(ctx, REG_MOTOR_SQPS + (off * 1), seq_pos);
+	usleep(MODBUS_MAX_PROC_TIME);
 
-
+    /*
 	if (slave == 1)
 	{
 		src[0] = 0;
@@ -248,19 +262,7 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 		usleep(MODBUS_MAX_PROC_TIME);
 		printf("ACCELERATION RATE FOR SELECT DATA NUMBER (LOWER): %x\n", src[0]);
 	}
-	/*
-	if (is_test)
-	{
-	    // set to operating mode link2
-	    n = modbus_write_register(ctx, REG_MOTOR_OPM + (off * 1), 0x02);	
-	    printf("errno: %s\n", modbus_strerror(errno));
-	    usleep(MODBUS_MAX_PROC_TIME);
-       
-        // set to sequential positioning    
-	    n = modbus_write_register(ctx, REG_MOTOR_SQPS + (off * 1), 0x01);	
-	    printf("errno: %s\n", modbus_strerror(errno));
-	    usleep(MODBUS_MAX_PROC_TIME); 
-	}*/
+	*/
 }
 
 uint16_t StepperMotor::angleToStep(double x, bool& invalid_motion)
@@ -279,16 +281,4 @@ uint16_t StepperMotor::angleToStep(double x, bool& invalid_motion)
 
 void StepperMotor::test()
 {
-     /** today a test for linked motions type 2
-     */
-     if (is_test)
-     {
-        std::cout << "Turned testing mode off." << std::endl;
-        is_test = false;
-     }
-     else
-     {
-        std::cout << "Turned testing mode on." << std::endl;
-        is_test = true;    
-     } 
 }

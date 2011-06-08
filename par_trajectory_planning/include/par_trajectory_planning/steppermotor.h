@@ -1,8 +1,11 @@
+/**
+ * Author: W. van Teijlingen <wouter.vanteijlingen@student.hu.nl>
+ */
+
 #include <ros/ros.h>
 #include <par_trajectory_planning/motor.h>
 #include <par_trajectory_planning/commands.h>
 #include <modbus/modbus.h>
-
 #include <iostream>
 #include <cmath>
 
@@ -26,7 +29,6 @@ class StepperMotor : public Motor
         virtual void init();
         /**
          * @brief Function for starting the motor.
-         * @param cmd Object with instructions.
          */
         virtual void start();
         /**
@@ -54,7 +56,7 @@ class StepperMotor : public Motor
         /**
          * @brief Function for converting angles in degrees to motor positions.
          * @param x Angle in degrees.
-         * @return uint16_t n amount of motor steps.
+         * @return n amount of motor steps.
          */
         uint16_t angleToStep(double x, bool& invalid_motion);
         /**
@@ -67,12 +69,13 @@ class StepperMotor : public Motor
 	    */
 	    void initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up, 
 	            uint16_t acc_lo, uint16_t acc_up, uint16_t dec_lo, uint16_t dec_up, 
-	            uint16_t speed_lo, uint16_t speed_up, int off);
+	            uint16_t speed_lo, uint16_t speed_up, uint16_t operating_mode, uint16_t seq_pos, 
+	            int off);
 
         modbus_t* ctx;
         int motions;
         int repeat_motions;
         bool is_test;
-	bool stop_motion;
+	    bool stop_motion;
 };
 #endif

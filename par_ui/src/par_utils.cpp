@@ -4,6 +4,12 @@
 
 #include <par_ui/par_utils.h>
 
+/**
+ * @brief Helper function to initialize xyz vector with coordinates.
+ * @param coord_client Object for requesting coordinates.
+ * @param coords Object with coordinates from the kinematic model.
+ * @param cmd Object with instructions for the motion.
+ */
 void push_angles(ros::ServiceClient& coord_client, par_kinematics::coord& coords,
 			  par_trajectory_planning::commands& cmd)
 {
@@ -25,6 +31,10 @@ void push_angles(ros::ServiceClient& coord_client, par_kinematics::coord& coords
         std::cout << "coords.request.z: " << coords.request.z << std::endl;        
 }
 
+/**
+ * @brief Helper function to configure single motions.
+ * @param cmd Object with instructions for the motion.
+ */
 void configure_single_motion(par_trajectory_planning::commands& cmd)
 {
 	cmd.abs_pos.clear();
@@ -66,6 +76,12 @@ void configure_single_motion(par_trajectory_planning::commands& cmd)
 	}
 }
 
+/**
+ * @brief Helper function to configure PTP motions.
+ * @param coord_client Object for requesting coordinates.
+ * @param coords Object with coordinates from the kinematic model.  
+ * @param cmd Object with instructions for the motion.
+ */
 void configure_PTP_motion(ros::ServiceClient& coord_client, par_kinematics::coord& coords,
 			  par_trajectory_planning::commands& cmd)
 {   
@@ -84,12 +100,27 @@ void configure_PTP_motion(ros::ServiceClient& coord_client, par_kinematics::coor
         std::cout << "Z: ";
         std::cin >> coords.request.z;
         
+        cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
         push_angles(coord_client, coords, cmd);
         
         i++;
     }
+    // configure important defaults; if not done motion fails. 
+    cmd.acc_up      = MOTOR_ACC_UP;
+    cmd.acc_lo      = MOTOR_ACC_LO;
+    cmd.dec_up      = MOTOR_DEC_UP;
+    cmd.dec_lo      = MOTOR_DEC_LO;
+    cmd.op_speed_up = MOTOR_OP_SPEED_UP;
+    cmd.op_speed_lo = MOTOR_OP_SPEED_LO;
+    cmd.st_speed_up = MOTOR_ST_SPEED_UP;
+    cmd.st_speed_lo = MOTOR_ST_SPEED_LO;
 }
 
+/**
+ * @brief Helper function for selecting a configuration file. 
+ * @param directory Contains base path for configuration files.
+ * @param file the selected file.
+ */
 void pick_configuration_file(const boost::filesystem::path& directory, std::string& file)
 {
     std::vector<std::string> files;
@@ -112,6 +143,24 @@ void pick_configuration_file(const boost::filesystem::path& directory, std::stri
     file = files[i-1];
 }
 
+/**
+ * @brief Helper function for configuring the homing operation.
+ * @param cmd Object with instructions for the motion.
+ */
+void configure_homing(par_trajectory_planning::commands& cmd)
+{
+    cmd.abs_pos.push_back(0);
+    cmd.abs_pos.push_back(0);
+    cmd.abs_pos.push_back(0);
+    cmd.abs_pos.push_back(0);
+    cmd.abs_pos.push_back(0);
+    cmd.abs_pos.push_back(0);
+}
+
+/**
+ * @brief Simple menu for guiding the user through the application.
+ * @return User's menu choice.
+ */
 int menu()
 {
     std::cout << "[" << MENU_INIT_COMM      << "] init communication"           << std::endl;

@@ -2,10 +2,13 @@ Header header
 int32 option
 uint16[] abs_pos
 float64[] xyz_pos
+uint16[] operating_mode
 int32 repeat_motions
 uint16 acc_up
 uint16 acc_lo
 uint16 dec_up
 uint16 dec_lo
-uint16 speed_up
-uint16 speed_lo
+uint16 op_speed_up
+uint16 op_speed_lo
+uint16 st_speed_up
+uint16 st_speed_lo

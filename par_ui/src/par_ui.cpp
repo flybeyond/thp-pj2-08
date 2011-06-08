@@ -61,24 +61,19 @@ int main(int argc, char **argv)
                 cmd.option = MENU_START_MOT;
                 chatter_pub_cmd.publish(cmd);
             break;
-	    case MENU_STOP_MOT:
-		cmd.option = MENU_STOP_MOT;
-		chatter_pub_cmd.publish(cmd);
-	    break;
-	    case MENU_START_HM:
+	        case MENU_STOP_MOT:
+		        cmd.option = MENU_STOP_MOT;
+		        chatter_pub_cmd.publish(cmd);
+	        break;
+	        case MENU_START_HM:
 	            cmd.option = MENU_START_HM;
-	            cmd.abs_pos.push_back(0);
-	            cmd.abs_pos.push_back(0);
-	            cmd.abs_pos.push_back(0);
-	            cmd.abs_pos.push_back(0);
-	            cmd.abs_pos.push_back(0);
-	            cmd.abs_pos.push_back(0);
+	            configure_homing(cmd);
 	            chatter_pub_cmd.publish(cmd);
 	        break;
-	    case MENU_START_TEST:
-		cmd.option = MENU_START_TEST;
-		chatter_pub_cmd.publish(cmd);
-		break;
+	        case MENU_START_TEST:
+		        cmd.option = MENU_START_TEST;
+		        chatter_pub_cmd.publish(cmd);
+		    break;
             case MENU_EXIT:
                 cmd.option = MENU_EXIT;
                 chatter_pub_cmd.publish(cmd);
