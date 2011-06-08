@@ -42,18 +42,19 @@ const int MODBUS_SLAVE_ADDR_03  = 0x03;
 /**
  * Constants for configuring the controllers/motors.
  */
-const uint16_t MOTOR_OP_SPEED_UP = 0xA120; 
-const uint16_t MOTOR_OP_SPEED_LO = 0x0007;
-const uint16_t MOTOR_ST_SPEED_UP = 0x03E8;
-const uint16_t MOTOR_ST_SPEED_LO = 0x0000;
-const uint16_t MOTOR_ACC_UP      = 0x1388;
-const uint16_t MOTOR_ACC_LO      = 0x0000;
-const uint16_t MOTOR_DEC_UP      = 0x1388;
-const uint16_t MOTOR_DEC_LO      = 0x0000;
-const uint16_t MOTOR_OPM_SINGLE  = 0x0000;
-const uint16_t MOTOR_OPM_LINK1   = 0x0001;
-const uint16_t MOTOR_OPM_LINK2   = 0x0002;
-const double   MOTOR_STEP_ANGLE  = 0.072;
+const uint16_t MOTOR_OP_SPEED_UP  = 0xA120; 
+const uint16_t MOTOR_OP_SPEED_LO  = 0x0007;
+const uint16_t MOTOR_ST_SPEED_UP  = 0x03E8;
+const uint16_t MOTOR_ST_SPEED_LO  = 0x0000;
+const uint16_t MOTOR_ACC_UP       = 0x1388;
+const uint16_t MOTOR_ACC_LO       = 0x0000;
+const uint16_t MOTOR_DEC_UP       = 0x1388;
+const uint16_t MOTOR_DEC_LO       = 0x0000;
+const uint16_t MOTOR_OPM_SINGLE   = 0x0000;
+const uint16_t MOTOR_OPM_LINK1    = 0x0001;
+const uint16_t MOTOR_OPM_LINK2    = 0x0002;
+const int      MOTOR_MAX_LINK_MOT = 0x04;
+const double   MOTOR_STEP_ANGLE   = 0.072;
 
 /**
  * Register address constants. See datasheet for more registers.

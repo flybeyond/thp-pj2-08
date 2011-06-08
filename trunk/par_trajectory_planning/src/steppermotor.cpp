@@ -76,24 +76,15 @@ void StepperMotor::stop()
 }
 
 void StepperMotor::initCom()
-{
-	if (ctx == NULL)
-	{
-		std::cout << "StepperMotor::init(): unable to create the libmodbus context." << std::endl;
-	}
-	
+{	
 	//modbus_set_debug(ctx, 1);
 	struct timeval timeout_end;
 	struct timeval timeout_begin;
 	modbus_get_timeout_end(ctx, &timeout_end);
-	//printf("timeout.tv_sec: %ld\n", timeout_end.tv_sec);
-	//printf("timeout.tv_usec: %ld\n", timeout_end.tv_usec);
 	timeout_end.tv_usec = MODBUS_TIMEOUT_END;
 	modbus_set_timeout_end(ctx, &timeout_end);
 
 	modbus_get_timeout_begin(ctx, &timeout_begin);
-	//printf("timeout.tv_sec: %ld\n", timeout_begin.tv_sec);
-	//printf("timeout.tv_usec: %ld\n", timeout_begin.tv_usec);
 	timeout_begin.tv_usec = MODBUS_TIMEOUT_BEGIN;
 	modbus_set_timeout_begin(ctx, &timeout_begin);
 
@@ -136,11 +127,12 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
     modbus_set_slave(ctx, 0);
 	src[1] = cmd.st_speed_lo;
 	src[0] = cmd.st_speed_up;
-	int n = modbus_write_registers(ctx, REG_MOTOR_ST_SPEED, 2, src);
+	modbus_write_registers(ctx, REG_MOTOR_ST_SPEED, 2, src);
 	printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);    
 
     int i;
+    int linked_motions = 0;
     uint16_t seq_pos = 0x01;
     uint16_t pos_lo[3];
     uint16_t pos_up[3];
@@ -152,19 +144,17 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
         std::cout << " z : " << cmd.xyz_pos[ 2 + (i * 3) ] << std::endl;
         pos_lo[X] = angleToStep( cmd.xyz_pos[ 0 + (i * 3) ], invalid_motion[X] );
         pos_up[X] = ( pos_lo[X] & 0x8000 ) ? 0xFFFF : 0x00;
-        //std::cout << "X: " << pos_lo[X] << std::endl;
         
         pos_lo[Y] = angleToStep( cmd.xyz_pos[ 1 + (i * 3) ], invalid_motion[Y] );
         pos_up[Y] = ( pos_lo[Y] & 0x8000 ) ? 0xFFFF : 0x00;
-	    //std::cout << "Y: " << pos_lo[Y] << std::endl;
         
         pos_lo[Z] = angleToStep( cmd.xyz_pos[ 2 + (i * 3) ], invalid_motion[Z] );
         pos_up[Z] = ( pos_lo[Z] & 0x8000 ) ? 0xFFFF : 0x00;
-	    //std::cout << "Z: " << pos_lo[Z] << std::endl;
 
-        uint16_t operating_mode = cmd.operating_mode[i];
         // disable sequential positioning for last entry.
         seq_pos = (i == (motions - 1)) ? 0x00 : 0x01;
+        if (i == (motions - 1)) std::cout << "SEQUENTIAL POSITIONING DISABLED FOR DATA NO. " << i << std::endl;
+        uint16_t operating_mode = cmd.operating_mode[i];
 
 	    if (invalid_motion[X] ||
                 invalid_motion[Y] ||
@@ -183,7 +173,29 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
             initSingleMotion(MODBUS_SLAVE_ADDR_03, pos_up[Z], pos_lo[Z], 
                 cmd.acc_lo, cmd.acc_up, cmd.dec_lo, cmd.dec_up, 
                 cmd.op_speed_lo, cmd.op_speed_up, operating_mode, seq_pos, i + 1); // Z	
+             
+            // This is important. You have to count the linked motions, because they need to be
+            // subtracted from the motions to start. 4 linked motions only require 1 start.     
+            if (operating_mode == MOTOR_OPM_LINK1 ||
+                operating_mode == MOTOR_OPM_LINK2)
+            {
+                linked_motions++;
+            }
 	    }
+    }
+    
+    if (linked_motions > 0)
+    {
+        // This is the recipe:
+        // motions = motions - linked_motions
+        // motions += (linked_motions / MOTOR_MAX_LINK_MOT);
+        // if (linked_motions % MOTOR_MAX_LINK_MOT) > 0 then motions++;
+        std::cout << "MOTIONS: " << motions << std::endl;
+        motions = motions - linked_motions;
+        motions = motions + (linked_motions / MOTOR_MAX_LINK_MOT);
+        if ( (linked_motions % MOTOR_MAX_LINK_MOT) > 0) motions++;
+        std::cout << "LINKED MOTIONS: " << linked_motions << std::endl;
+        std::cout << "MOTIONS TO START AFTER CORRECTION: " << motions << std::endl;
     }
 }
 
@@ -267,7 +279,6 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 
 uint16_t StepperMotor::angleToStep(double x, bool& invalid_motion)
 {
-	//std::cout << "ANGLE: " << x << std::endl;
 	if (x != x)
     	{
 	    invalid_motion = true;
