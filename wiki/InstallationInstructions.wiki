@@ -33,4 +33,4 @@ $ rosrun par_kinematics par_kinematics
 $ rosrun par_ui par_ui
 }}}
 
-The package par_ui can be used for controlling the delta robot.
+The package par_ui is the package that allows a user to control the delta robot.
