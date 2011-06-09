@@ -115,20 +115,22 @@ void StepperMotor::confSingleMotion(const par_trajectory_planning::commands& cmd
     motions = cmd.abs_pos.size() / 6; 
     repeat_motions = 1;
 
+    std::cout << "hallo" << std::endl;
+
     int i;
     for(i=0; i<motions; i++)
     {
         initSingleMotion(MODBUS_SLAVE_ADDR_01, cmd.abs_pos[ 0 + (i * 6) ], cmd.abs_pos[ 1 + (i * 6) ], 
-            MOTOR_ACC_UP, MOTOR_ACC_LO, MOTOR_DEC_UP, MOTOR_DEC_LO, 
-            MOTOR_OP_SPEED_UP, MOTOR_OP_SPEED_LO, MOTOR_OPM_SINGLE, 0x00, i + 1); // X
+            MOTOR_ACC_LO, MOTOR_ACC_UP, MOTOR_DEC_LO, MOTOR_DEC_UP, 
+            MOTOR_OP_SPEED_LO, MOTOR_OP_SPEED_UP, MOTOR_OPM_SINGLE, 0x00, i + 1); // X
 
         initSingleMotion(MODBUS_SLAVE_ADDR_02, cmd.abs_pos[ 2 + (i * 6) ], cmd.abs_pos[ 3 + (i * 6) ],
-            MOTOR_ACC_UP, MOTOR_ACC_LO, MOTOR_DEC_UP, MOTOR_DEC_LO, 
-            MOTOR_OP_SPEED_UP, MOTOR_OP_SPEED_LO, MOTOR_OPM_SINGLE, 0x00, i + 1); // Y
+            MOTOR_ACC_LO, MOTOR_ACC_UP, MOTOR_DEC_LO, MOTOR_DEC_UP, 
+            MOTOR_OP_SPEED_LO, MOTOR_OP_SPEED_UP, MOTOR_OPM_SINGLE, 0x00, i + 1); // Y
 
         initSingleMotion(MODBUS_SLAVE_ADDR_03, cmd.abs_pos[ 4 + (i * 6) ], cmd.abs_pos[ 5 + (i * 6) ], 
-            MOTOR_ACC_UP, MOTOR_ACC_LO, MOTOR_DEC_UP, MOTOR_DEC_LO,
-            MOTOR_OP_SPEED_UP, MOTOR_OP_SPEED_LO, MOTOR_OPM_SINGLE, 0x00, i + 1); // Z
+            MOTOR_ACC_LO, MOTOR_ACC_UP, MOTOR_DEC_LO, MOTOR_DEC_UP,
+            MOTOR_OP_SPEED_LO, MOTOR_OP_SPEED_UP, MOTOR_OPM_SINGLE, 0x00, i + 1); // Z
     }
 
 }
@@ -207,12 +209,12 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
 	    }
     }
 
-
     // safe guard check: if the first entry is a linked motion
     // a start for that motion must be done.
     if (cmd.operating_mode[0] == MOTOR_OPM_LINK1 ||
         cmd.operating_mode[0] == MOTOR_OPM_LINK2)
     {
+        std::cout << "MOTIONS: " << motions << std::endl;
         if ( (motions % MOTOR_MAX_LINK_MOT == 0) )
         {
             motions = single_motions;
@@ -222,7 +224,6 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
             motions = ++single_motions;
         }
     }
-    
     std::cout << "MOTIONS TO START: " << motions << std::endl;
 }
 
