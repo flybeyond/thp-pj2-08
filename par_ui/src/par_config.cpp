@@ -136,7 +136,7 @@ void Config::parse_xml_ptp()
                 }
             }
             
-            
+            int k = 1;
             for (TiXmlElement* row = config->FirstChildElement(); row;
                 row = row->NextSiblingElement())
             {
@@ -144,6 +144,7 @@ void Config::parse_xml_ptp()
                 TiXmlNode* Y  = row->FirstChild("Y");
                 TiXmlNode* Z  = row->FirstChild("Z");
                 TiXmlNode* OM = row->FirstChild("mode"); 
+                std::cout << "ROW READ: " << k++ << std::endl;
                 if (X != NULL && Y != NULL && Z != NULL)
                 {
                     coords.request.x = atof( X->FirstChild()->ValueStr().c_str() );
@@ -151,29 +152,39 @@ void Config::parse_xml_ptp()
                     coords.request.z = atof( Z->FirstChild()->ValueStr().c_str() );
                     push_angles(coord_client, coords, cmd);
                 }
+                else
+                {
+                    std::cout << "XYZ NULL" << std::endl;
+                }
                 
                 if (OM != NULL)
                 {
                     std::string om = OM->FirstChild()->ValueStr();
+                    std::cout << "OM: " << om << std::endl;
                     if ( om == "single" )
                     {
+                        std::cout << "single picked" << std::endl;
                         cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
                     }
                     else if ( om == "link" )
                     {
+                        std::cout << "link picked" << std::endl;
                         cmd.operating_mode.push_back( MOTOR_OPM_LINK1 );
                     }
                     else if ( om == "cp" )
                     {
+                        std::cout << "cp picked" << std::endl;
                         cmd.operating_mode.push_back( MOTOR_OPM_LINK2 );
                     }
                     else
                     {
+                        std::cout << "defaulted to single" << std::endl;
                         cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
                     }
                 }
                 else
                 {
+                    std::cout << "OM == null" << std::endl;
                     cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
                 }
             }
@@ -183,6 +194,7 @@ void Config::read(const std::string& file)
 {
     cmd.abs_pos.clear();
     cmd.xyz_pos.clear();
+    cmd.operating_mode.clear();
 
 	TiXmlDocument doc(file.c_str());
 	std::cout << "file: " << file.c_str() << std::endl;

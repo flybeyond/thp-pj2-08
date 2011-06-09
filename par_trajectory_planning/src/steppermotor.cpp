@@ -12,6 +12,22 @@ void StepperMotor::init()
 {
     std::cout << "StepperMotor::init()" << std::endl;
     motions = 0;
+
+    // It is important to clear the operation data register with default settings.
+    // E.g., if more than 4 motions are linked the system won't work.
+    modbus_set_slave(ctx, 0);
+    int i;
+    for(i=0; i<63; i++)
+    {
+	    // set operating mode
+	    int n = modbus_write_register(ctx, REG_MOTOR_OPM + (i + 1), MOTOR_OPM_SINGLE);
+	    usleep(MODBUS_MAX_PROC_TIME);	
+
+        // disable sequential positioning
+	    n = modbus_write_register(ctx, REG_MOTOR_SQPS + (i + 1), 0x00);
+	    usleep(MODBUS_MAX_PROC_TIME);        
+    }
+    std::cout << "init successful" << std::endl;
 }
 
 void StepperMotor::start()
@@ -120,6 +136,7 @@ void StepperMotor::confSingleMotion(const par_trajectory_planning::commands& cmd
 void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
 {
     motions = cmd.xyz_pos.size() / 3;
+    std::cout << "SIZE OF OPERATING MODE TABLE: " << cmd.operating_mode.size() << std::endl;
     repeat_motions = cmd.repeat_motions;
     if (repeat_motions == 0) repeat_motions = 1;    
 
@@ -133,6 +150,7 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
 
     int i;
     int linked_motions = 0;
+    int single_motions = 0;
     uint16_t seq_pos = 0x01;
     uint16_t pos_lo[3];
     uint16_t pos_up[3];
@@ -156,6 +174,8 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
         if (i == (motions - 1)) std::cout << "SEQUENTIAL POSITIONING DISABLED FOR DATA NO. " << i << std::endl;
         uint16_t operating_mode = cmd.operating_mode[i];
 
+        std::cout << "OPERATING MODE[" << i << "]: " << cmd.operating_mode[i] << std::endl;
+
 	    if (invalid_motion[X] ||
                 invalid_motion[Y] ||
                 invalid_motion[Z] )
@@ -174,29 +194,36 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
                 cmd.acc_lo, cmd.acc_up, cmd.dec_lo, cmd.dec_up, 
                 cmd.op_speed_lo, cmd.op_speed_up, operating_mode, seq_pos, i + 1); // Z	
              
-            // This is important. You have to count the linked motions, because they need to be
-            // subtracted from the motions to start. 4 linked motions only require 1 start.     
-            if (operating_mode == MOTOR_OPM_LINK1 ||
-                operating_mode == MOTOR_OPM_LINK2)
+            // This is important. You have to count the single motions, because that are the
+            // only ones you have to start.
+            if (operating_mode == MOTOR_OPM_SINGLE)
+            {
+                single_motions++;
+            }
+            else
             {
                 linked_motions++;
             }
 	    }
     }
-    
-    if (linked_motions > 0)
+
+
+    // safe guard check: if the first entry is a linked motion
+    // a start for that motion must be done.
+    if (cmd.operating_mode[0] == MOTOR_OPM_LINK1 ||
+        cmd.operating_mode[0] == MOTOR_OPM_LINK2)
     {
-        // This is the recipe:
-        // motions = motions - linked_motions
-        // motions += (linked_motions / MOTOR_MAX_LINK_MOT);
-        // if (linked_motions % MOTOR_MAX_LINK_MOT) > 0 then motions++;
-        std::cout << "MOTIONS: " << motions << std::endl;
-        motions = motions - linked_motions;
-        motions = motions + (linked_motions / MOTOR_MAX_LINK_MOT);
-        if ( (linked_motions % MOTOR_MAX_LINK_MOT) > 0) motions++;
-        std::cout << "LINKED MOTIONS: " << linked_motions << std::endl;
-        std::cout << "MOTIONS TO START AFTER CORRECTION: " << motions << std::endl;
+        if ( (motions % MOTOR_MAX_LINK_MOT == 0) )
+        {
+            motions = single_motions;
+        }
+        else
+        {
+            motions = ++single_motions;
+        }
     }
+    
+    std::cout << "MOTIONS TO START: " << motions << std::endl;
 }
 
 void StepperMotor::exit()
@@ -228,8 +255,8 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	// set operating speed
 	src[1] = speed_up;
 	src[0] = speed_lo;
-	std::cout << "speed_up: " << speed_up << std::endl;
-    std::cout << "speed_lo: " << speed_lo << std::endl;
+	//std::cout << "speed_up: " << speed_up << std::endl;
+    //std::cout << "speed_lo: " << speed_lo << std::endl;
 	n = modbus_write_registers(ctx, REG_MOTOR_OP_SPEED + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);
@@ -237,8 +264,8 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	// set acceleration
 	src[1] = acc_up;
 	src[0] = acc_lo;
-	std::cout << "acc_up: " << acc_up << std::endl;
-    std::cout << "acc_lo: " << acc_lo << std::endl;
+	//std::cout << "acc_up: " << acc_up << std::endl;
+    //std::cout << "acc_lo: " << acc_lo << std::endl;
 	n = modbus_write_registers(ctx, REG_MOTOR_ACC + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);	
@@ -246,8 +273,8 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 	// set deceleration
 	src[1] = dec_up;
 	src[0] = dec_lo;
-	std::cout << "dec_up: " << dec_up << std::endl;
-    std::cout << "dec_lo: " << dec_lo << std::endl;	
+	//std::cout << "dec_up: " << dec_up << std::endl;
+    //std::cout << "dec_lo: " << dec_lo << std::endl;	
 	n = modbus_write_registers(ctx, REG_MOTOR_DEC + (off * 2), 2, src);
 	//printf("errno: %s\n", modbus_strerror(errno));
 	usleep(MODBUS_MAX_PROC_TIME);		

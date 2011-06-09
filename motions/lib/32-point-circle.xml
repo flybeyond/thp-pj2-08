@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <config>
 <option number="4">
-        <repeat_motions>1</repeat_motions>
+    <repeat_motions>1</repeat_motions>
 	<row number="1">
 		<X>-5.88103</X>
 		<Y>59.7111</Y>
@@ -24,13 +24,13 @@
 		<X>-38.0636</X>
 		<Y>46.3806</Y>
 		<Z>130</Z>
-		<mode>cp</mode>
+		<mode>single</mode>
 	</row>
 	<row number="5">
 		<X>-46.3806</X>
 		<Y>38.0636</Y>
 		<Z>130</Z>
-		<mode>single</mode>
+		<mode>cp</mode>
 	</row>
 	<row number="6">
 		<X>-52.9153</X>
@@ -48,7 +48,7 @@
 		<X>-59.7111</X>
 		<Y>5.88103</Y>
 		<Z>130</Z>
-		<mode>cp</mode>
+		<mode>single</mode>
 	</row>
 	<row number="9">
 		<X>-59.7111</X>
@@ -60,7 +60,7 @@
 		<X>-57.4164</X>
 		<Y>-17.4171</Y>
 		<Z>130</Z>
-		<mode>single</mode>
+		<mode>cp</mode>
 	</row>
 	<row number="11">
 		<X>-52.9153</X>
@@ -72,7 +72,7 @@
 		<X>-46.3806</X>
 		<Y>-38.0636</Y>
 		<Z>130</Z>
-		<mode>cp</mode>
+		<mode>single</mode>
 	</row>
 	<row number="13">
 		<X>-38.0636</X>
@@ -90,13 +90,13 @@
 		<X>-17.4171</X>
 		<Y>-57.4164</Y>
 		<Z>130</Z>
-		<mode>single</mode>
+		<mode>cp</mode>
 	</row>
 	<row number="16">
 		<X>-5.88103</X>
 		<Y>-59.7111</Y>
 		<Z>130</Z>
-		<mode>cp</mode>
+		<mode>single</mode>
 	</row>
 	<row number="17">
 		<X>5.88103</X>
@@ -144,13 +144,13 @@
 		<X>59.7111</X>
 		<Y>-5.88103</Y>
 		<Z>130</Z>
-		<mode>cp</mode>
+		<mode>single</mode>
 	</row>
 	<row number="25">
 		<X>59.7111</X>
 		<Y>5.88103</Y>
 		<Z>130</Z>
-		<mode>single</mode>
+		<mode>cp</mode>
 	</row>
 	<row number="26">
 		<X>57.4164</X>
@@ -168,7 +168,7 @@
 		<X>46.3806</X>
 		<Y>38.0636</Y>
 		<Z>130</Z>
-		<mode>cp</mode>
+		<mode>single</mode>
 	</row>
 	<row number="29">
 		<X>38.0636</X>
@@ -180,7 +180,7 @@
 		<X>28.2838</X>
 		<Y>52.9153</Y>
 		<Z>130</Z>
-		<mode>single</mode>
+		<mode>cp</mode>
 	</row>
 	<row number="31">
 		<X>17.4171</X>
@@ -192,13 +192,13 @@
 		<X>5.88103</X>
 		<Y>59.7111</Y>
 		<Z>130</Z>
-		<mode>cp</mode>
+		<mode>single</mode>
 	</row>
 	<row number="33">
 		<X>0</X>
 		<Y>0</Y>
 		<Z>201.5</Z>
-		<mode>cp</mode>
+		<mode>single</mode>
 	</row>
 </option>
 </config>
