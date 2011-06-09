@@ -150,12 +150,23 @@ void pick_configuration_file(const boost::filesystem::path& directory, std::stri
  */
 void configure_homing(par_trajectory_planning::commands& cmd)
 {
+    cmd.abs_pos.clear();
+
     cmd.abs_pos.push_back(0);
     cmd.abs_pos.push_back(0);
     cmd.abs_pos.push_back(0);
     cmd.abs_pos.push_back(0);
     cmd.abs_pos.push_back(0);
     cmd.abs_pos.push_back(0);
+    // configure important defaults; if not done motion fails. 
+    cmd.acc_up      = MOTOR_ACC_UP;
+    cmd.acc_lo      = MOTOR_ACC_LO;
+    cmd.dec_up      = MOTOR_DEC_UP;
+    cmd.dec_lo      = MOTOR_DEC_LO;
+    cmd.op_speed_up = MOTOR_OP_SPEED_UP;
+    cmd.op_speed_lo = MOTOR_OP_SPEED_LO;
+    cmd.st_speed_up = MOTOR_ST_SPEED_UP;
+    cmd.st_speed_lo = MOTOR_ST_SPEED_LO;
 }
 
 /**
