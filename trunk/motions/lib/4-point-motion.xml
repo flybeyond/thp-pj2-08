@@ -2,20 +2,20 @@
 <config>
 <option number="4">
 	<row number="1">
-		<X>-5.88103</X>
-		<Y>59.7111</Y>
+		<X>0</X>
+		<Y>0</Y>
 		<Z>130</Z>
 		<mode>cp</mode>
 	</row>
 	<row number="2">
-		<X>-17.4171</X>
-		<Y>57.4164</Y>
-		<Z>130</Z>
+		<X>0</X>
+		<Y>0</Y>
+		<Z>201.5</Z>
 		<mode>cp</mode>
 	</row>
 	<row number="3">
-		<X>-28.2838</X>
-		<Y>52.9153</Y>
+		<X>0</X>
+		<Y>0</Y>
 		<Z>130</Z>
 		<mode>cp</mode>
 	</row>
@@ -23,7 +23,7 @@
 		<X>0</X>
 		<Y>0</Y>
 		<Z>201.5</Z>
-		<mode>cp</mode>
+		<mode>single</mode>
 	</row>
 </option>
 </config>

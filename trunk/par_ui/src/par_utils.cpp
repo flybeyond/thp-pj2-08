@@ -26,9 +26,9 @@ void push_angles(ros::ServiceClient& coord_client, par_kinematics::coord& coords
         cmd.xyz_pos.push_back(coords.response.angles[Y]);
         cmd.xyz_pos.push_back(coords.response.angles[Z]);
         
-        std::cout << "coords.request.x: " << coords.request.x << std::endl;
-        std::cout << "coords.request.y: " << coords.request.y << std::endl;
-        std::cout << "coords.request.z: " << coords.request.z << std::endl;        
+        //std::cout << "coords.request.x: " << coords.request.x << std::endl;
+        //std::cout << "coords.request.y: " << coords.request.y << std::endl;
+        //std::cout << "coords.request.z: " << coords.request.z << std::endl;        
 }
 
 /**
@@ -86,6 +86,7 @@ void configure_PTP_motion(ros::ServiceClient& coord_client, par_kinematics::coor
 			  par_trajectory_planning::commands& cmd)
 {   
     cmd.xyz_pos.clear();
+    cmd.operating_mode.clear();
     int motions = 0;
 	std::cout << "Enter amount of PTP motions to configure: " << std::endl; 
 	std::cin >> motions;
