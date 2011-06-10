@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<config>
+<option number="4">
+	<row number="1">
+		<X>0</X>
+		<Y>0</Y>
+		<Z>130</Z>
+		<mode>single</mode>
+	</row>
+	<row number="2">
+		<X>0</X>
+		<Y>0</Y>
+		<Z>201.5</Z>
+		<mode>single</mode>
+	</row>	
+</option>
+</config>
