@@ -26,6 +26,15 @@ void StepperMotor::init()
         // disable sequential positioning
 	    n = modbus_write_register(ctx, REG_MOTOR_SQPS + (i + 1), 0x00);
 	    usleep(MODBUS_MAX_PROC_TIME);        
+
+        // set positions
+	    uint16_t src[2] = {0x0000, 0x0000};
+	    n = modbus_write_registers(ctx, REG_MOTOR_POS + (i + 1) * 2, 2, src);
+    	usleep(MODBUS_MAX_PROC_TIME);
+
+	    // set to absolute positioning
+	    n = modbus_write_register(ctx, REG_MOTOR_MPOS + (i + 1), 0x01);	
+	    usleep(MODBUS_MAX_PROC_TIME);
     }
     std::cout << "init successful" << std::endl;
 }
@@ -33,16 +42,17 @@ void StepperMotor::init()
 void StepperMotor::start()
 {
     std::cout << "StepperMotor::start()" << std::endl;
-    uint16_t stat_ax01[2], stat_ax02[2], stat_ax03[3];
+    //uint16_t stat_ax01[2], stat_ax02[2], stat_ax03[2];
+    uint16_t stat_ax01[1], stat_ax02[1], stat_ax03[1];
     int i, n, j;
     
     j = 0;
     std::cout << "REPEAT MOTIONS: " << repeat_motions << std::endl;
     std::cout << "MOTIONS: " << motions << std::endl;
 
-    while(j < repeat_motions && !stop_motion)
+    while(j < repeat_motions)
     {
-        for(i=1; i<=motions && !stop_motion; i++)
+        for(i=0; i<motions-1; i++)
         {
 	        modbus_set_slave(ctx, 0);
             n = modbus_write_register(ctx, 0x001E, 0x2000);
@@ -50,40 +60,48 @@ void StepperMotor::start()
 		    //std::cout << "--> [1] write result: " << n << std::endl;
 	        usleep(MODBUS_MAX_BCAST_TIME);
 	        // turn start input on
-	        n = modbus_write_register(ctx, 0x001E, 0x2100 /*+ i*/ );
+	        n = modbus_write_register(ctx, 0x001E, 0x2100 /* + i */ );
 	        //printf("errno: %s\n", modbus_strerror(errno));
 		    //std::cout << "--> [2] write result: " << n << std::endl;
 	        usleep(MODBUS_MAX_BCAST_TIME);
 	        // turn start input off
-	        n = modbus_write_register(ctx, 0x001E, 0x2000 /*+ i*/ );
+	        n = modbus_write_register(ctx, 0x001E, 0x2000 /* + i */ );
 		    //std::cout << "--> [3] write result: " << n << std::endl;
 	        //printf("errno: %s\n", modbus_strerror(errno));    
 	        usleep(MODBUS_MAX_BCAST_TIME);
 	
 
 	        stat_ax01[0] = stat_ax02[0] = stat_ax03[0] = 0x0000;
-	        stat_ax01[1] = stat_ax02[1] = stat_ax03[1] = 0x0000;
-	        while( (stat_ax01[0] & 0x2000) == 0 ||
-	               (stat_ax02[0] && 0x2000) == 0 ||
-	               (stat_ax03[0] && 0x2000) == 0 )
+	        //stat_ax01[1] = stat_ax02[1] = stat_ax03[1] = 0x0000;
+            
+	        while( (stat_ax01[0] != 0x2000) ||
+	               (stat_ax02[0] != 0x2000) ||
+	               (stat_ax03[0] != 0x2000) )
 	        {
 		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_01);
-		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax01); 
+		        n = modbus_read_registers(ctx, 0x0020, 1, stat_ax01); 
 		        usleep(MODBUS_MAX_PROC_TIME);
-
+                printf("stat_ax01: %x\n", stat_ax01[0]);
+                
 		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_02);
-		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax02); 
+		        n = modbus_read_registers(ctx, 0x0020, 1, stat_ax02); 
 		        usleep(MODBUS_MAX_PROC_TIME);
+                printf("stat_ax02: %x\n", stat_ax02[0]);
 
 		        modbus_set_slave(ctx, MODBUS_SLAVE_ADDR_03);
-		        n = modbus_read_registers(ctx, 0x0020, 2, stat_ax03); 
+		        n = modbus_read_registers(ctx, 0x0020, 1, stat_ax03); 
 		        usleep(MODBUS_MAX_PROC_TIME);
+                printf("stat_ax03: %x\n", stat_ax03[0]);
 	        }
-	        //std::cout << "motor can receive new command\n" << std::endl;
+	        std::cout << "motor can receive new command\n" << std::endl;
         }  
         j++;
     }
     stop_motion = false;
+    // set operation number to zero
+    modbus_set_slave(ctx, 0);
+	n = modbus_write_register(ctx, 0x001E, 0x0000 /* + i */ );
+    usleep(MODBUS_MAX_PROC_TIME);
 }
 
 void StepperMotor::stop()
@@ -137,6 +155,8 @@ void StepperMotor::confSingleMotion(const par_trajectory_planning::commands& cmd
 
 void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
 {
+    init();
+
     motions = cmd.xyz_pos.size() / 3;
     std::cout << "SIZE OF OPERATING MODE TABLE: " << cmd.operating_mode.size() << std::endl;
     repeat_motions = cmd.repeat_motions;
@@ -172,7 +192,12 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
         pos_up[Z] = ( pos_lo[Z] & 0x8000 ) ? 0xFFFF : 0x00;
 
         // disable sequential positioning for last entry.
-        seq_pos = (i == (motions - 1)) ? 0x00 : 0x01;
+        /*
+         * TEMPORARY DISABLE
+         */
+         //seq_pos = (i == (motions - 1)) ? 0x00 : 0x01;
+        
+        //seq_pos = 0x00;
         if (i == (motions - 1)) std::cout << "SEQUENTIAL POSITIONING DISABLED FOR DATA NO. " << i << std::endl;
         uint16_t operating_mode = cmd.operating_mode[i];
 
@@ -224,6 +249,9 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
             motions = ++single_motions;
         }
     }
+
+    if (linked_motions == 0) motions++;
+
     std::cout << "MOTIONS TO START: " << motions << std::endl;
 }
 
