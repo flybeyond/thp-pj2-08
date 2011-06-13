@@ -20,26 +20,22 @@ bool IK_solver(par_kinematics::coord::Request& req,
                par_kinematics::coord::Response& res)
 {
     std::cout << "Inverse kinematics request received." << std::endl;
-    
+    // y and z are changed. this is how the model works. you could of course fix this
+    // by rewriting the code, but at the moment i don't have the time to do so.
 	double x = req.x;
-	double y = req.y;
-	double z = req.z;
-	// y and z are reversed, yes, this is nasty.
-	// for now, it's a quick fix that works as expected. 
-    Point goal(x, z, y);
+	double y = req.z;
+	double z = req.y;
+
+    Point goal(x, y, z);
 	deltaRobot->moveto(goal);    
 	
-    std::cout << "deltaRobot->servo[X]: " << deltaRobot->servo[X] << std::endl;
-	std::cout << "deltaRobot->servo[Y]: " << deltaRobot->servo[Y] << std::endl;
-	std::cout << "deltaRobot->servo[Z]: " << deltaRobot->servo[Z] << std::endl;
-	
-	std::cout << "deltaRobot->servo[X] deg: " << Util::deg(deltaRobot->servo[X]) << std::endl;
-	std::cout << "deltaRobot->servo[Y] deg: " << Util::deg(deltaRobot->servo[Y]) << std::endl;
-	std::cout << "deltaRobot->servo[Z] deg: " << Util::deg(deltaRobot->servo[Z]) << std::endl;
 	res.angles[X] = Util::deg(deltaRobot->servo[X]);
 	res.angles[Y] = Util::deg(deltaRobot->servo[Y]);
-	res.angles[Z] = Util::deg(deltaRobot->servo[Z]); 
-    
+	res.angles[Z] = Util::deg(deltaRobot->servo[Z]); 	
+	
+	std::cout << "X: " << Util::deg(deltaRobot->servo[X]) << std::endl;
+	std::cout << "Y: " << Util::deg(deltaRobot->servo[Y]) << std::endl;
+	std::cout << "Z: " << Util::deg(deltaRobot->servo[Z]) << std::endl;
 
     return true;    
 }

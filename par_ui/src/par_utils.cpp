@@ -24,11 +24,7 @@ void push_angles(ros::ServiceClient& coord_client, par_kinematics::coord& coords
         
         cmd.xyz_pos.push_back(coords.response.angles[X]);
         cmd.xyz_pos.push_back(coords.response.angles[Y]);
-        cmd.xyz_pos.push_back(coords.response.angles[Z]);
-        
-        //std::cout << "coords.request.x: " << coords.request.x << std::endl;
-        //std::cout << "coords.request.y: " << coords.request.y << std::endl;
-        //std::cout << "coords.request.z: " << coords.request.z << std::endl;        
+        cmd.xyz_pos.push_back(coords.response.angles[Z]);    
 }
 
 /**
@@ -151,7 +147,8 @@ void pick_configuration_file(const boost::filesystem::path& directory, std::stri
 void configure_homing(par_trajectory_planning::commands& cmd)
 {
     cmd.abs_pos.clear();
-
+    // this has to be fixed in a next release. Create a function in the
+    // steppermotor class for homing.
     cmd.abs_pos.push_back(0);
     cmd.abs_pos.push_back(0);
     cmd.abs_pos.push_back(0);
@@ -182,7 +179,7 @@ int menu()
     std::cout << "[" << MENU_RD_CONF_FILE   << "] read configuration file"      << std::endl;
     std::cout << "[" << MENU_START_MOT      << "] start motion"                 << std::endl;
     std::cout << "[" << MENU_STOP_MOT       << "] stop motion"                  << std::endl;
-    std::cout << "[" << MENU_START_HM	    << "] start homing"			<< std::endl;
+    std::cout << "[" << MENU_START_HM	    << "] start homing"			        << std::endl;
     std::cout << "[" << MENU_START_TEST     << "] test"                         << std::endl;
     std::cout << "[" << MENU_EXIT           << "] exit"                         << std::endl;
     

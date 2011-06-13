@@ -60,7 +60,7 @@ int main(int argc, char **argv)
      * Important note!
      * You cannot move the initialization of the modbus interface inside the class' constructor.
      * I don't know the exact reason for this, but GDB shows some memory leakage and
-     * initialization of the object fails. 
+     * initialization of the object fails. In other words: something interesting to look into 
      */
     modbus_t* ctx = modbus_new_rtu("/dev/ttyS0", 115200, 'N', 8, 1); 
     stepperMotor = new StepperMotor(ctx);

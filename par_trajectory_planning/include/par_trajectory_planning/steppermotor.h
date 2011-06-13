@@ -22,7 +22,7 @@ class StepperMotor : public Motor
         /**
          * @brief Destructor.
          */        
-        virtual ~StepperMotor() { /*free(ctx);*/ }
+        virtual ~StepperMotor() { if (ctx) { modbus_close(ctx); free(ctx); } }
         /**
          * @brief Function for initializing the motor.
          */      
