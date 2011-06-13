@@ -203,7 +203,7 @@ void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
                 cmd.op_speed_lo, cmd.op_speed_up, operating_mode, seq_pos, i + 1); // Z	
              
             // This is important. You have to count the single motions, because that are the
-            // only ones you have to manually start.
+            // only ones you have to start manually.
             if (operating_mode == MOTOR_OPM_SINGLE)
             {
                 single_motions++;

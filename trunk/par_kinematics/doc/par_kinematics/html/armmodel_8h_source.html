@@ -66,19 +66,19 @@ None<br />
 <a name="l00017"></a>00017 {
 <a name="l00018"></a>00018         <span class="keyword">public</span>:
 <a name="l00019"></a><a class="code" href="classArmModel.html#a6135ea3cb1411df7dddd40f43c2c6fc5">00019</a>                 <span class="keywordtype">float</span> <a class="code" href="classArmModel.html#a3e469a0741f6e29e6b11950df601c9c0">alpha</a>, <a class="code" href="classArmModel.html#ae03cad3fb0cdae2de17b71e2e8af6229">beta</a>, <a class="code" href="classArmModel.html#a6135ea3cb1411df7dddd40f43c2c6fc5">rho</a>;
-<a name="l00020"></a><a class="code" href="classArmModel.html#a6b8b7868576b967376eb4c99a7f3f8ce">00020</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#aadaa6904d92741aa270a1cf8c3ecb9c4">a</a>, <a class="code" href="classArmModel.html#a6b8b7868576b967376eb4c99a7f3f8ce">b</a>;                    <span class="comment">// ankle length, hip length</span>
-<a name="l00021"></a><a class="code" href="classArmModel.html#a4d1b74b7b6f8e0ecf56fa56e3fc34aa3">00021</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a4d1b74b7b6f8e0ecf56fa56e3fc34aa3">c</a>;                       <span class="comment">// base to goal distance, a2: projected ankle length</span>
+<a name="l00020"></a><a class="code" href="classArmModel.html#a6b8b7868576b967376eb4c99a7f3f8ce">00020</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#aadaa6904d92741aa270a1cf8c3ecb9c4">a</a>, <a class="code" href="classArmModel.html#a6b8b7868576b967376eb4c99a7f3f8ce">b</a>; <span class="comment">// ankle length, hip length</span>
+<a name="l00021"></a><a class="code" href="classArmModel.html#a4d1b74b7b6f8e0ecf56fa56e3fc34aa3">00021</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a4d1b74b7b6f8e0ecf56fa56e3fc34aa3">c</a>;        <span class="comment">// base to goal distance, a2: projected ankle length</span>
 <a name="l00022"></a>00022 
 <a name="l00023"></a><a class="code" href="classArmModel.html#ac03d09b8aa4abf5987275c2093ac8caf">00023</a>                 <a class="code" href="classPoint.html">Point</a>* <a class="code" href="classArmModel.html#ac03d09b8aa4abf5987275c2093ac8caf">ab</a>;
 <a name="l00024"></a>00024 
-<a name="l00025"></a><a class="code" href="classArmModel.html#a465bd0a8945f7509114240a7af0906c0">00025</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a465bd0a8945f7509114240a7af0906c0">base</a>;         <span class="comment">// base size</span>
-<a name="l00026"></a><a class="code" href="classArmModel.html#aa26d9b7ae909db4dbef4de004f95e4e2">00026</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#aa26d9b7ae909db4dbef4de004f95e4e2">effector</a>;     <span class="comment">// effector size</span>
+<a name="l00025"></a><a class="code" href="classArmModel.html#a465bd0a8945f7509114240a7af0906c0">00025</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a465bd0a8945f7509114240a7af0906c0">base</a>;        <span class="comment">// base size</span>
+<a name="l00026"></a><a class="code" href="classArmModel.html#aa26d9b7ae909db4dbef4de004f95e4e2">00026</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#aa26d9b7ae909db4dbef4de004f95e4e2">effector</a>;    <span class="comment">// effector size</span>
 <a name="l00027"></a><a class="code" href="classArmModel.html#a6901a15b221d275ce26a659bfeee7a8d">00027</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a6901a15b221d275ce26a659bfeee7a8d">angle</a>;           <span class="comment">// this arm length</span>
 <a name="l00028"></a>00028         
 <a name="l00029"></a><a class="code" href="classArmModel.html#a79e2dad57d7d2982b159a89961a54535">00029</a>                 <a class="code" href="classPoint.html">Point</a>* <a class="code" href="classArmModel.html#a79e2dad57d7d2982b159a89961a54535">g</a>;           <span class="comment">// goal point </span>
 <a name="l00030"></a>00030 
-<a name="l00031"></a><a class="code" href="classArmModel.html#a62c37ad0350bc177c9c008ac8fcbb875">00031</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a62c37ad0350bc177c9c008ac8fcbb875">pangle</a>;       <span class="comment">// parallelogram joint angle</span>
-<a name="l00032"></a><a class="code" href="classArmModel.html#a4145e8c786a08caa40b37c926d57fb48">00032</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a4145e8c786a08caa40b37c926d57fb48">ankleAngle</a>;   <span class="comment">// for transforms</span>
+<a name="l00031"></a><a class="code" href="classArmModel.html#a62c37ad0350bc177c9c008ac8fcbb875">00031</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a62c37ad0350bc177c9c008ac8fcbb875">pangle</a>;      <span class="comment">// parallelogram joint angle</span>
+<a name="l00032"></a><a class="code" href="classArmModel.html#a4145e8c786a08caa40b37c926d57fb48">00032</a>                 <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a4145e8c786a08caa40b37c926d57fb48">ankleAngle</a>;  <span class="comment">// for transforms</span>
 <a name="l00033"></a>00033                 
 <a name="l00034"></a>00034                 <a class="code" href="classArmModel.html#a442413d8223d30a804c38784bac0af3a">ArmModel</a>(<span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a6901a15b221d275ce26a659bfeee7a8d">angle</a>, <span class="keywordtype">double</span> hip, <span class="keywordtype">double</span> ankle, <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#a465bd0a8945f7509114240a7af0906c0">base</a>, <span class="keywordtype">double</span> <a class="code" href="classArmModel.html#aa26d9b7ae909db4dbef4de004f95e4e2">effector</a>);
 <a name="l00035"></a>00035                 <a class="code" href="classArmModel.html#a442413d8223d30a804c38784bac0af3a">ArmModel</a>(<span class="keyword">const</span> <a class="code" href="classArmModel.html">ArmModel</a>&amp; p);
@@ -93,7 +93,7 @@ None<br />
 <hr size="1"><div style="align: right;">
 <a href="http://ros.org/wiki/par_kinematics">par_kinematics</a><br />
 Author(s): Wouter van Teijlingen</br />
-<small>autogenerated on Wed Jun 8 2011 17:12:12</small>
+<small>autogenerated on Mon Jun 13 2011 17:06:55</small>
 </div>
 </body>
 </html>
