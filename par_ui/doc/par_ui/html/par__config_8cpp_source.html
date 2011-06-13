@@ -74,205 +74,144 @@ None<br />
 <a name="l00022"></a>00022 
 <a name="l00023"></a><a class="code" href="classConfig.html#ad4f99d7b741d557b0c33922c35d4ac7e">00023</a> <span class="keywordtype">void</span> <a class="code" href="classConfig.html#ad4f99d7b741d557b0c33922c35d4ac7e" title="Function for parsing motor parameters.">Config::parse_xml_init</a>()
 <a name="l00024"></a>00024 {
-<a name="l00025"></a>00025             TiXmlElement* motor = <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>-&gt;FirstChildElement();
-<a name="l00026"></a>00026             
-<a name="l00027"></a>00027             uint16_t speed_up;
-<a name="l00028"></a>00028             uint16_t speed_lo;
-<a name="l00029"></a>00029             
-<a name="l00030"></a>00030             speed_up = atoi( motor-&gt;FirstChild()-&gt;ValueStr().c_str() );
-<a name="l00031"></a>00031             speed_lo = atoi( motor-&gt;FirstChild()-&gt;ValueStr().c_str() );
-<a name="l00032"></a>00032 }
-<a name="l00033"></a>00033 
-<a name="l00034"></a>00034 
-<a name="l00035"></a><a class="code" href="classConfig.html#aec17f8bbbeecadbbb7575070a9623e06">00035</a> <span class="keywordtype">void</span> <a class="code" href="classConfig.html#aec17f8bbbeecadbbb7575070a9623e06" title="Function for retrieving value of a specified node.">Config::get_value</a>(TiXmlNode* node, <span class="keyword">const</span> std::string&amp; key, std::string&amp; value)
-<a name="l00036"></a>00036 {
-<a name="l00037"></a>00037     <span class="keywordflow">if</span> (node != NULL)
-<a name="l00038"></a>00038     {
-<a name="l00039"></a>00039         std::string el;
-<a name="l00040"></a>00040         el = node-&gt;ValueStr();
-<a name="l00041"></a>00041         <span class="keywordflow">if</span> (el == key)
-<a name="l00042"></a>00042         {
-<a name="l00043"></a>00043             value = node-&gt;FirstChild()-&gt;ValueStr();
-<a name="l00044"></a>00044         }
-<a name="l00045"></a>00045         <span class="keywordflow">else</span>
-<a name="l00046"></a>00046         {
-<a name="l00047"></a>00047             value = <span class="stringliteral">&quot;invalid&quot;</span>;
-<a name="l00048"></a>00048         }
-<a name="l00049"></a>00049     }
-<a name="l00050"></a>00050 }
-<a name="l00051"></a>00051 
-<a name="l00052"></a><a class="code" href="classConfig.html#af71847173b3109bb53131480cb4f87a1">00052</a> <span class="keywordtype">void</span> <a class="code" href="classConfig.html#af71847173b3109bb53131480cb4f87a1" title="Function for parsing PTP parameters.">Config::parse_xml_ptp</a>()
-<a name="l00053"></a>00053 {
-<a name="l00054"></a>00054             TiXmlNode* node = <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>-&gt;FirstChild();
-<a name="l00055"></a>00055             std::string key;
-<a name="l00056"></a>00056             std::string value;
-<a name="l00057"></a>00057             
-<a name="l00058"></a>00058             <span class="keywordflow">if</span> (node != NULL)
-<a name="l00059"></a>00059             {
-<a name="l00060"></a>00060                 <a class="code" href="classConfig.html#aec17f8bbbeecadbbb7575070a9623e06" title="Function for retrieving value of a specified node.">get_value</a>(node, <span class="stringliteral">&quot;repeat_motions&quot;</span>, value);
-<a name="l00061"></a>00061                 <span class="keywordflow">if</span> (value != <span class="stringliteral">&quot;invalid&quot;</span>)
-<a name="l00062"></a>00062                 {
-<a name="l00063"></a>00063                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.repeat_motions = atoi( value.c_str() );
-<a name="l00064"></a>00064                 }
-<a name="l00065"></a>00065                 <span class="keywordflow">else</span>
-<a name="l00066"></a>00066                 {   
-<a name="l00067"></a>00067                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.repeat_motions = 1;
-<a name="l00068"></a>00068                 }
-<a name="l00069"></a>00069             }
-<a name="l00070"></a>00070             
-<a name="l00071"></a>00071             <span class="keywordflow">if</span> (node != NULL)
-<a name="l00072"></a>00072             {
-<a name="l00073"></a>00073                 node = node-&gt;NextSibling();
-<a name="l00074"></a>00074                 <a class="code" href="classConfig.html#aec17f8bbbeecadbbb7575070a9623e06" title="Function for retrieving value of a specified node.">get_value</a>(node, <span class="stringliteral">&quot;acceleration&quot;</span>, value);
-<a name="l00075"></a>00075                 <span class="keywordflow">if</span> (value != <span class="stringliteral">&quot;invalid&quot;</span>)
-<a name="l00076"></a>00076                 {
-<a name="l00077"></a>00077                     uint32_t acc = atoi( value.c_str() );
-<a name="l00078"></a>00078                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.acc_up = 0xFFFF &amp; acc;
-<a name="l00079"></a>00079                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.acc_lo = 0xFFFF &amp; (acc &gt;&gt; 16);
-<a name="l00080"></a>00080                 }
-<a name="l00081"></a>00081                 <span class="keywordflow">else</span>
-<a name="l00082"></a>00082                 {
-<a name="l00083"></a>00083                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.acc_up = MOTOR_ACC_UP;
-<a name="l00084"></a>00084                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.acc_lo = MOTOR_ACC_LO;
-<a name="l00085"></a>00085                 }
-<a name="l00086"></a>00086             }
-<a name="l00087"></a>00087             
-<a name="l00088"></a>00088             <span class="keywordflow">if</span> (node != NULL)
-<a name="l00089"></a>00089             {
-<a name="l00090"></a>00090                 node = node-&gt;NextSibling();
-<a name="l00091"></a>00091                 <a class="code" href="classConfig.html#aec17f8bbbeecadbbb7575070a9623e06" title="Function for retrieving value of a specified node.">get_value</a>(node, <span class="stringliteral">&quot;deceleration&quot;</span>, value);
-<a name="l00092"></a>00092                 <span class="keywordflow">if</span> (value != <span class="stringliteral">&quot;invalid&quot;</span>)
-<a name="l00093"></a>00093                 {
-<a name="l00094"></a>00094                     uint32_t dec = atoi( value.c_str() );
-<a name="l00095"></a>00095                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.dec_up = 0xFFFF &amp; dec;
-<a name="l00096"></a>00096                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.dec_lo = 0xFFFF &amp; (dec &gt;&gt; 16);
-<a name="l00097"></a>00097                 }
-<a name="l00098"></a>00098                 <span class="keywordflow">else</span>
-<a name="l00099"></a>00099                 {
-<a name="l00100"></a>00100                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.dec_up = MOTOR_DEC_UP;
-<a name="l00101"></a>00101                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.dec_lo = MOTOR_DEC_LO;
-<a name="l00102"></a>00102                 }
-<a name="l00103"></a>00103             }
-<a name="l00104"></a>00104             
-<a name="l00105"></a>00105             <span class="keywordflow">if</span> (node != NULL)
-<a name="l00106"></a>00106             {
-<a name="l00107"></a>00107                 node = node-&gt;NextSibling();
-<a name="l00108"></a>00108                 <a class="code" href="classConfig.html#aec17f8bbbeecadbbb7575070a9623e06" title="Function for retrieving value of a specified node.">get_value</a>(node, <span class="stringliteral">&quot;operating_speed&quot;</span>, value);
-<a name="l00109"></a>00109                 <span class="keywordflow">if</span> (value != <span class="stringliteral">&quot;invalid&quot;</span>)
-<a name="l00110"></a>00110                 {
-<a name="l00111"></a>00111                     uint32_t speed = atoi( value.c_str() );
-<a name="l00112"></a>00112                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.op_speed_up = 0xFFFF &amp; speed;
-<a name="l00113"></a>00113                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.op_speed_lo = 0xFFFF &amp; (speed &gt;&gt; 16);
-<a name="l00114"></a>00114                 }
-<a name="l00115"></a>00115                 <span class="keywordflow">else</span>
-<a name="l00116"></a>00116                 {
-<a name="l00117"></a>00117                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.op_speed_up = MOTOR_OP_SPEED_UP;
-<a name="l00118"></a>00118                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.op_speed_lo = MOTOR_OP_SPEED_LO;
-<a name="l00119"></a>00119                 }
-<a name="l00120"></a>00120             }            
-<a name="l00121"></a>00121             
-<a name="l00122"></a>00122             <span class="keywordflow">if</span> (node != NULL)
-<a name="l00123"></a>00123             {
-<a name="l00124"></a>00124                 node = node-&gt;NextSibling();
-<a name="l00125"></a>00125                 <a class="code" href="classConfig.html#aec17f8bbbeecadbbb7575070a9623e06" title="Function for retrieving value of a specified node.">get_value</a>(node, <span class="stringliteral">&quot;startup_speed&quot;</span>, value);
-<a name="l00126"></a>00126                 <span class="keywordflow">if</span> (value != <span class="stringliteral">&quot;invalid&quot;</span>)
-<a name="l00127"></a>00127                 {
-<a name="l00128"></a>00128                     uint32_t speed = atoi( value.c_str() );
-<a name="l00129"></a>00129                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.st_speed_up = 0xFFFF &amp; speed;
-<a name="l00130"></a>00130                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.st_speed_lo = 0xFFFF &amp; (speed &gt;&gt; 16);                    
-<a name="l00131"></a>00131                 }
-<a name="l00132"></a>00132                 <span class="keywordflow">else</span>
-<a name="l00133"></a>00133                 {
-<a name="l00134"></a>00134                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.st_speed_up = MOTOR_ST_SPEED_UP;
-<a name="l00135"></a>00135                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.st_speed_lo = MOTOR_ST_SPEED_LO;
-<a name="l00136"></a>00136                 }
-<a name="l00137"></a>00137             }
-<a name="l00138"></a>00138             
-<a name="l00139"></a>00139             
-<a name="l00140"></a>00140             <span class="keywordflow">for</span> (TiXmlElement* row = <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>-&gt;FirstChildElement(); row;
-<a name="l00141"></a>00141                 row = row-&gt;NextSiblingElement())
+<a name="l00028"></a>00028 }
+<a name="l00029"></a>00029 
+<a name="l00030"></a><a class="code" href="classConfig.html#af71847173b3109bb53131480cb4f87a1">00030</a> <span class="keywordtype">void</span> <a class="code" href="classConfig.html#af71847173b3109bb53131480cb4f87a1" title="Function for parsing PTP parameters.">Config::parse_xml_ptp</a>()
+<a name="l00031"></a>00031 {                             
+<a name="l00032"></a>00032     <span class="keywordflow">for</span> (TiXmlNode* node = <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>-&gt;FirstChild(); node;
+<a name="l00033"></a>00033         node = node-&gt;NextSibling() )
+<a name="l00034"></a>00034     {
+<a name="l00035"></a>00035         <span class="keywordflow">if</span> (node-&gt;ValueStr() == <span class="stringliteral">&quot;row&quot;</span>)
+<a name="l00036"></a>00036         {
+<a name="l00037"></a>00037             uint16_t om = MOTOR_OPM_SINGLE;
+<a name="l00038"></a>00038             <a class="code" href="classConfig.html#a28074debfd22ac091b23b0b409cc7b64" title="Function for parsing a PTP motion row.">parse_xml_ptp_row</a>(node, <a class="code" href="classConfig.html#a6016978f0cdcea94b3cdc262d0b19be9">coords</a>.request.x, <a class="code" href="classConfig.html#a6016978f0cdcea94b3cdc262d0b19be9">coords</a>.request.y, <a class="code" href="classConfig.html#a6016978f0cdcea94b3cdc262d0b19be9">coords</a>.request.z, om);
+<a name="l00039"></a>00039             <a class="code" href="par__utils_8h.html#a2e3efb87c9f9ddd6b48b0c10b9a3d3fa" title="Function that asks kinematic model for motor angles.">push_angles</a>(<a class="code" href="classConfig.html#a4ce06e0d6eed2f4f78ef37e02657be44">coord_client</a>, <a class="code" href="classConfig.html#a6016978f0cdcea94b3cdc262d0b19be9">coords</a>, <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>);
+<a name="l00040"></a>00040             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.operating_mode.push_back( om );
+<a name="l00041"></a>00041         }
+<a name="l00042"></a>00042         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (node-&gt;ValueStr() == <span class="stringliteral">&quot;repeat_motions&quot;</span>)
+<a name="l00043"></a>00043         {
+<a name="l00044"></a>00044             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.repeat_motions = atoi( node-&gt;FirstChild()-&gt;ValueStr().c_str() );
+<a name="l00045"></a>00045             std::cout &lt;&lt; <span class="stringliteral">&quot;repeat motions: &quot;</span> &lt;&lt; <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.repeat_motions &lt;&lt; std::endl;
+<a name="l00046"></a>00046         }
+<a name="l00047"></a>00047         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (node-&gt;ValueStr() == <span class="stringliteral">&quot;acceleration&quot;</span>)
+<a name="l00048"></a>00048         {
+<a name="l00049"></a>00049             uint32_t acc = atoi( node-&gt;FirstChild()-&gt;ValueStr().c_str() );
+<a name="l00050"></a>00050             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.acc_up = 0xFFFF &amp; acc;
+<a name="l00051"></a>00051             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.acc_lo = 0xFFFF &amp; (acc &gt;&gt; 16);
+<a name="l00052"></a>00052             std::cout &lt;&lt; <span class="stringliteral">&quot;acceleration: &quot;</span> &lt;&lt; acc &lt;&lt; std::endl;
+<a name="l00053"></a>00053         }
+<a name="l00054"></a>00054         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (node-&gt;ValueStr() == <span class="stringliteral">&quot;deceleration&quot;</span>)
+<a name="l00055"></a>00055         {
+<a name="l00056"></a>00056             uint32_t dec = atoi( node-&gt;FirstChild()-&gt;ValueStr().c_str() );
+<a name="l00057"></a>00057             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.dec_up = 0xFFFF &amp; dec;
+<a name="l00058"></a>00058             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.dec_lo = 0xFFFF &amp; (dec &gt;&gt; 16);       
+<a name="l00059"></a>00059             std::cout &lt;&lt; <span class="stringliteral">&quot;deceleration: &quot;</span> &lt;&lt; dec &lt;&lt; std::endl;         
+<a name="l00060"></a>00060         }
+<a name="l00061"></a>00061         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (node-&gt;ValueStr() == <span class="stringliteral">&quot;operating_speed&quot;</span>)
+<a name="l00062"></a>00062         {
+<a name="l00063"></a>00063             uint32_t speed = atoi( node-&gt;FirstChild()-&gt;ValueStr().c_str() );
+<a name="l00064"></a>00064             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.op_speed_up = 0xFFFF &amp; speed;
+<a name="l00065"></a>00065             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.op_speed_lo = 0xFFFF &amp; (speed &gt;&gt; 16);    
+<a name="l00066"></a>00066             std::cout &lt;&lt; <span class="stringliteral">&quot;operating speed: &quot;</span> &lt;&lt; speed &lt;&lt; std::endl;            
+<a name="l00067"></a>00067         }
+<a name="l00068"></a>00068         <span class="keywordflow">else</span> <span class="keywordflow">if</span> (node-&gt;ValueStr() == <span class="stringliteral">&quot;startup_speed&quot;</span>)
+<a name="l00069"></a>00069         {
+<a name="l00070"></a>00070             uint32_t speed = atoi( node-&gt;FirstChild()-&gt;ValueStr().c_str() );
+<a name="l00071"></a>00071             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.st_speed_up = 0xFFFF &amp; speed;
+<a name="l00072"></a>00072             <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.st_speed_lo = 0xFFFF &amp; (speed &gt;&gt; 16);  
+<a name="l00073"></a>00073             std::cout &lt;&lt; <span class="stringliteral">&quot;startup speed: &quot;</span> &lt;&lt; speed &lt;&lt; std::endl;
+<a name="l00074"></a>00074         }
+<a name="l00075"></a>00075     }                
+<a name="l00076"></a>00076 }
+<a name="l00077"></a>00077 
+<a name="l00078"></a><a class="code" href="classConfig.html#a28074debfd22ac091b23b0b409cc7b64">00078</a> <span class="keywordtype">void</span> <a class="code" href="classConfig.html#a28074debfd22ac091b23b0b409cc7b64" title="Function for parsing a PTP motion row.">Config::parse_xml_ptp_row</a>(TiXmlNode* node, <span class="keywordtype">double</span>&amp; X, <span class="keywordtype">double</span>&amp; Y, <span class="keywordtype">double</span>&amp; Z, uint16_t&amp; operating_mode)
+<a name="l00079"></a>00079 {
+<a name="l00080"></a>00080     TiXmlNode* x  = node-&gt;FirstChild(<span class="stringliteral">&quot;X&quot;</span>);
+<a name="l00081"></a>00081     TiXmlNode* y  = node-&gt;FirstChild(<span class="stringliteral">&quot;Y&quot;</span>);
+<a name="l00082"></a>00082     TiXmlNode* z  = node-&gt;FirstChild(<span class="stringliteral">&quot;Z&quot;</span>);
+<a name="l00083"></a>00083     TiXmlNode* OM = node-&gt;FirstChild(<span class="stringliteral">&quot;mode&quot;</span>); 
+<a name="l00084"></a>00084     
+<a name="l00085"></a>00085     X = atof( x-&gt;FirstChild()-&gt;ValueStr().c_str() );
+<a name="l00086"></a>00086     Y = atof( y-&gt;FirstChild()-&gt;ValueStr().c_str() );
+<a name="l00087"></a>00087     Z = atof( z-&gt;FirstChild()-&gt;ValueStr().c_str() );
+<a name="l00088"></a>00088     
+<a name="l00089"></a>00089     <span class="keywordflow">if</span> (OM != NULL)
+<a name="l00090"></a>00090     {
+<a name="l00091"></a>00091         std::string key = OM-&gt;FirstChild()-&gt;ValueStr();
+<a name="l00092"></a>00092         <span class="keywordflow">if</span> ( key == <span class="stringliteral">&quot;single&quot;</span> )
+<a name="l00093"></a>00093         {
+<a name="l00094"></a>00094             operating_mode = MOTOR_OPM_SINGLE;
+<a name="l00095"></a>00095         }
+<a name="l00096"></a>00096         <span class="keywordflow">else</span> <span class="keywordflow">if</span> ( key == <span class="stringliteral">&quot;link&quot;</span> )
+<a name="l00097"></a>00097         {
+<a name="l00098"></a>00098             operating_mode = MOTOR_OPM_LINK1;
+<a name="l00099"></a>00099         }
+<a name="l00100"></a>00100         <span class="keywordflow">else</span> <span class="keywordflow">if</span> ( key == <span class="stringliteral">&quot;cp&quot;</span> )
+<a name="l00101"></a>00101         {
+<a name="l00102"></a>00102             operating_mode = MOTOR_OPM_LINK2;
+<a name="l00103"></a>00103         }
+<a name="l00104"></a>00104         <span class="keywordflow">else</span>
+<a name="l00105"></a>00105         {
+<a name="l00106"></a>00106             operating_mode = MOTOR_OPM_SINGLE;
+<a name="l00107"></a>00107         }    
+<a name="l00108"></a>00108     }
+<a name="l00109"></a>00109 }
+<a name="l00110"></a>00110 
+<a name="l00111"></a><a class="code" href="classConfig.html#a4e9f99ceaf254f82b14e845de037fc5f">00111</a> <span class="keywordtype">void</span> <a class="code" href="classConfig.html#a4e9f99ceaf254f82b14e845de037fc5f" title="Function for reading XML configuration file.">Config::read</a>(<span class="keyword">const</span> std::string&amp; file)
+<a name="l00112"></a>00112 {
+<a name="l00113"></a>00113     <span class="comment">// don&#39;t forget this. if this is already filled with data and not cleared</span>
+<a name="l00114"></a>00114     <span class="comment">// behavior is undefined. </span>
+<a name="l00115"></a>00115     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.abs_pos.clear();
+<a name="l00116"></a>00116     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.xyz_pos.clear();
+<a name="l00117"></a>00117     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.operating_mode.clear();
+<a name="l00118"></a>00118     
+<a name="l00119"></a>00119     <span class="comment">// set object defaults.</span>
+<a name="l00120"></a>00120     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.repeat_motions = 1;
+<a name="l00121"></a>00121     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.acc_up = MOTOR_ACC_UP;
+<a name="l00122"></a>00122     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.acc_lo = MOTOR_ACC_LO;    
+<a name="l00123"></a>00123     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.dec_up = MOTOR_DEC_UP;
+<a name="l00124"></a>00124     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.dec_lo = MOTOR_DEC_LO;
+<a name="l00125"></a>00125     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.op_speed_up = MOTOR_OP_SPEED_UP;
+<a name="l00126"></a>00126     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.op_speed_lo = MOTOR_OP_SPEED_LO;    
+<a name="l00127"></a>00127     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.st_speed_up = MOTOR_ST_SPEED_UP;
+<a name="l00128"></a>00128     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.st_speed_lo = MOTOR_ST_SPEED_LO;        
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130         TiXmlDocument doc(file.c_str());
+<a name="l00131"></a>00131         std::cout &lt;&lt; <span class="stringliteral">&quot;file: &quot;</span> &lt;&lt; file.c_str() &lt;&lt; std::endl;
+<a name="l00132"></a>00132         
+<a name="l00133"></a>00133         <span class="keywordflow">if</span> (doc.LoadFile())
+<a name="l00134"></a>00134         {
+<a name="l00135"></a>00135             TiXmlElement *root = doc.RootElement();
+<a name="l00136"></a>00136         <span class="keywordflow">for</span>(<a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a> = root-&gt;FirstChildElement(); <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>;
+<a name="l00137"></a>00137                 <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a> = <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>-&gt;NextSiblingElement()) 
+<a name="l00138"></a>00138         {
+<a name="l00139"></a>00139             <span class="keywordtype">int</span> x = 0;
+<a name="l00140"></a>00140             <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>-&gt;QueryIntAttribute(<span class="stringliteral">&quot;number&quot;</span>, &amp;x);
+<a name="l00141"></a>00141             <span class="keywordflow">switch</span>(x)
 <a name="l00142"></a>00142             {
-<a name="l00143"></a>00143                 TiXmlNode* X  = row-&gt;FirstChild(<span class="stringliteral">&quot;X&quot;</span>);
-<a name="l00144"></a>00144                 TiXmlNode* Y  = row-&gt;FirstChild(<span class="stringliteral">&quot;Y&quot;</span>);
-<a name="l00145"></a>00145                 TiXmlNode* Z  = row-&gt;FirstChild(<span class="stringliteral">&quot;Z&quot;</span>);
-<a name="l00146"></a>00146                 TiXmlNode* OM = row-&gt;FirstChild(<span class="stringliteral">&quot;mode&quot;</span>); 
-<a name="l00147"></a>00147                 <span class="keywordflow">if</span> (X != NULL &amp;&amp; Y != NULL &amp;&amp; Z != NULL)
-<a name="l00148"></a>00148                 {
-<a name="l00149"></a>00149                     <a class="code" href="classConfig.html#a6016978f0cdcea94b3cdc262d0b19be9">coords</a>.request.x = atof( X-&gt;FirstChild()-&gt;ValueStr().c_str() );
-<a name="l00150"></a>00150                     <a class="code" href="classConfig.html#a6016978f0cdcea94b3cdc262d0b19be9">coords</a>.request.y = atof( Y-&gt;FirstChild()-&gt;ValueStr().c_str() );
-<a name="l00151"></a>00151                     <a class="code" href="classConfig.html#a6016978f0cdcea94b3cdc262d0b19be9">coords</a>.request.z = atof( Z-&gt;FirstChild()-&gt;ValueStr().c_str() );
-<a name="l00152"></a>00152                     <a class="code" href="par__utils_8h.html#a2e3efb87c9f9ddd6b48b0c10b9a3d3fa" title="Function that asks kinematic model for motor angles.">push_angles</a>(<a class="code" href="classConfig.html#a4ce06e0d6eed2f4f78ef37e02657be44">coord_client</a>, <a class="code" href="classConfig.html#a6016978f0cdcea94b3cdc262d0b19be9">coords</a>, <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>);
-<a name="l00153"></a>00153                 }
-<a name="l00154"></a>00154                 
-<a name="l00155"></a>00155                 <span class="keywordflow">if</span> (OM != NULL)
-<a name="l00156"></a>00156                 {
-<a name="l00157"></a>00157                     std::string om = OM-&gt;FirstChild()-&gt;ValueStr();
-<a name="l00158"></a>00158                     <span class="keywordflow">if</span> ( om == <span class="stringliteral">&quot;single&quot;</span> )
-<a name="l00159"></a>00159                     {
-<a name="l00160"></a>00160                         <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.operating_mode.push_back( MOTOR_OPM_SINGLE );
-<a name="l00161"></a>00161                     }
-<a name="l00162"></a>00162                     <span class="keywordflow">else</span> <span class="keywordflow">if</span> ( om == <span class="stringliteral">&quot;link&quot;</span> )
-<a name="l00163"></a>00163                     {
-<a name="l00164"></a>00164                         <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.operating_mode.push_back( MOTOR_OPM_LINK1 );
-<a name="l00165"></a>00165                     }
-<a name="l00166"></a>00166                     <span class="keywordflow">else</span> <span class="keywordflow">if</span> ( om == <span class="stringliteral">&quot;cp&quot;</span> )
-<a name="l00167"></a>00167                     {
-<a name="l00168"></a>00168                         <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.operating_mode.push_back( MOTOR_OPM_LINK2 );
-<a name="l00169"></a>00169                     }
-<a name="l00170"></a>00170                     <span class="keywordflow">else</span>
-<a name="l00171"></a>00171                     {
-<a name="l00172"></a>00172                         <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.operating_mode.push_back( MOTOR_OPM_SINGLE );
-<a name="l00173"></a>00173                     }
-<a name="l00174"></a>00174                 }
-<a name="l00175"></a>00175                 <span class="keywordflow">else</span>
-<a name="l00176"></a>00176                 {
-<a name="l00177"></a>00177                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.operating_mode.push_back( MOTOR_OPM_SINGLE );
-<a name="l00178"></a>00178                 }
-<a name="l00179"></a>00179             }
-<a name="l00180"></a>00180 }
-<a name="l00181"></a>00181 
-<a name="l00182"></a><a class="code" href="classConfig.html#a4e9f99ceaf254f82b14e845de037fc5f">00182</a> <span class="keywordtype">void</span> <a class="code" href="classConfig.html#a4e9f99ceaf254f82b14e845de037fc5f" title="Function for reading XML configuration file.">Config::read</a>(<span class="keyword">const</span> std::string&amp; file)
-<a name="l00183"></a>00183 {
-<a name="l00184"></a>00184     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.abs_pos.clear();
-<a name="l00185"></a>00185     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.xyz_pos.clear();
-<a name="l00186"></a>00186 
-<a name="l00187"></a>00187         TiXmlDocument doc(file.c_str());
-<a name="l00188"></a>00188         std::cout &lt;&lt; <span class="stringliteral">&quot;file: &quot;</span> &lt;&lt; file.c_str() &lt;&lt; std::endl;
-<a name="l00189"></a>00189         
-<a name="l00190"></a>00190         <span class="keywordflow">if</span> (doc.LoadFile())
-<a name="l00191"></a>00191         {
-<a name="l00192"></a>00192             TiXmlElement *root = doc.RootElement();
-<a name="l00193"></a>00193         <span class="keywordflow">for</span>(<a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a> = root-&gt;FirstChildElement(); <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>;
-<a name="l00194"></a>00194                 <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a> = <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>-&gt;NextSiblingElement()) 
-<a name="l00195"></a>00195         {
-<a name="l00196"></a>00196             <span class="keywordtype">int</span> x = 0;
-<a name="l00197"></a>00197             <a class="code" href="classConfig.html#acfcf2db554ec86f6e8b11e63181419e8">config</a>-&gt;QueryIntAttribute(<span class="stringliteral">&quot;number&quot;</span>, &amp;x);
-<a name="l00198"></a>00198             std::cout &lt;&lt; <span class="stringliteral">&quot;Number #: &quot;</span> &lt;&lt; x &lt;&lt; std::endl;
-<a name="l00199"></a>00199             <span class="keywordflow">switch</span>(x)
-<a name="l00200"></a>00200             {
-<a name="l00201"></a>00201                 <span class="keywordflow">case</span> MENU_INIT_MOTOR: 
-<a name="l00202"></a>00202                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.option = MENU_INIT_MOTOR;
-<a name="l00203"></a>00203                     <a class="code" href="classConfig.html#ad4f99d7b741d557b0c33922c35d4ac7e" title="Function for parsing motor parameters.">parse_xml_init</a>();
-<a name="l00204"></a>00204                     <a class="code" href="classConfig.html#abae604229130930920b20f7d3d3275f3">chatter_pub_cmd</a>.publish(<a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>);
-<a name="l00205"></a>00205                 <span class="keywordflow">break</span>;
-<a name="l00206"></a>00206                 <span class="keywordflow">case</span> MENU_CONF_PTP_MOT:
-<a name="l00207"></a>00207                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.option = MENU_CONF_PTP_MOT;
-<a name="l00208"></a>00208                     <a class="code" href="classConfig.html#af71847173b3109bb53131480cb4f87a1" title="Function for parsing PTP parameters.">parse_xml_ptp</a>();
-<a name="l00209"></a>00209                     <a class="code" href="classConfig.html#abae604229130930920b20f7d3d3275f3">chatter_pub_cmd</a>.publish(<a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>);
-<a name="l00210"></a>00210                 <span class="keywordflow">break</span>;
-<a name="l00211"></a>00211                 <span class="keywordflow">case</span> MENU_START_MOT:
-<a name="l00212"></a>00212                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.option = MENU_START_MOT;
-<a name="l00213"></a>00213                     <a class="code" href="classConfig.html#abae604229130930920b20f7d3d3275f3">chatter_pub_cmd</a>.publish(<a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>);
-<a name="l00214"></a>00214                 <span class="keywordflow">break</span>;
-<a name="l00215"></a>00215             }
-<a name="l00216"></a>00216         }           
-<a name="l00217"></a>00217         }
-<a name="l00218"></a>00218         <span class="keywordflow">else</span>
-<a name="l00219"></a>00219         {
-<a name="l00220"></a>00220             std::cout &lt;&lt; <span class="stringliteral">&quot;Could not load XML file.&quot;</span> &lt;&lt; std::endl;
-<a name="l00221"></a>00221         }
-<a name="l00222"></a>00222 }
-<a name="l00223"></a>00223 
+<a name="l00143"></a>00143                 <span class="keywordflow">case</span> MENU_INIT_MOTOR: 
+<a name="l00144"></a>00144                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.option = MENU_INIT_MOTOR;
+<a name="l00145"></a>00145                     <a class="code" href="classConfig.html#ad4f99d7b741d557b0c33922c35d4ac7e" title="Function for parsing motor parameters.">parse_xml_init</a>();
+<a name="l00146"></a>00146                     <a class="code" href="classConfig.html#abae604229130930920b20f7d3d3275f3">chatter_pub_cmd</a>.publish(<a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>);
+<a name="l00147"></a>00147                 <span class="keywordflow">break</span>;
+<a name="l00148"></a>00148                 <span class="keywordflow">case</span> MENU_CONF_PTP_MOT:
+<a name="l00149"></a>00149                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.option = MENU_CONF_PTP_MOT;
+<a name="l00150"></a>00150                     <a class="code" href="classConfig.html#af71847173b3109bb53131480cb4f87a1" title="Function for parsing PTP parameters.">parse_xml_ptp</a>();
+<a name="l00151"></a>00151                     <a class="code" href="classConfig.html#abae604229130930920b20f7d3d3275f3">chatter_pub_cmd</a>.publish(<a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>);
+<a name="l00152"></a>00152                 <span class="keywordflow">break</span>;
+<a name="l00153"></a>00153                 <span class="keywordflow">case</span> MENU_START_MOT:
+<a name="l00154"></a>00154                     <a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>.option = MENU_START_MOT;
+<a name="l00155"></a>00155                     <a class="code" href="classConfig.html#abae604229130930920b20f7d3d3275f3">chatter_pub_cmd</a>.publish(<a class="code" href="classConfig.html#a80565c8992f0daefecdfaf68f4b54ed8">cmd</a>);
+<a name="l00156"></a>00156                 <span class="keywordflow">break</span>;
+<a name="l00157"></a>00157             }
+<a name="l00158"></a>00158         }           
+<a name="l00159"></a>00159         }
+<a name="l00160"></a>00160         <span class="keywordflow">else</span>
+<a name="l00161"></a>00161         {
+<a name="l00162"></a>00162             std::cout &lt;&lt; <span class="stringliteral">&quot;Could not load XML file.&quot;</span> &lt;&lt; std::endl;
+<a name="l00163"></a>00163         }
+<a name="l00164"></a>00164 }
+<a name="l00165"></a>00165 
 </pre></div></div>
 </div>
 </td></tr></table>
@@ -280,7 +219,7 @@ None<br />
 <hr size="1"><div style="align: right;">
 <a href="http://ros.org/wiki/par_ui">par_ui</a><br />
 Author(s): Wouter van Teijlingen</br />
-<small>autogenerated on Wed Jun 8 2011 17:11:24</small>
+<small>autogenerated on Mon Jun 13 2011 17:06:40</small>
 </div>
 </body>
 </html>

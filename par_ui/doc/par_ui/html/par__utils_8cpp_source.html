@@ -70,137 +70,146 @@ None<br />
 <a name="l00024"></a>00024         
 <a name="l00025"></a>00025         cmd.xyz_pos.push_back(coords.response.angles[X]);
 <a name="l00026"></a>00026         cmd.xyz_pos.push_back(coords.response.angles[Y]);
-<a name="l00027"></a>00027         cmd.xyz_pos.push_back(coords.response.angles[Z]);
-<a name="l00028"></a>00028         
-<a name="l00029"></a>00029         std::cout &lt;&lt; <span class="stringliteral">&quot;coords.request.x: &quot;</span> &lt;&lt; coords.request.x &lt;&lt; std::endl;
-<a name="l00030"></a>00030         std::cout &lt;&lt; <span class="stringliteral">&quot;coords.request.y: &quot;</span> &lt;&lt; coords.request.y &lt;&lt; std::endl;
-<a name="l00031"></a>00031         std::cout &lt;&lt; <span class="stringliteral">&quot;coords.request.z: &quot;</span> &lt;&lt; coords.request.z &lt;&lt; std::endl;        
-<a name="l00032"></a>00032 }
-<a name="l00033"></a>00033 
-<a name="l00038"></a><a class="code" href="par__utils_8cpp.html#a16f93f2ae5fbda3b2800dce916d374a1">00038</a> <span class="keywordtype">void</span> <a class="code" href="par__utils_8h.html#a16f93f2ae5fbda3b2800dce916d374a1" title="Function configuring a single motion.">configure_single_motion</a>(par_trajectory_planning::commands&amp; cmd)
-<a name="l00039"></a>00039 {
-<a name="l00040"></a>00040         cmd.abs_pos.clear();
-<a name="l00041"></a>00041         uint16_t pos_up[3];
-<a name="l00042"></a>00042         uint16_t pos_lo[3];   
-<a name="l00043"></a>00043         <span class="keywordtype">int</span> motions = 0;
-<a name="l00044"></a>00044         
-<a name="l00045"></a>00045         std::cout &lt;&lt; <span class="stringliteral">&quot;Enter amount of single motions to configure: &quot;</span> &lt;&lt; std::endl; 
-<a name="l00046"></a>00046         std::cin &gt;&gt; motions;
-<a name="l00047"></a>00047         
-<a name="l00048"></a>00048         <span class="keywordtype">int</span> i = 0;
-<a name="l00049"></a>00049         <span class="keywordflow">while</span>(i &lt; motions)
-<a name="l00050"></a>00050         {
-<a name="l00051"></a>00051             pos_up[0] = 0;
-<a name="l00052"></a>00052             std::cout &lt;&lt; <span class="stringliteral">&quot;pos lo for axis 1: &quot;</span>;
-<a name="l00053"></a>00053             std::cin &gt;&gt; pos_lo[0];
-<a name="l00054"></a>00054             <span class="keywordflow">if</span> (pos_lo[0] &amp; 0x8000) pos_up[0] = 0xFFFF;
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056             pos_up[1] = 0;
-<a name="l00057"></a>00057             std::cout &lt;&lt; <span class="stringliteral">&quot;pos lo for axis 2: &quot;</span>;
-<a name="l00058"></a>00058             std::cin &gt;&gt; pos_lo[1];
-<a name="l00059"></a>00059             <span class="keywordflow">if</span> (pos_lo[1] &amp; 0x8000) pos_up[1] = 0xFFFF;
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061             pos_up[2] = 0;
-<a name="l00062"></a>00062             std::cout &lt;&lt; <span class="stringliteral">&quot;pos lo for axis 3: &quot;</span>;
-<a name="l00063"></a>00063             std::cin &gt;&gt; pos_lo[2];
-<a name="l00064"></a>00064             <span class="keywordflow">if</span> (pos_lo[2] &amp; 0x8000) pos_up[2] = 0xFFFF;
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066             cmd.abs_pos.push_back(pos_up[X]);
-<a name="l00067"></a>00067             cmd.abs_pos.push_back(pos_lo[X]);
-<a name="l00068"></a>00068 
-<a name="l00069"></a>00069             cmd.abs_pos.push_back(pos_up[Y]);
-<a name="l00070"></a>00070             cmd.abs_pos.push_back(pos_lo[Y]);
-<a name="l00071"></a>00071 
-<a name="l00072"></a>00072             cmd.abs_pos.push_back(pos_up[Z]);
-<a name="l00073"></a>00073             cmd.abs_pos.push_back(pos_lo[Z]);       
-<a name="l00074"></a>00074             
-<a name="l00075"></a>00075             i++;
-<a name="l00076"></a>00076         }
-<a name="l00077"></a>00077 }
-<a name="l00078"></a>00078 
-<a name="l00085"></a><a class="code" href="par__utils_8cpp.html#a05bc2492b4896b6738d0c181b6f75e4f">00085</a> <span class="keywordtype">void</span> <a class="code" href="par__utils_8h.html#a05bc2492b4896b6738d0c181b6f75e4f" title="Function for configuring PTP motions.">configure_PTP_motion</a>(ros::ServiceClient&amp; coord_client, par_kinematics::coord&amp; coords,
-<a name="l00086"></a>00086                           par_trajectory_planning::commands&amp; cmd)
-<a name="l00087"></a>00087 {   
-<a name="l00088"></a>00088     cmd.xyz_pos.clear();
-<a name="l00089"></a>00089     <span class="keywordtype">int</span> motions = 0;
-<a name="l00090"></a>00090         std::cout &lt;&lt; <span class="stringliteral">&quot;Enter amount of PTP motions to configure: &quot;</span> &lt;&lt; std::endl; 
-<a name="l00091"></a>00091         std::cin &gt;&gt; motions;
-<a name="l00092"></a>00092         
-<a name="l00093"></a>00093         <span class="keywordtype">int</span> i = 0;
-<a name="l00094"></a>00094         <span class="keywordflow">while</span>(i &lt; motions)    
-<a name="l00095"></a>00095     {
-<a name="l00096"></a>00096         std::cout &lt;&lt; <span class="stringliteral">&quot;X: &quot;</span>;
-<a name="l00097"></a>00097         std::cin &gt;&gt; coords.request.x;
-<a name="l00098"></a>00098         std::cout &lt;&lt; <span class="stringliteral">&quot;Y: &quot;</span>;
-<a name="l00099"></a>00099         std::cin &gt;&gt; coords.request.y;
-<a name="l00100"></a>00100         std::cout &lt;&lt; <span class="stringliteral">&quot;Z: &quot;</span>;
-<a name="l00101"></a>00101         std::cin &gt;&gt; coords.request.z;
+<a name="l00027"></a>00027         cmd.xyz_pos.push_back(coords.response.angles[Z]);    
+<a name="l00028"></a>00028 }
+<a name="l00029"></a>00029 
+<a name="l00034"></a><a class="code" href="par__utils_8cpp.html#a16f93f2ae5fbda3b2800dce916d374a1">00034</a> <span class="keywordtype">void</span> <a class="code" href="par__utils_8h.html#a16f93f2ae5fbda3b2800dce916d374a1" title="Function configuring a single motion.">configure_single_motion</a>(par_trajectory_planning::commands&amp; cmd)
+<a name="l00035"></a>00035 {
+<a name="l00036"></a>00036         cmd.abs_pos.clear();
+<a name="l00037"></a>00037         uint16_t pos_up[3];
+<a name="l00038"></a>00038         uint16_t pos_lo[3];   
+<a name="l00039"></a>00039         <span class="keywordtype">int</span> motions = 0;
+<a name="l00040"></a>00040         
+<a name="l00041"></a>00041         std::cout &lt;&lt; <span class="stringliteral">&quot;Enter amount of single motions to configure: &quot;</span> &lt;&lt; std::endl; 
+<a name="l00042"></a>00042         std::cin &gt;&gt; motions;
+<a name="l00043"></a>00043         
+<a name="l00044"></a>00044         <span class="keywordtype">int</span> i = 0;
+<a name="l00045"></a>00045         <span class="keywordflow">while</span>(i &lt; motions)
+<a name="l00046"></a>00046         {
+<a name="l00047"></a>00047             pos_up[0] = 0;
+<a name="l00048"></a>00048             std::cout &lt;&lt; <span class="stringliteral">&quot;pos lo for axis 1: &quot;</span>;
+<a name="l00049"></a>00049             std::cin &gt;&gt; pos_lo[0];
+<a name="l00050"></a>00050             <span class="keywordflow">if</span> (pos_lo[0] &amp; 0x8000) pos_up[0] = 0xFFFF;
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052             pos_up[1] = 0;
+<a name="l00053"></a>00053             std::cout &lt;&lt; <span class="stringliteral">&quot;pos lo for axis 2: &quot;</span>;
+<a name="l00054"></a>00054             std::cin &gt;&gt; pos_lo[1];
+<a name="l00055"></a>00055             <span class="keywordflow">if</span> (pos_lo[1] &amp; 0x8000) pos_up[1] = 0xFFFF;
+<a name="l00056"></a>00056 
+<a name="l00057"></a>00057             pos_up[2] = 0;
+<a name="l00058"></a>00058             std::cout &lt;&lt; <span class="stringliteral">&quot;pos lo for axis 3: &quot;</span>;
+<a name="l00059"></a>00059             std::cin &gt;&gt; pos_lo[2];
+<a name="l00060"></a>00060             <span class="keywordflow">if</span> (pos_lo[2] &amp; 0x8000) pos_up[2] = 0xFFFF;
+<a name="l00061"></a>00061 
+<a name="l00062"></a>00062             cmd.abs_pos.push_back(pos_up[X]);
+<a name="l00063"></a>00063             cmd.abs_pos.push_back(pos_lo[X]);
+<a name="l00064"></a>00064 
+<a name="l00065"></a>00065             cmd.abs_pos.push_back(pos_up[Y]);
+<a name="l00066"></a>00066             cmd.abs_pos.push_back(pos_lo[Y]);
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068             cmd.abs_pos.push_back(pos_up[Z]);
+<a name="l00069"></a>00069             cmd.abs_pos.push_back(pos_lo[Z]);       
+<a name="l00070"></a>00070             
+<a name="l00071"></a>00071             i++;
+<a name="l00072"></a>00072         }
+<a name="l00073"></a>00073 }
+<a name="l00074"></a>00074 
+<a name="l00081"></a><a class="code" href="par__utils_8cpp.html#a05bc2492b4896b6738d0c181b6f75e4f">00081</a> <span class="keywordtype">void</span> <a class="code" href="par__utils_8h.html#a05bc2492b4896b6738d0c181b6f75e4f" title="Function for configuring PTP motions.">configure_PTP_motion</a>(ros::ServiceClient&amp; coord_client, par_kinematics::coord&amp; coords,
+<a name="l00082"></a>00082                           par_trajectory_planning::commands&amp; cmd)
+<a name="l00083"></a>00083 {   
+<a name="l00084"></a>00084     cmd.xyz_pos.clear();
+<a name="l00085"></a>00085     cmd.operating_mode.clear();
+<a name="l00086"></a>00086     <span class="keywordtype">int</span> motions = 0;
+<a name="l00087"></a>00087         std::cout &lt;&lt; <span class="stringliteral">&quot;Enter amount of PTP motions to configure: &quot;</span> &lt;&lt; std::endl; 
+<a name="l00088"></a>00088         std::cin &gt;&gt; motions;
+<a name="l00089"></a>00089         
+<a name="l00090"></a>00090         <span class="keywordtype">int</span> i = 0;
+<a name="l00091"></a>00091         <span class="keywordflow">while</span>(i &lt; motions)    
+<a name="l00092"></a>00092     {
+<a name="l00093"></a>00093         std::cout &lt;&lt; <span class="stringliteral">&quot;X: &quot;</span>;
+<a name="l00094"></a>00094         std::cin &gt;&gt; coords.request.x;
+<a name="l00095"></a>00095         std::cout &lt;&lt; <span class="stringliteral">&quot;Y: &quot;</span>;
+<a name="l00096"></a>00096         std::cin &gt;&gt; coords.request.y;
+<a name="l00097"></a>00097         std::cout &lt;&lt; <span class="stringliteral">&quot;Z: &quot;</span>;
+<a name="l00098"></a>00098         std::cin &gt;&gt; coords.request.z;
+<a name="l00099"></a>00099         
+<a name="l00100"></a>00100         cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
+<a name="l00101"></a>00101         <a class="code" href="par__utils_8h.html#a2e3efb87c9f9ddd6b48b0c10b9a3d3fa" title="Function that asks kinematic model for motor angles.">push_angles</a>(coord_client, coords, cmd);
 <a name="l00102"></a>00102         
-<a name="l00103"></a>00103         cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
-<a name="l00104"></a>00104         <a class="code" href="par__utils_8h.html#a2e3efb87c9f9ddd6b48b0c10b9a3d3fa" title="Function that asks kinematic model for motor angles.">push_angles</a>(coord_client, coords, cmd);
-<a name="l00105"></a>00105         
-<a name="l00106"></a>00106         i++;
-<a name="l00107"></a>00107     }
-<a name="l00108"></a>00108     <span class="comment">// configure important defaults; if not done motion fails. </span>
-<a name="l00109"></a>00109     cmd.acc_up      = MOTOR_ACC_UP;
-<a name="l00110"></a>00110     cmd.acc_lo      = MOTOR_ACC_LO;
-<a name="l00111"></a>00111     cmd.dec_up      = MOTOR_DEC_UP;
-<a name="l00112"></a>00112     cmd.dec_lo      = MOTOR_DEC_LO;
-<a name="l00113"></a>00113     cmd.op_speed_up = MOTOR_OP_SPEED_UP;
-<a name="l00114"></a>00114     cmd.op_speed_lo = MOTOR_OP_SPEED_LO;
-<a name="l00115"></a>00115     cmd.st_speed_up = MOTOR_ST_SPEED_UP;
-<a name="l00116"></a>00116     cmd.st_speed_lo = MOTOR_ST_SPEED_LO;
-<a name="l00117"></a>00117 }
-<a name="l00118"></a>00118 
-<a name="l00124"></a><a class="code" href="par__utils_8cpp.html#a848151259ce1295c267886885658673a">00124</a> <span class="keywordtype">void</span> <a class="code" href="par__utils_8h.html#a848151259ce1295c267886885658673a" title="Function for choosing a configuration file.">pick_configuration_file</a>(<span class="keyword">const</span> boost::filesystem::path&amp; directory, std::string&amp; file)
-<a name="l00125"></a>00125 {
-<a name="l00126"></a>00126     std::vector&lt;std::string&gt; files;
-<a name="l00127"></a>00127     <span class="keywordtype">int</span> i = 1;
-<a name="l00128"></a>00128     
-<a name="l00129"></a>00129     std::cout &lt;&lt; <span class="stringliteral">&quot;Please pick your preferred configuration file: &quot;</span> &lt;&lt; std::endl;
-<a name="l00130"></a>00130     <span class="keywordflow">if</span> ( boost::filesystem::exists( directory ) )
-<a name="l00131"></a>00131     {
-<a name="l00132"></a>00132         boost::filesystem::directory_iterator end;
-<a name="l00133"></a>00133         <span class="keywordflow">for</span>( boost::filesystem::directory_iterator iter(directory);  iter != end; ++iter )
-<a name="l00134"></a>00134         {
-<a name="l00135"></a>00135             <span class="keywordflow">if</span> (! boost::filesystem::is_directory( *iter ) )
-<a name="l00136"></a>00136             {
-<a name="l00137"></a>00137                 std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; i++ &lt;&lt; <span class="stringliteral">&quot;]&quot;</span> &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; iter-&gt;path().file_string() &lt;&lt; std::endl;
-<a name="l00138"></a>00138                 files.push_back( iter-&gt;path().file_string() );
-<a name="l00139"></a>00139             }
-<a name="l00140"></a>00140         }
-<a name="l00141"></a>00141     }
-<a name="l00142"></a>00142     std::cin &gt;&gt; i;
-<a name="l00143"></a>00143     file = files[i-1];
-<a name="l00144"></a>00144 }
-<a name="l00145"></a>00145 
-<a name="l00150"></a><a class="code" href="par__utils_8cpp.html#a29c8f7bbfe2e9aa011bf0540863ec03a">00150</a> <span class="keywordtype">void</span> <a class="code" href="par__utils_8h.html#a29c8f7bbfe2e9aa011bf0540863ec03a" title="Function for configuring homing parameters.">configure_homing</a>(par_trajectory_planning::commands&amp; cmd)
-<a name="l00151"></a>00151 {
+<a name="l00103"></a>00103         i++;
+<a name="l00104"></a>00104     }
+<a name="l00105"></a>00105     <span class="comment">// configure important defaults; if not done motion fails. </span>
+<a name="l00106"></a>00106     cmd.acc_up      = MOTOR_ACC_UP;
+<a name="l00107"></a>00107     cmd.acc_lo      = MOTOR_ACC_LO;
+<a name="l00108"></a>00108     cmd.dec_up      = MOTOR_DEC_UP;
+<a name="l00109"></a>00109     cmd.dec_lo      = MOTOR_DEC_LO;
+<a name="l00110"></a>00110     cmd.op_speed_up = MOTOR_OP_SPEED_UP;
+<a name="l00111"></a>00111     cmd.op_speed_lo = MOTOR_OP_SPEED_LO;
+<a name="l00112"></a>00112     cmd.st_speed_up = MOTOR_ST_SPEED_UP;
+<a name="l00113"></a>00113     cmd.st_speed_lo = MOTOR_ST_SPEED_LO;
+<a name="l00114"></a>00114 }
+<a name="l00115"></a>00115 
+<a name="l00121"></a><a class="code" href="par__utils_8cpp.html#a848151259ce1295c267886885658673a">00121</a> <span class="keywordtype">void</span> <a class="code" href="par__utils_8h.html#a848151259ce1295c267886885658673a" title="Function for choosing a configuration file.">pick_configuration_file</a>(<span class="keyword">const</span> boost::filesystem::path&amp; directory, std::string&amp; file)
+<a name="l00122"></a>00122 {
+<a name="l00123"></a>00123     std::vector&lt;std::string&gt; files;
+<a name="l00124"></a>00124     <span class="keywordtype">int</span> i = 1;
+<a name="l00125"></a>00125     
+<a name="l00126"></a>00126     std::cout &lt;&lt; <span class="stringliteral">&quot;Please pick your preferred configuration file: &quot;</span> &lt;&lt; std::endl;
+<a name="l00127"></a>00127     <span class="keywordflow">if</span> ( boost::filesystem::exists( directory ) )
+<a name="l00128"></a>00128     {
+<a name="l00129"></a>00129         boost::filesystem::directory_iterator end;
+<a name="l00130"></a>00130         <span class="keywordflow">for</span>( boost::filesystem::directory_iterator iter(directory);  iter != end; ++iter )
+<a name="l00131"></a>00131         {
+<a name="l00132"></a>00132             <span class="keywordflow">if</span> (! boost::filesystem::is_directory( *iter ) )
+<a name="l00133"></a>00133             {
+<a name="l00134"></a>00134                 std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; i++ &lt;&lt; <span class="stringliteral">&quot;]&quot;</span> &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; iter-&gt;path().file_string() &lt;&lt; std::endl;
+<a name="l00135"></a>00135                 files.push_back( iter-&gt;path().file_string() );
+<a name="l00136"></a>00136             }
+<a name="l00137"></a>00137         }
+<a name="l00138"></a>00138     }
+<a name="l00139"></a>00139     std::cin &gt;&gt; i;
+<a name="l00140"></a>00140     file = files[i-1];
+<a name="l00141"></a>00141 }
+<a name="l00142"></a>00142 
+<a name="l00147"></a><a class="code" href="par__utils_8cpp.html#a29c8f7bbfe2e9aa011bf0540863ec03a">00147</a> <span class="keywordtype">void</span> <a class="code" href="par__utils_8h.html#a29c8f7bbfe2e9aa011bf0540863ec03a" title="Function for configuring homing parameters.">configure_homing</a>(par_trajectory_planning::commands&amp; cmd)
+<a name="l00148"></a>00148 {
+<a name="l00149"></a>00149     cmd.abs_pos.clear();
+<a name="l00150"></a>00150     <span class="comment">// this has to be fixed in a next release. Create a function in the</span>
+<a name="l00151"></a>00151     <span class="comment">// steppermotor class for homing.</span>
 <a name="l00152"></a>00152     cmd.abs_pos.push_back(0);
 <a name="l00153"></a>00153     cmd.abs_pos.push_back(0);
 <a name="l00154"></a>00154     cmd.abs_pos.push_back(0);
 <a name="l00155"></a>00155     cmd.abs_pos.push_back(0);
 <a name="l00156"></a>00156     cmd.abs_pos.push_back(0);
 <a name="l00157"></a>00157     cmd.abs_pos.push_back(0);
-<a name="l00158"></a>00158 }
-<a name="l00159"></a>00159 
-<a name="l00164"></a><a class="code" href="par__utils_8cpp.html#ae83fcdbeb2b6757fc741ae953b633ee1">00164</a> <span class="keywordtype">int</span> <a class="code" href="par__utils_8h.html#ae83fcdbeb2b6757fc741ae953b633ee1" title="The menu presented to the user.">menu</a>()
-<a name="l00165"></a>00165 {
-<a name="l00166"></a>00166     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_INIT_COMM      &lt;&lt; <span class="stringliteral">&quot;] init communication&quot;</span>           &lt;&lt; std::endl;
-<a name="l00167"></a>00167     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_INIT_MOTOR     &lt;&lt; <span class="stringliteral">&quot;] init motors&quot;</span>                  &lt;&lt; std::endl;
-<a name="l00168"></a>00168     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_CONF_SIN_MOT   &lt;&lt; <span class="stringliteral">&quot;] configure single abs motion&quot;</span>  &lt;&lt; std::endl;
-<a name="l00169"></a>00169     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_CONF_PTP_MOT   &lt;&lt; <span class="stringliteral">&quot;] configure PTP motion&quot;</span>         &lt;&lt; std::endl;
-<a name="l00170"></a>00170     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_RD_CONF_FILE   &lt;&lt; <span class="stringliteral">&quot;] read configuration file&quot;</span>      &lt;&lt; std::endl;
-<a name="l00171"></a>00171     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_START_MOT      &lt;&lt; <span class="stringliteral">&quot;] start motion&quot;</span>                 &lt;&lt; std::endl;
-<a name="l00172"></a>00172     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_STOP_MOT       &lt;&lt; <span class="stringliteral">&quot;] stop motion&quot;</span>                  &lt;&lt; std::endl;
-<a name="l00173"></a>00173     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_START_HM       &lt;&lt; <span class="stringliteral">&quot;] start homing&quot;</span>                 &lt;&lt; std::endl;
-<a name="l00174"></a>00174     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_START_TEST     &lt;&lt; <span class="stringliteral">&quot;] test&quot;</span>                         &lt;&lt; std::endl;
-<a name="l00175"></a>00175     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_EXIT           &lt;&lt; <span class="stringliteral">&quot;] exit&quot;</span>                         &lt;&lt; std::endl;
-<a name="l00176"></a>00176     
-<a name="l00177"></a>00177     <span class="keywordtype">int</span> x = 0;
-<a name="l00178"></a>00178     std::cin &gt;&gt; x;
-<a name="l00179"></a>00179     <span class="keywordflow">return</span> x;
-<a name="l00180"></a>00180 }
+<a name="l00158"></a>00158     <span class="comment">// configure important defaults; if not done motion fails. </span>
+<a name="l00159"></a>00159     cmd.acc_up      = MOTOR_ACC_UP;
+<a name="l00160"></a>00160     cmd.acc_lo      = MOTOR_ACC_LO;
+<a name="l00161"></a>00161     cmd.dec_up      = MOTOR_DEC_UP;
+<a name="l00162"></a>00162     cmd.dec_lo      = MOTOR_DEC_LO;
+<a name="l00163"></a>00163     cmd.op_speed_up = MOTOR_OP_SPEED_UP;
+<a name="l00164"></a>00164     cmd.op_speed_lo = MOTOR_OP_SPEED_LO;
+<a name="l00165"></a>00165     cmd.st_speed_up = MOTOR_ST_SPEED_UP;
+<a name="l00166"></a>00166     cmd.st_speed_lo = MOTOR_ST_SPEED_LO;
+<a name="l00167"></a>00167 }
+<a name="l00168"></a>00168 
+<a name="l00173"></a><a class="code" href="par__utils_8cpp.html#ae83fcdbeb2b6757fc741ae953b633ee1">00173</a> <span class="keywordtype">int</span> <a class="code" href="par__utils_8h.html#ae83fcdbeb2b6757fc741ae953b633ee1" title="The menu presented to the user.">menu</a>()
+<a name="l00174"></a>00174 {
+<a name="l00175"></a>00175     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_INIT_COMM      &lt;&lt; <span class="stringliteral">&quot;] init communication&quot;</span>           &lt;&lt; std::endl;
+<a name="l00176"></a>00176     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_INIT_MOTOR     &lt;&lt; <span class="stringliteral">&quot;] init motors&quot;</span>                  &lt;&lt; std::endl;
+<a name="l00177"></a>00177     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_CONF_SIN_MOT   &lt;&lt; <span class="stringliteral">&quot;] configure single abs motion&quot;</span>  &lt;&lt; std::endl;
+<a name="l00178"></a>00178     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_CONF_PTP_MOT   &lt;&lt; <span class="stringliteral">&quot;] configure PTP motion&quot;</span>         &lt;&lt; std::endl;
+<a name="l00179"></a>00179     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_RD_CONF_FILE   &lt;&lt; <span class="stringliteral">&quot;] read configuration file&quot;</span>      &lt;&lt; std::endl;
+<a name="l00180"></a>00180     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_START_MOT      &lt;&lt; <span class="stringliteral">&quot;] start motion&quot;</span>                 &lt;&lt; std::endl;
+<a name="l00181"></a>00181     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_STOP_MOT       &lt;&lt; <span class="stringliteral">&quot;] stop motion&quot;</span>                  &lt;&lt; std::endl;
+<a name="l00182"></a>00182     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_START_HM       &lt;&lt; <span class="stringliteral">&quot;] start homing&quot;</span>                         &lt;&lt; std::endl;
+<a name="l00183"></a>00183     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_START_TEST     &lt;&lt; <span class="stringliteral">&quot;] test&quot;</span>                         &lt;&lt; std::endl;
+<a name="l00184"></a>00184     std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; MENU_EXIT           &lt;&lt; <span class="stringliteral">&quot;] exit&quot;</span>                         &lt;&lt; std::endl;
+<a name="l00185"></a>00185     
+<a name="l00186"></a>00186     <span class="keywordtype">int</span> x = 0;
+<a name="l00187"></a>00187     std::cin &gt;&gt; x;
+<a name="l00188"></a>00188     <span class="keywordflow">return</span> x;
+<a name="l00189"></a>00189 }
 </pre></div></div>
 </div>
 </td></tr></table>
@@ -208,7 +217,7 @@ None<br />
 <hr size="1"><div style="align: right;">
 <a href="http://ros.org/wiki/par_ui">par_ui</a><br />
 Author(s): Wouter van Teijlingen</br />
-<small>autogenerated on Wed Jun 8 2011 17:11:24</small>
+<small>autogenerated on Mon Jun 13 2011 17:06:40</small>
 </div>
 </body>
 </html>

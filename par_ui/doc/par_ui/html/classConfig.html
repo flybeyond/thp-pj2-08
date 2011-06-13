@@ -71,12 +71,12 @@ Public Member Functions</h2></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function for reading XML configuration file.  <a href="#a4e9f99ceaf254f82b14e845de037fc5f"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#aec17f8bbbeecadbbb7575070a9623e06">get_value</a> (TiXmlNode *node, const std::string &amp;key, std::string &amp;value)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function for retrieving value of a specified node.  <a href="#aec17f8bbbeecadbbb7575070a9623e06"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#ad4f99d7b741d557b0c33922c35d4ac7e">parse_xml_init</a> ()</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function for parsing motor parameters.  <a href="#ad4f99d7b741d557b0c33922c35d4ac7e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#af71847173b3109bb53131480cb4f87a1">parse_xml_ptp</a> ()</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function for parsing PTP parameters.  <a href="#af71847173b3109bb53131480cb4f87a1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a28074debfd22ac091b23b0b409cc7b64">parse_xml_ptp_row</a> (TiXmlNode *node, double &amp;X, double &amp;Y, double &amp;Z, uint16_t &amp;operating_mode)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function for parsing a PTP motion row.  <a href="#a28074debfd22ac091b23b0b409cc7b64"></a><br/></td></tr>
 <tr><td colspan="2"><h2><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">ros::Publisher&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#abae604229130930920b20f7d3d3275f3">chatter_pub_cmd</a></td></tr>
@@ -144,50 +144,6 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="aec17f8bbbeecadbbb7575070a9623e06"></a><!-- doxytag: member="Config::get_value" ref="aec17f8bbbeecadbbb7575070a9623e06" args="(TiXmlNode *node, const std::string &amp;key, std::string &amp;value)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Config::get_value </td>
-          <td>(</td>
-          <td class="paramtype">TiXmlNode *&nbsp;</td>
-          <td class="paramname"> <em>node</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>key</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>value</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [private]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Function for retrieving value of a specified node. </p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>key</em>&nbsp;</td><td>Key to retrieve value for. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>value</em>&nbsp;</td><td>Variable to store associated value. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>Definition at line <a class="el" href="par__config_8cpp_source.html#l00035">35</a> of file <a class="el" href="par__config_8cpp_source.html">par_config.cpp</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="ad4f99d7b741d557b0c33922c35d4ac7e"></a><!-- doxytag: member="Config::parse_xml_init" ref="ad4f99d7b741d557b0c33922c35d4ac7e" args="()" -->
 <div class="memitem">
 <div class="memproto">
@@ -204,6 +160,9 @@ Private Attributes</h2></td></tr>
 <div class="memdoc">
 
 <p>Function for parsing motor parameters. </p>
+
+<p><p>Implement this function for parsing motor parameters.</p>
+</p>
 
 <p>Definition at line <a class="el" href="par__config_8cpp_source.html#l00023">23</a> of file <a class="el" href="par__config_8cpp_source.html">par_config.cpp</a>.</p>
 
@@ -226,7 +185,66 @@ Private Attributes</h2></td></tr>
 
 <p>Function for parsing PTP parameters. </p>
 
-<p>Definition at line <a class="el" href="par__config_8cpp_source.html#l00052">52</a> of file <a class="el" href="par__config_8cpp_source.html">par_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="par__config_8cpp_source.html#l00030">30</a> of file <a class="el" href="par__config_8cpp_source.html">par_config.cpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a28074debfd22ac091b23b0b409cc7b64"></a><!-- doxytag: member="Config::parse_xml_ptp_row" ref="a28074debfd22ac091b23b0b409cc7b64" args="(TiXmlNode *node, double &amp;X, double &amp;Y, double &amp;Z, uint16_t &amp;operating_mode)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Config::parse_xml_ptp_row </td>
+          <td>(</td>
+          <td class="paramtype">TiXmlNode *&nbsp;</td>
+          <td class="paramname"> <em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&nbsp;</td>
+          <td class="paramname"> <em>X</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&nbsp;</td>
+          <td class="paramname"> <em>Y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double &amp;&nbsp;</td>
+          <td class="paramname"> <em>Z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t &amp;&nbsp;</td>
+          <td class="paramname"> <em>operating_mode</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [private]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Function for parsing a PTP motion row. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>node</em>&nbsp;</td><td>XML node to parse. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>X</em>&nbsp;</td><td>X coordinate. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Y</em>&nbsp;</td><td>Y coordinate. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>Z</em>&nbsp;</td><td>Z coordinate. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>operating_mode</em>&nbsp;</td><td>The user defined operating mode. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Definition at line <a class="el" href="par__config_8cpp_source.html#l00078">78</a> of file <a class="el" href="par__config_8cpp_source.html">par_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -248,7 +266,7 @@ Private Attributes</h2></td></tr>
 
 <p>Function for reading XML configuration file. </p>
 
-<p>Definition at line <a class="el" href="par__config_8cpp_source.html#l00182">182</a> of file <a class="el" href="par__config_8cpp_source.html">par_config.cpp</a>.</p>
+<p>Definition at line <a class="el" href="par__config_8cpp_source.html#l00111">111</a> of file <a class="el" href="par__config_8cpp_source.html">par_config.cpp</a>.</p>
 
 </div>
 </div>
@@ -264,7 +282,7 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="par__config_8h_source.html#l00051">51</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
+<p>Definition at line <a class="el" href="par__config_8h_source.html#l00054">54</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
 
 </div>
 </div>
@@ -279,7 +297,7 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="par__config_8h_source.html#l00050">50</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
+<p>Definition at line <a class="el" href="par__config_8h_source.html#l00053">53</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
 
 </div>
 </div>
@@ -294,7 +312,7 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="par__config_8h_source.html#l00047">47</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
+<p>Definition at line <a class="el" href="par__config_8h_source.html#l00050">50</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
 
 </div>
 </div>
@@ -309,7 +327,7 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="par__config_8h_source.html#l00048">48</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
+<p>Definition at line <a class="el" href="par__config_8h_source.html#l00051">51</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
 
 </div>
 </div>
@@ -324,7 +342,7 @@ Private Attributes</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Definition at line <a class="el" href="par__config_8h_source.html#l00049">49</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
+<p>Definition at line <a class="el" href="par__config_8h_source.html#l00052">52</a> of file <a class="el" href="par__config_8h_source.html">par_config.h</a>.</p>
 
 </div>
 </div>
@@ -338,7 +356,7 @@ Private Attributes</h2></td></tr>
 <hr size="1"><div style="align: right;">
 <a href="http://ros.org/wiki/par_ui">par_ui</a><br />
 Author(s): Wouter van Teijlingen</br />
-<small>autogenerated on Wed Jun 8 2011 17:11:24</small>
+<small>autogenerated on Mon Jun 13 2011 17:06:40</small>
 </div>
 </body>
 </html>

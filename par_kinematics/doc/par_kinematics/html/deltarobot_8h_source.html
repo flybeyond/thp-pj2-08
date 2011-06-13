@@ -66,43 +66,33 @@ None<br />
 <a name="l00017"></a>00017 <span class="preprocessor">#ifndef _DELTAROBOT_H_</span>
 <a name="l00018"></a><a class="code" href="deltarobot_8h.html#a09241cd9ed62fc3318bc08c670916744">00018</a> <span class="preprocessor"></span><span class="preprocessor">#define _DELTAROBOT_H_</span>
 <a name="l00019"></a>00019 <span class="preprocessor"></span>
-<a name="l00020"></a><a class="code" href="classDeltaRobot.html">00020</a> <span class="keyword">class </span><a class="code" href="classDeltaRobot.html">DeltaRobot</a> {
-<a name="l00021"></a>00021 <span class="keyword">public</span>:
-<a name="l00022"></a><a class="code" href="classDeltaRobot.html#a6425a5ad096a98545332feadc9e485cb">00022</a>         <a class="code" href="classArmModel.html">ArmModel</a>* <a class="code" href="classDeltaRobot.html#a6425a5ad096a98545332feadc9e485cb">m</a>[3];
-<a name="l00023"></a><a class="code" href="classDeltaRobot.html#a16900ee3d373338644a956860303bda1">00023</a>         <a class="code" href="classDeltaArm.html">DeltaArm</a>* <a class="code" href="classDeltaRobot.html#a16900ee3d373338644a956860303bda1">arm</a>[3];
+<a name="l00020"></a><a class="code" href="classDeltaRobot.html">00020</a> <span class="keyword">class </span><a class="code" href="classDeltaRobot.html">DeltaRobot</a> 
+<a name="l00021"></a>00021 {
+<a name="l00022"></a>00022     <span class="keyword">public</span>:
+<a name="l00023"></a>00023         <span class="comment">// public variable for servo angles.</span>
 <a name="l00024"></a><a class="code" href="classDeltaRobot.html#abe45e9ddd8091b2b76a4d7ac49a22795">00024</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#abe45e9ddd8091b2b76a4d7ac49a22795">servo</a>[3];
-<a name="l00025"></a><a class="code" href="classDeltaRobot.html#afffffef6e172b447a3f679412c60958a">00025</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#afffffef6e172b447a3f679412c60958a">pangle</a>[3];
-<a name="l00026"></a><a class="code" href="classDeltaRobot.html#a003ac461d7ad7ce24a9216970a98a611">00026</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a003ac461d7ad7ce24a9216970a98a611">servoMin</a>, <a class="code" href="classDeltaRobot.html#a4b5da4b34859948b1cb2364f81b4e765">servoMax</a>;
-<a name="l00027"></a><a class="code" href="classDeltaRobot.html#a931a360f92077bf197364bbc4eba287e">00027</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a931a360f92077bf197364bbc4eba287e">hip</a>, <a class="code" href="classDeltaRobot.html#afaea16e8df17cf56ae568f6b817f0cc9">ankle</a>, <a class="code" href="classDeltaRobot.html#adb62b57597123a9448a7ee4d8a17fec8">base</a>, <a class="code" href="classDeltaRobot.html#a06ed6718a14e5747550ad5ac6276b2c3">effector</a>;
-<a name="l00028"></a><a class="code" href="classDeltaRobot.html#aaad4dd5537c21e1906a698e66e6a3a95">00028</a>         <a class="code" href="classPoint.html">Point</a>* <a class="code" href="classDeltaRobot.html#aaad4dd5537c21e1906a698e66e6a3a95">effLoc</a>;
-<a name="l00029"></a>00029   
-<a name="l00030"></a>00030         <a class="code" href="classDeltaRobot.html#a483dde020bcc6b759ac83efa29bc0e69">DeltaRobot</a>(<span class="keywordtype">double</span> hipLength, <span class="keywordtype">double</span> ankleLength, <span class="keywordtype">double</span> baseSize, <span class="keywordtype">double</span> effectorSize);
-<a name="l00031"></a>00031   
-<a name="l00032"></a>00032         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d">newArms</a>();
-<a name="l00033"></a>00033   
-<a name="l00034"></a>00034         <span class="keywordtype">bool</span> <a class="code" href="classDeltaRobot.html#a1b84447cde9a3c8a8807517e3b052f4f">isEffectorOk</a>();
-<a name="l00035"></a>00035   
-<a name="l00036"></a>00036         <span class="keywordtype">bool</span> <a class="code" href="classDeltaRobot.html#aed23f0594a258fad5176651242119fc6">moveto</a>(<a class="code" href="classPoint.html">Point</a> goal);
-<a name="l00037"></a>00037   
-<a name="l00038"></a><a class="code" href="classDeltaRobot.html#a9aa0e9f69986c401077b1d92ba47e2a4">00038</a>         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#a9aa0e9f69986c401077b1d92ba47e2a4">setHip</a>(<span class="keywordtype">double</span> b) { this-&gt;<a class="code" href="classDeltaRobot.html#a931a360f92077bf197364bbc4eba287e">hip</a> = b; <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d">newArms</a>(); }
-<a name="l00039"></a>00039   
-<a name="l00040"></a><a class="code" href="classDeltaRobot.html#a147524d05d33f286752e16699f580f85">00040</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a147524d05d33f286752e16699f580f85">getHip</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="classDeltaRobot.html#a931a360f92077bf197364bbc4eba287e">hip</a>; }
-<a name="l00041"></a>00041   
-<a name="l00042"></a><a class="code" href="classDeltaRobot.html#a48111fa770d3406cbdf910155bf48507">00042</a>         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#a48111fa770d3406cbdf910155bf48507">setAnkle</a>(<span class="keywordtype">double</span> a) { this-&gt;<a class="code" href="classDeltaRobot.html#afaea16e8df17cf56ae568f6b817f0cc9">ankle</a> = a; <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d">newArms</a>();}
-<a name="l00043"></a>00043   
-<a name="l00044"></a><a class="code" href="classDeltaRobot.html#a155ae1e2e00407b44cffd641229f8f90">00044</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a155ae1e2e00407b44cffd641229f8f90">getAnkle</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="classDeltaRobot.html#afaea16e8df17cf56ae568f6b817f0cc9">ankle</a>; }
-<a name="l00045"></a>00045   
-<a name="l00046"></a><a class="code" href="classDeltaRobot.html#aaeb4681d8574f03fb3a7c6e5c3a5774f">00046</a>         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#aaeb4681d8574f03fb3a7c6e5c3a5774f">setBase</a>(<span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#adb62b57597123a9448a7ee4d8a17fec8">base</a>) { this-&gt;base = base; <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d">newArms</a>();}
-<a name="l00047"></a>00047   
-<a name="l00048"></a><a class="code" href="classDeltaRobot.html#a432fe6e993571658b51e37143b2e8fb7">00048</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a432fe6e993571658b51e37143b2e8fb7">getBase</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="classDeltaRobot.html#adb62b57597123a9448a7ee4d8a17fec8">base</a>; }
-<a name="l00049"></a>00049   
-<a name="l00050"></a><a class="code" href="classDeltaRobot.html#a486ad47220576a06b3f2db5db5bae463">00050</a>         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#a486ad47220576a06b3f2db5db5bae463">setEffector</a>(<span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a06ed6718a14e5747550ad5ac6276b2c3">effector</a>) { this-&gt;effector = effector; <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d">newArms</a>();}
-<a name="l00051"></a>00051   
-<a name="l00052"></a><a class="code" href="classDeltaRobot.html#afd8526fa9942a453d0ea9a8af7c0306b">00052</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#afd8526fa9942a453d0ea9a8af7c0306b">getEffector</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="classDeltaRobot.html#a06ed6718a14e5747550ad5ac6276b2c3">effector</a>; }
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054 };
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056 <span class="preprocessor">#endif</span>
+<a name="l00032"></a>00032         <a class="code" href="classDeltaRobot.html#a483dde020bcc6b759ac83efa29bc0e69" title="Constructor for deltarobot.">DeltaRobot</a>(<span class="keywordtype">double</span> hipLength, <span class="keywordtype">double</span> ankleLength, <span class="keywordtype">double</span> baseSize, <span class="keywordtype">double</span> effectorSize);
+<a name="l00036"></a>00036         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d" title="Method for creating new delta robot arms.">newArms</a>();
+<a name="l00041"></a>00041         <span class="keywordtype">bool</span> <a class="code" href="classDeltaRobot.html#a1b84447cde9a3c8a8807517e3b052f4f" title="Method for checking the end effector.">isEffectorOk</a>();
+<a name="l00046"></a>00046         <span class="keywordtype">bool</span> <a class="code" href="classDeltaRobot.html#aed23f0594a258fad5176651242119fc6" title="Method for moving the delta robot to a specified point.">moveto</a>(<a class="code" href="classPoint.html">Point</a> goal);
+<a name="l00051"></a><a class="code" href="classDeltaRobot.html#a9aa0e9f69986c401077b1d92ba47e2a4">00051</a>         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#a9aa0e9f69986c401077b1d92ba47e2a4" title="Method for setting the hip.">setHip</a>(<span class="keywordtype">double</span> b) { this-&gt;<a class="code" href="classDeltaRobot.html#a931a360f92077bf197364bbc4eba287e">hip</a> = b; <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d" title="Method for creating new delta robot arms.">newArms</a>(); }
+<a name="l00056"></a><a class="code" href="classDeltaRobot.html#a147524d05d33f286752e16699f580f85">00056</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a147524d05d33f286752e16699f580f85" title="Method for returning the hip length.">getHip</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="classDeltaRobot.html#a931a360f92077bf197364bbc4eba287e">hip</a>; }
+<a name="l00061"></a><a class="code" href="classDeltaRobot.html#a48111fa770d3406cbdf910155bf48507">00061</a>         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#a48111fa770d3406cbdf910155bf48507" title="Method for setting the ankle.">setAnkle</a>(<span class="keywordtype">double</span> a) { this-&gt;<a class="code" href="classDeltaRobot.html#afaea16e8df17cf56ae568f6b817f0cc9">ankle</a> = a; <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d" title="Method for creating new delta robot arms.">newArms</a>();}
+<a name="l00066"></a><a class="code" href="classDeltaRobot.html#a155ae1e2e00407b44cffd641229f8f90">00066</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a155ae1e2e00407b44cffd641229f8f90" title="Method for returning the ankle length.">getAnkle</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="classDeltaRobot.html#afaea16e8df17cf56ae568f6b817f0cc9">ankle</a>; }
+<a name="l00071"></a><a class="code" href="classDeltaRobot.html#aaeb4681d8574f03fb3a7c6e5c3a5774f">00071</a>         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#aaeb4681d8574f03fb3a7c6e5c3a5774f" title="Method for setting the base size.">setBase</a>(<span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#adb62b57597123a9448a7ee4d8a17fec8">base</a>) { this-&gt;base = base; <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d" title="Method for creating new delta robot arms.">newArms</a>();}
+<a name="l00076"></a><a class="code" href="classDeltaRobot.html#a432fe6e993571658b51e37143b2e8fb7">00076</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a432fe6e993571658b51e37143b2e8fb7" title="Method for returning the base size.">getBase</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="classDeltaRobot.html#adb62b57597123a9448a7ee4d8a17fec8">base</a>; }
+<a name="l00081"></a><a class="code" href="classDeltaRobot.html#a486ad47220576a06b3f2db5db5bae463">00081</a>         <span class="keywordtype">void</span> <a class="code" href="classDeltaRobot.html#a486ad47220576a06b3f2db5db5bae463" title="Method for setting effector&amp;#39;s size.">setEffector</a>(<span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a06ed6718a14e5747550ad5ac6276b2c3">effector</a>) { this-&gt;effector = effector; <a class="code" href="classDeltaRobot.html#a4e6286cb0a38b1fb404d052d75d14b0d" title="Method for creating new delta robot arms.">newArms</a>();}
+<a name="l00086"></a><a class="code" href="classDeltaRobot.html#afd8526fa9942a453d0ea9a8af7c0306b">00086</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#afd8526fa9942a453d0ea9a8af7c0306b" title="Method for getting the effector&amp;#39;s size.">getEffector</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="classDeltaRobot.html#a06ed6718a14e5747550ad5ac6276b2c3">effector</a>; }
+<a name="l00087"></a>00087 <span class="keyword">private</span>:
+<a name="l00088"></a><a class="code" href="classDeltaRobot.html#a6425a5ad096a98545332feadc9e485cb">00088</a>         <a class="code" href="classArmModel.html">ArmModel</a>* <a class="code" href="classDeltaRobot.html#a6425a5ad096a98545332feadc9e485cb">m</a>[3];
+<a name="l00089"></a><a class="code" href="classDeltaRobot.html#a16900ee3d373338644a956860303bda1">00089</a>         <a class="code" href="classDeltaArm.html">DeltaArm</a>* <a class="code" href="classDeltaRobot.html#a16900ee3d373338644a956860303bda1">arm</a>[3];
+<a name="l00090"></a><a class="code" href="classDeltaRobot.html#afffffef6e172b447a3f679412c60958a">00090</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#afffffef6e172b447a3f679412c60958a">pangle</a>[3];
+<a name="l00091"></a><a class="code" href="classDeltaRobot.html#a003ac461d7ad7ce24a9216970a98a611">00091</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a003ac461d7ad7ce24a9216970a98a611">servoMin</a>, <a class="code" href="classDeltaRobot.html#a4b5da4b34859948b1cb2364f81b4e765">servoMax</a>;
+<a name="l00092"></a><a class="code" href="classDeltaRobot.html#a931a360f92077bf197364bbc4eba287e">00092</a>         <span class="keywordtype">double</span> <a class="code" href="classDeltaRobot.html#a931a360f92077bf197364bbc4eba287e">hip</a>, <a class="code" href="classDeltaRobot.html#afaea16e8df17cf56ae568f6b817f0cc9">ankle</a>, <a class="code" href="classDeltaRobot.html#adb62b57597123a9448a7ee4d8a17fec8">base</a>, <a class="code" href="classDeltaRobot.html#a06ed6718a14e5747550ad5ac6276b2c3">effector</a>;
+<a name="l00093"></a><a class="code" href="classDeltaRobot.html#aaad4dd5537c21e1906a698e66e6a3a95">00093</a>         <a class="code" href="classPoint.html">Point</a>* <a class="code" href="classDeltaRobot.html#aaad4dd5537c21e1906a698e66e6a3a95">effLoc</a>;
+<a name="l00094"></a>00094 };
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096 <span class="preprocessor">#endif</span>
 </pre></div></div>
 </div>
 </td></tr></table>
@@ -110,7 +100,7 @@ None<br />
 <hr size="1"><div style="align: right;">
 <a href="http://ros.org/wiki/par_kinematics">par_kinematics</a><br />
 Author(s): Wouter van Teijlingen</br />
-<small>autogenerated on Wed Jun 8 2011 17:12:12</small>
+<small>autogenerated on Mon Jun 13 2011 17:06:55</small>
 </div>
 </body>
 </html>
