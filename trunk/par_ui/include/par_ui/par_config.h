@@ -38,11 +38,14 @@ class Config
          */	          
         void parse_xml_ptp();
         /**
-         * @brief Function for retrieving value of a specified node.
-         * @param key Key to retrieve value for.
-         * @param value Variable to store associated value.
+         * @brief Function for parsing a PTP motion row.
+         * @param node XML node to parse.
+         * @param X X coordinate.
+         * @param Y Y coordinate.
+         * @param Z Z coordinate.
+         * @param operating_mode The user defined operating mode.
          */
-        void get_value(TiXmlNode* node, const std::string& key, std::string& value);
+        void parse_xml_ptp_row(TiXmlNode* node, double& X, double& Y, double& Z, uint16_t& operating_mode);
         
         TiXmlElement* config;
         ros::ServiceClient coord_client;

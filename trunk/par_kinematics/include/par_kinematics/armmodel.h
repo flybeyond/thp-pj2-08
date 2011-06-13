@@ -17,19 +17,19 @@ class ArmModel
 {
 	public:
 		float alpha, beta, rho;
-		double a, b;			// ankle length, hip length
-		double c;			// base to goal distance, a2: projected ankle length
+		double a, b; // ankle length, hip length
+		double c;	 // base to goal distance, a2: projected ankle length
 
 		Point* ab;
 
-		double base;         // base size
-		double effector;     // effector size
+		double base;        // base size
+		double effector;    // effector size
 		double angle;		// this arm length
 	
 		Point* g;           // goal point 
 
-		double pangle;       // parallelogram joint angle
-		double ankleAngle;   // for transforms
+		double pangle;      // parallelogram joint angle
+		double ankleAngle;  // for transforms
 		
 		ArmModel(double angle, double hip, double ankle, double base, double effector);
 		ArmModel(const ArmModel& p);

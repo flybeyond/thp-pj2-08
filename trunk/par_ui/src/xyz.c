@@ -1,3 +1,10 @@
+/**
+ * Author: W. van Teijlingen <wouter.vanteijlingen@student.hu.nl>
+ *
+ * This program takes an AutoCAD generated X,Y,Z file and creates a
+ * XML configuration file with proper parameters.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -21,6 +28,7 @@ int main(int argc, char* argv[])
 		fprintf(out, "\t\t<X>%lg</X>\n", x);
 		fprintf(out, "\t\t<Y>%lg</Y>\n", y);
 		fprintf(out, "\t\t<Z>%lg</Z>\n", z);
+		fprintf(out, "\t\t<mode>single</mode>\n");
 
 		fprintf(out, "\t</row>\n");
 		i++;

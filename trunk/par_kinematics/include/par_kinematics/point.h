@@ -13,11 +13,9 @@
 #ifndef _POINT_H_
 #define _POINT_H_
 
-class Point {
+class Point 
+{
 	public: 
-		double x, y, z;
-
-
 		Point(double x, double y, double z);
 		
 		Point moveto(double x, double y, double z);
@@ -34,6 +32,7 @@ class Point {
 
 		void rotateZ(double phi);
 
+        double x, y, z;
 };
 
 #endif

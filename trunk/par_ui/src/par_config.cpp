@@ -22,179 +22,110 @@ Config::Config(ros::ServiceClient& coord_client, par_kinematics::coord& coords,
 
 void Config::parse_xml_init()
 {
-            TiXmlElement* motor = config->FirstChildElement();
-            
-            uint16_t speed_up;
-            uint16_t speed_lo;
-            
-            speed_up = atoi( motor->FirstChild()->ValueStr().c_str() );
-            speed_lo = atoi( motor->FirstChild()->ValueStr().c_str() );
-}
-
-
-void Config::get_value(TiXmlNode* node, const std::string& key, std::string& value)
-{
-    if (node != NULL)
-    {
-        std::string el;
-        el = node->ValueStr();
-        if (el == key)
-        {
-            value = node->FirstChild()->ValueStr();
-        }
-        else
-        {
-            value = "invalid";
-        }
-    }
+    /**
+     * Implement this function for parsing motor parameters.
+     */
 }
 
 void Config::parse_xml_ptp()
+{                             
+    for (TiXmlNode* node = config->FirstChild(); node;
+        node = node->NextSibling() )
+    {
+        if (node->ValueStr() == "row")
+        {
+            uint16_t om = MOTOR_OPM_SINGLE;
+            parse_xml_ptp_row(node, coords.request.x, coords.request.y, coords.request.z, om);
+            push_angles(coord_client, coords, cmd);
+            cmd.operating_mode.push_back( om );
+        }
+        else if (node->ValueStr() == "repeat_motions")
+        {
+            cmd.repeat_motions = atoi( node->FirstChild()->ValueStr().c_str() );
+            std::cout << "repeat motions: " << cmd.repeat_motions << std::endl;
+        }
+        else if (node->ValueStr() == "acceleration")
+        {
+            uint32_t acc = atoi( node->FirstChild()->ValueStr().c_str() );
+            cmd.acc_up = 0xFFFF & acc;
+            cmd.acc_lo = 0xFFFF & (acc >> 16);
+            std::cout << "acceleration: " << acc << std::endl;
+        }
+        else if (node->ValueStr() == "deceleration")
+        {
+            uint32_t dec = atoi( node->FirstChild()->ValueStr().c_str() );
+            cmd.dec_up = 0xFFFF & dec;
+            cmd.dec_lo = 0xFFFF & (dec >> 16);       
+            std::cout << "deceleration: " << dec << std::endl;         
+        }
+        else if (node->ValueStr() == "operating_speed")
+        {
+            uint32_t speed = atoi( node->FirstChild()->ValueStr().c_str() );
+            cmd.op_speed_up = 0xFFFF & speed;
+            cmd.op_speed_lo = 0xFFFF & (speed >> 16);    
+            std::cout << "operating speed: " << speed << std::endl;            
+        }
+        else if (node->ValueStr() == "startup_speed")
+        {
+            uint32_t speed = atoi( node->FirstChild()->ValueStr().c_str() );
+            cmd.st_speed_up = 0xFFFF & speed;
+            cmd.st_speed_lo = 0xFFFF & (speed >> 16);  
+            std::cout << "startup speed: " << speed << std::endl;
+        }
+    }                
+}
+
+void Config::parse_xml_ptp_row(TiXmlNode* node, double& X, double& Y, double& Z, uint16_t& operating_mode)
 {
-            TiXmlNode* node = config->FirstChild();
-            std::string key;
-            std::string value;
-            
-            if (node != NULL)
-            {
-                get_value(node, "repeat_motions", value);
-                if (value != "invalid")
-                {
-                    cmd.repeat_motions = atoi( value.c_str() );
-                }
-                else
-                {   
-                    cmd.repeat_motions = 1;
-                }
-            }
-            
-            if (node != NULL)
-            {
-                node = node->NextSibling();
-                get_value(node, "acceleration", value);
-                if (value != "invalid")
-                {
-                    uint32_t acc = atoi( value.c_str() );
-                    cmd.acc_up = 0xFFFF & acc;
-                    cmd.acc_lo = 0xFFFF & (acc >> 16);
-                }
-                else
-                {
-                    cmd.acc_up = MOTOR_ACC_UP;
-                    cmd.acc_lo = MOTOR_ACC_LO;
-                }
-            }
-            
-            if (node != NULL)
-            {
-                node = node->NextSibling();
-                get_value(node, "deceleration", value);
-                if (value != "invalid")
-                {
-                    uint32_t dec = atoi( value.c_str() );
-                    cmd.dec_up = 0xFFFF & dec;
-                    cmd.dec_lo = 0xFFFF & (dec >> 16);
-                }
-                else
-                {
-                    cmd.dec_up = MOTOR_DEC_UP;
-                    cmd.dec_lo = MOTOR_DEC_LO;
-                }
-            }
-            
-            if (node != NULL)
-            {
-                node = node->NextSibling();
-                get_value(node, "operating_speed", value);
-                if (value != "invalid")
-                {
-                    uint32_t speed = atoi( value.c_str() );
-                    cmd.op_speed_up = 0xFFFF & speed;
-                    cmd.op_speed_lo = 0xFFFF & (speed >> 16);
-                }
-                else
-                {
-                    cmd.op_speed_up = MOTOR_OP_SPEED_UP;
-                    cmd.op_speed_lo = MOTOR_OP_SPEED_LO;
-                }
-            }            
-            
-            if (node != NULL)
-            {
-                node = node->NextSibling();
-                get_value(node, "startup_speed", value);
-                if (value != "invalid")
-                {
-                    uint32_t speed = atoi( value.c_str() );
-                    cmd.st_speed_up = 0xFFFF & speed;
-                    cmd.st_speed_lo = 0xFFFF & (speed >> 16);                    
-                }
-                else
-                {
-                    cmd.st_speed_up = MOTOR_ST_SPEED_UP;
-                    cmd.st_speed_lo = MOTOR_ST_SPEED_LO;
-                }
-            }
-            
-            int k = 1;
-            for (TiXmlElement* row = config->FirstChildElement(); row;
-                row = row->NextSiblingElement())
-            {
-                TiXmlNode* X  = row->FirstChild("X");
-                TiXmlNode* Y  = row->FirstChild("Y");
-                TiXmlNode* Z  = row->FirstChild("Z");
-                TiXmlNode* OM = row->FirstChild("mode"); 
-                std::cout << "ROW READ: " << k++ << std::endl;
-                if (X != NULL && Y != NULL && Z != NULL)
-                {
-                    coords.request.x = atof( X->FirstChild()->ValueStr().c_str() );
-                    coords.request.y = atof( Y->FirstChild()->ValueStr().c_str() );
-                    coords.request.z = atof( Z->FirstChild()->ValueStr().c_str() );
-                    push_angles(coord_client, coords, cmd);
-                }
-                else
-                {
-                    std::cout << "XYZ NULL" << std::endl;
-                }
-                
-                if (OM != NULL)
-                {
-                    std::string om = OM->FirstChild()->ValueStr();
-                    std::cout << "OM: " << om << std::endl;
-                    if ( om == "single" )
-                    {
-                        std::cout << "single picked" << std::endl;
-                        cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
-                    }
-                    else if ( om == "link" )
-                    {
-                        std::cout << "link picked" << std::endl;
-                        cmd.operating_mode.push_back( MOTOR_OPM_LINK1 );
-                    }
-                    else if ( om == "cp" )
-                    {
-                        std::cout << "cp picked" << std::endl;
-                        cmd.operating_mode.push_back( MOTOR_OPM_LINK2 );
-                    }
-                    else
-                    {
-                        std::cout << "defaulted to single" << std::endl;
-                        cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
-                    }
-                }
-                else
-                {
-                    std::cout << "OM == null" << std::endl;
-                    cmd.operating_mode.push_back( MOTOR_OPM_SINGLE );
-                }
-            }
+    TiXmlNode* x  = node->FirstChild("X");
+    TiXmlNode* y  = node->FirstChild("Y");
+    TiXmlNode* z  = node->FirstChild("Z");
+    TiXmlNode* OM = node->FirstChild("mode"); 
+    
+    X = atof( x->FirstChild()->ValueStr().c_str() );
+    Y = atof( y->FirstChild()->ValueStr().c_str() );
+    Z = atof( z->FirstChild()->ValueStr().c_str() );
+    
+    if (OM != NULL)
+    {
+        std::string key = OM->FirstChild()->ValueStr();
+        if ( key == "single" )
+        {
+            operating_mode = MOTOR_OPM_SINGLE;
+        }
+        else if ( key == "link" )
+        {
+            operating_mode = MOTOR_OPM_LINK1;
+        }
+        else if ( key == "cp" )
+        {
+            operating_mode = MOTOR_OPM_LINK2;
+        }
+        else
+        {
+            operating_mode = MOTOR_OPM_SINGLE;
+        }    
+    }
 }
 
 void Config::read(const std::string& file)
 {
+    // don't forget this. if this is already filled with data and not cleared
+    // behavior is undefined. 
     cmd.abs_pos.clear();
     cmd.xyz_pos.clear();
     cmd.operating_mode.clear();
+    
+    // set object defaults.
+    cmd.repeat_motions = 1;
+    cmd.acc_up = MOTOR_ACC_UP;
+    cmd.acc_lo = MOTOR_ACC_LO;    
+    cmd.dec_up = MOTOR_DEC_UP;
+    cmd.dec_lo = MOTOR_DEC_LO;
+    cmd.op_speed_up = MOTOR_OP_SPEED_UP;
+    cmd.op_speed_lo = MOTOR_OP_SPEED_LO;    
+    cmd.st_speed_up = MOTOR_ST_SPEED_UP;
+    cmd.st_speed_lo = MOTOR_ST_SPEED_LO;        
 
 	TiXmlDocument doc(file.c_str());
 	std::cout << "file: " << file.c_str() << std::endl;
@@ -207,7 +138,6 @@ void Config::read(const std::string& file)
         {
             int x = 0;
             config->QueryIntAttribute("number", &x);
-            std::cout << "Number #: " << x << std::endl;
             switch(x)
             {
                 case MENU_INIT_MOTOR: 

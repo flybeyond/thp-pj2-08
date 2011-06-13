@@ -38,6 +38,7 @@ const int MODBUS_TIMEOUT_END    = 50000;
 const int MODBUS_SLAVE_ADDR_01  = 0x01;
 const int MODBUS_SLAVE_ADDR_02  = 0x02;
 const int MODBUS_SLAVE_ADDR_03  = 0x03;
+const int MODBUS_BCAST_ADDR     = 0x00;
 
 /**
  * Constants for configuring the controllers/motors.
@@ -53,6 +54,7 @@ const uint16_t MOTOR_DEC_LO       = 0x0000;
 const uint16_t MOTOR_OPM_SINGLE   = 0x0000;
 const uint16_t MOTOR_OPM_LINK1    = 0x0001;
 const uint16_t MOTOR_OPM_LINK2    = 0x0002;
+const uint16_t MOTOR_READY        = 0x2000;
 const int      MOTOR_MAX_LINK_MOT = 0x04;
 const double   MOTOR_STEP_ANGLE   = 0.072;
 
