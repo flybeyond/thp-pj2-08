@@ -149,7 +149,6 @@ void StepperMotor::confSingleMotion(const par_trajectory_planning::commands& cmd
 
 void StepperMotor::confPTPMotion(const par_trajectory_planning::commands& cmd)
 {
-    init();
     motions = cmd.xyz_pos.size() / 3;
     repeat_motions = cmd.repeat_motions;
     if (repeat_motions == 0) repeat_motions = 1;    
@@ -257,8 +256,6 @@ void StepperMotor::initSingleMotion(int slave, uint16_t pos_lo, uint16_t pos_up,
 
 	src[1] = pos_up;
 	src[0] = pos_lo;
-	std::cout << "src[1]: " << src[1] << std::endl;
-	std::cout << "src[0]: " << src[0] << std::endl;
 	n = modbus_write_registers(ctx, REG_MOTOR_POS + (off * 2), 2, src);
 	usleep(MODBUS_MAX_PROC_TIME);
 	
